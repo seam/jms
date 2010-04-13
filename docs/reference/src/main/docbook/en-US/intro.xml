@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
+<chapter id="intro">
+	<title>Introduction</title>
+
+	<para>
+		Seam extends the CDI programming model into the messaging world
+		by allowing you to inject JMS resources into your beans. Further, Seam
+		bridges the CDI event bus over JMS; this gives you the benefits of
+		CDI-style type-safety for inter-application communication.
+	</para>
+
+	<section id="mission">
+		<title>Mission statement</title>
+
+		<para>
+			The missing of the JMS module for Seam 3 is to provide injection
+			of JMS resources and the necessary scaffolding for CDI event
+			propagation over JMS.
+		</para>
+	</section>
+
+	<section id="overview">
+		<title>Seam 3 JMS Module Overview</title>
+
+		<para>
+			The general goals can be divided into two categories: injection
+			of JMS resources and forwarding of events:
+		</para>
+
+		<itemizedlist>
+			<title>JMS Resource Injection</title>
+			<listitem>
+				Connection
+			</listitem>
+			<listitem>
+				Session
+			</listitem>
+			<listitem>
+				Destination (Topic/Queue)
+			</listitem>
+			<listitem>
+				Message Producer (TopicPublisher/QueueSender)
+			</listitem>
+			<listitem>
+				Message Received (TopicSubscriber/QueueReceiver
+			</listitem>
+		</itemizedlist>
+
+		<itemizedlist>
+			<title>Forwarding of Events</title>
+			<listitem>
+				Implicit - use a stereotype annotation when firing events
+			</listitem>
+			<listitem>
+				Explicit - events and qualifiers are registered explicitly
+			</listitem>
+		</itemizedlist>
+	</section>
+</chapter>

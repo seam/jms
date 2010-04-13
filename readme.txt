@@ -1,0 +1,21 @@
+Seam JMS
+=============
+
+Seam extends the CDI programming model into the messaging world by allowing you
+to inject JMS resources into your beans. Further, Seam bridges the CDI event 
+bus over JMS; this gives you the benefits of CDI-style type-safety for 
+inter-application communication.
+
+The general goals can be divided into two categories: injection of JMS 
+resources and forwarding of events.
+
+Injection of JMS Resources
+ - Connection
+ - Session
+ - Destination (Topic/Queue)
+ - Message Producer
+ - Message Consumer
+
+Forwarding of Events
+ - Implicit - use a stereotype annotation when firing events
+ - Explicit - events and qualifiers are registered explicitly

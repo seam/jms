@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.jboss.seam</groupId>
+      <artifactId>seam-jms-parent</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+
+   <artifactId>seam-jms-impl</artifactId>
+   <name>Seam JMS Implementation</name>
+   <description>Implementation of the Seam JMS Module</description>
+
+   <properties>
+      <arquillian.version>1.0.0-SNAPSHOT</arquillian.version>
+   </properties>
+
+   <dependencies>
+      <dependency>
+         <groupId>javax.enterprise</groupId>
+         <artifactId>cdi-api</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam</groupId>
+         <artifactId>seam-jms</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.weld</groupId>
+         <artifactId>weld-extensions</artifactId>
+         <scope>runtime</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>javax.jms</groupId>
+         <artifactId>jms</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.8.1</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.arquillian</groupId>
+         <artifactId>arquillian-junit</artifactId>
+         <version>${arquillian.version}</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.arquillian.container</groupId>
+         <artifactId>arquillian-jbossas-remote-60</artifactId>
+         <version>${arquillian.version}</version>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+
+   <!--
+      No JBoss SVN yet <scm>
+      <connection>scm:svn:http://anonsvn.jboss.org/repos/seam/modules/jms/trunk</connection>
+      <developerConnection>scm:svn:https://svn.jboss.org/repos/seam/modules/jms/trunk</developerConnection>
+      <url>http://fisheye.jboss.org/browse/Seam/modules/jms/trunk</url>
+      </scm>
+   -->
+</project>

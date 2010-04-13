@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.jboss.seam</groupId>
+      <artifactId>seam-parent</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+   </parent>
+
+   <groupId>org.jboss.seam</groupId>
+   <artifactId>seam-jms-parent</artifactId>
+   <packaging>pom</packaging>
+   <name>Seam JMS Parent</name>
+   <version>3.0.0-SNAPSHOT</version>
+
+   <modules>
+      <module>api</module>
+      <module>impl</module>
+      <module>docs/reference</module>
+      <!-- 
+		<module>examples</module>
+		-->
+   </modules>
+
+   <developers>
+      <developer>
+         <name>Jordan Ganoff</name>
+         <roles>
+            <role>Project Lead</role>
+         </roles>
+         <email>jganoff@gmail.com</email>
+      </developer>
+   </developers>
+
+   <build>
+      <plugins>
+         <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.2-beta-5</version>
+            <configuration>
+               <descriptors>
+                  <descriptor>assembly.xml</descriptor>
+               </descriptors>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>jms</artifactId>
+            <version>1.1</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-extensions</artifactId>
+            <version>1.0.0.Alpha1</version>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
+
+   <scm>
+      <connection>scm:svn:http://anonsvn.jboss.org/repos/seam/modules/jms/trunk</connection>
+      <developerConnection>scm:svn:https://svn.jboss.org/repos/seam/modules/jms/trunk</developerConnection>
+      <url>http://fisheye.jboss.org/browse/Seam/modules/jms/trunk</url>
+   </scm>
+</project>

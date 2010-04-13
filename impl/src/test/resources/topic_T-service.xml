@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<server>
+    <mbean xmbean-dd="xmdesc/Topic-xmbean.xml" name="jboss.messaging.destination:service=Topic,name=T" code="org.jboss.jms.server.destination.TopicService">
+        <attribute name="JNDIName">jms/T</attribute>
+        <depends optional-attribute-name="ServerPeer">jboss.messaging:service=ServerPeer</depends>
+        <depends>jboss.messaging:service=PostOffice</depends>
+    </mbean>
+</server>

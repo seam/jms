@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
+<chapter id="gettingstarted">
+
+	<title>Getting started</title>
+
+	<para>
+		In this chapter we'll look at how to setup a Maven project to use the
+		JMS module, how to inject JMS resources and how to route events over
+		JMS.
+	</para>
+	
+	<section>
+		<title>Setting up a Maven project</title>
+		
+		<para>TODO</para>
+	</section>
+	
+	<section>
+		<title>Injection JMS Resources</title>
+		
+		<para>TODO</para>
+	</section>
+	
+	<section>
+		<title>Routing Events over JMS</title>
+		
+		<para>TODO</para>
+	</section>
+</chapter>
