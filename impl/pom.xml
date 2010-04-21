@@ -63,12 +63,4 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
-
-   <!--
-      No JBoss SVN yet <scm>
-      <connection>scm:svn:http://anonsvn.jboss.org/repos/seam/modules/jms/trunk</connection>
-      <developerConnection>scm:svn:https://svn.jboss.org/repos/seam/modules/jms/trunk</developerConnection>
-      <url>http://fisheye.jboss.org/browse/Seam/modules/jms/trunk</url>
-      </scm>
-   -->
 </project>

@@ -15,6 +15,10 @@
    <name>Seam JMS Parent</name>
    <version>3.0.0-SNAPSHOT</version>
 
+   <properties>
+      <seamJmsVersion>3.0.0-SNAPSHOT</seamJmsVersion>
+   </properties>
+
    <modules>
       <module>api</module>
       <module>impl</module>
@@ -22,6 +26,7 @@
       <!-- 
 		<module>examples</module>
 		-->
+      <module>dist</module>
    </modules>
 
    <developers>
@@ -33,20 +38,6 @@
          <email>jganoff@gmail.com</email>
       </developer>
    </developers>
-
-   <build>
-      <plugins>
-         <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.2-beta-5</version>
-            <configuration>
-               <descriptors>
-                  <descriptor>assembly.xml</descriptor>
-               </descriptors>
-            </configuration>
-         </plugin>
-      </plugins>
-   </build>
 
    <dependencyManagement>
       <dependencies>
@@ -60,6 +51,19 @@
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-extensions</artifactId>
             <version>1.0.0.Alpha1</version>
+         </dependency>
+
+         <!-- Modules defined again here to prevent need to explicitly specify version where used -->
+         <dependency>
+            <groupId>org.jboss.seam</groupId>
+            <artifactId>seam-jms</artifactId>
+            <version>${seamJmsVersion}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.jboss.seam</groupId>
+            <artifactId>seam-jms-impl</artifactId>
+            <version>${seamJmsVersion}</version>
          </dependency>
       </dependencies>
    </dependencyManagement>
