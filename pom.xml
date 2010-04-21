@@ -26,9 +26,18 @@
       <!-- 
 		<module>examples</module>
 		-->
-      <module>dist</module>
    </modules>
 
+   <!-- Only build the distribution if requested explicitly -->
+   <profiles>
+      <profile>
+         <id>distribution</id>
+         <modules>
+            <module>dist</module>
+         </modules>
+      </profile>
+   </profiles>
+   
    <developers>
       <developer>
          <name>Jordan Ganoff</name>
