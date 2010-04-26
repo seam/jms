@@ -15,7 +15,7 @@
    <description>Implementation of the Seam JMS Module</description>
 
    <properties>
-      <arquillian.version>1.0.0-SNAPSHOT</arquillian.version>
+      <arquillian.version>1.0.0.Alpha1</arquillian.version>
    </properties>
 
    <dependencies>
