@@ -241,6 +241,12 @@
 				<artifactId>seam-jms-impl</artifactId>
 				<version>${seam.jms.version}</version>
 			</dependency>
+   
+         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.5.10</version>
+         </dependency>
 		</dependencies>
 	</dependencyManagement>
 
