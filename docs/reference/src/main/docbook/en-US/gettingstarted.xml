@@ -23,30 +23,90 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
    "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
 <chapter id="gettingstarted">
+   <title>Getting Started</title>
 
-	<title>Getting started</title>
+   <para>
+      In this chapter we'll look at how to inject JMS resources and route events over JMS.
+   </para>
 
-	<para>
-		In this chapter we'll look at how to setup a Maven project to use the
-		JMS module, how to inject JMS resources and how to route events over
-		JMS.
-	</para>
-	
-	<section>
-		<title>Setting up a Maven project</title>
-		
-		<para>TODO</para>
-	</section>
-	
-	<section>
-		<title>Injection JMS Resources</title>
-		
-		<para>TODO</para>
-	</section>
-	
-	<section>
-		<title>Routing Events over JMS</title>
-		
-		<para>TODO</para>
-	</section>
+   <section id="injection">
+      <title>JMS Resource Injection</title>
+
+      <para>The following JMS resources are now available for injection:</para>
+
+      <itemizedlist>
+         <listitem>
+            javax.jms.Connection
+         </listitem>
+         <listitem>
+            javax.jms.Session
+         </listitem>
+      </itemizedlist>
+
+      <para>Destination-based resources:</para>
+      <itemizedlist>
+         <listitem>
+            javax.jms.Topic
+         </listitem>
+         <listitem>
+            javax.jms.Queue
+         </listitem>
+         <listitem>
+            javax.jms.TopicPublisher
+         </listitem>
+         <listitem>
+            javax.jms.QueueSender
+         </listitem>
+         <listitem>
+            javax.jms.TopicSubscriber
+         </listitem>
+         <listitem>
+            javax.jms.QueueReceiver
+         </listitem>
+      </itemizedlist>
+      
+      <!-- TODO  Clean up and move elsewhere
+      <tip>
+      You can use the <literal>@JmsSession</literal> qualifier when injecting <literal>javax.jms.Session</literal> to specify transacted and acknowledgement type:
+      <programlisting role="Java">
+@Inject @JmsSession(transacted=true, acknowledgementType=Session.CLIENT_ACKNOWLEDGE) Session s;
+</programlisting>
+      </tip>
+      -->
+
+      <section id="injection.destination-based">
+         <title>Destination Based Injection</title>
+
+         <para>
+            The injection of resources that are themselves a <literal>javax.jms.Destination</literal> or require one needs
+            a hint:  What destination do you want to work with?  This is provided by the 
+            <literal>@JmsDestination</literal> annotatation.
+         
+            <programlisting role="Java">
+@Inject @JmsDestination(jndiName="jms/MyTopic") Topic t;
+@Inject @JmsDestination(jndiName="jms/MyQueue") Queue q;</programlisting>
+         </para>
+            
+         <para>            
+            You should create your own qualifier to provide type safe injection of predefined destinations:
+            <programlisting role="Java">
+@Qualifier
+@JmsDestination(jndiName = "jms/MyTopic")
+public @interface MyTopic {}</programlisting>
+         </para>
+         
+         <para>
+         You can then use it in place of the <literal>@JmsDestination</literal> qualifier anywhere it's required:
+
+         <programlisting role="Java">
+@Inject @MyTopic TopicPublisher myPub;</programlisting>
+         </para>
+      </section>
+   </section>
+
+   <section id="routing-egress">
+      <title>Routing Events over JMS</title>
+
+      <para>TODO</para>
+   </section>
 </chapter>

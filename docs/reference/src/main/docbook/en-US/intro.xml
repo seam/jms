@@ -36,9 +36,9 @@
 		<title>Mission statement</title>
 
 		<para>
-			The missing of the JMS module for Seam 3 is to provide injection
-			of JMS resources and the necessary scaffolding for CDI event
-			propagation over JMS.
+			The JMS module for Seam 3 is to provide injection of JMS resources 
+         and the necessary scaffolding for a bidirectional propagation of 
+         CDI event over JMS.
 		</para>
 	</section>
 
@@ -47,7 +47,7 @@
 
 		<para>
 			The general goals can be divided into two categories: injection
-			of JMS resources and forwarding of events:
+			of JMS resources and bridging of events:
 		</para>
 
 		<itemizedlist>
@@ -70,12 +70,12 @@
 		</itemizedlist>
 
 		<itemizedlist>
-			<title>Forwarding of Events</title>
+			<title>Event Bridge</title>
 			<listitem>
-				Implicit - use a stereotype annotation when firing events
+				Egress: Routes CDI events to JMS destinations
 			</listitem>
 			<listitem>
-				Explicit - events and qualifiers are registered explicitly
+				Ingress: Fires CDI events based on the reception of JMS messages
 			</listitem>
 		</itemizedlist>
 	</section>

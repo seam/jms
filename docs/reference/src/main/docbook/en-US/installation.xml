@@ -20,12 +20,29 @@
   Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
    "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
-<book lang="en">
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="book_info.xml" />
-   <toc />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="intro.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="installation.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="gettingstarted.xml" />
-</book>
+<chapter id="installation">
+
+   <title>Installation</title>
+
+   <para>
+      Most features of Seam JMS are installed automatically by
+      including the seam-jms.jar in your application's library folder.
+      If you are using
+      <ulink
+         url="http://maven.apache.org/">Maven
+         </ulink>
+      as your build tool use the following dependency:
+   </para>
+      
+   <programlisting role="XML"><![CDATA[<dependency>
+   <groupId>org.jboss.seam</groupId>
+   <artifactId>seam-jms</artifactId>
+   <version>${seam.jms.version}</version>
+</dependency>]]></programlisting>
+
+   <tip>
+      <para>Define or replace the property ${seam.jms.version} with a valid version of Seam JMS.</para>
+   </tip>
+</chapter>
