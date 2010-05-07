@@ -27,7 +27,6 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
-import javax.jms.Session;
 import javax.jms.TopicSubscriber;
 
 import org.jboss.arquillian.api.Deployment;
@@ -49,7 +48,6 @@ public class SimpleBridgedEventTest
    }
    
    @Inject Connection c;
-   @Inject Session s;
    @Inject @JmsDestination(jndiName="jms/T") TopicSubscriber ts;
    @Inject @Bridged Event<String> event;
    
