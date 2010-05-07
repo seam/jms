@@ -31,15 +31,16 @@ import javax.jms.JMSException;
 
 import org.jboss.seam.jms.annotations.Module;
 
-public @ApplicationScoped
-class ConnectionProducer
+public class ConnectionProducer
 {
    @Produces
+   @ApplicationScoped
    @Module
    @Resource(mappedName = "ConnectionFactory")
    private ConnectionFactory cf;
 
    @Produces
+   @ApplicationScoped
    public Connection getConnection() throws Exception
    {
       return cf.createConnection();

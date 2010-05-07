@@ -19,56 +19,79 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms.test.inject;
+package org.jboss.seam.jms.test.transmit;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.jms.Connection;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.test.Util;
+import org.jboss.seam.jms.test.inject.InjectMessageConsumer;
+import org.jboss.seam.jms.test.inject.InjectMessageProducer;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class InjectConnectionTest
+public class SimpleTransmitMessageTest
 {
-
    @Deployment
    public static JavaArchive createDeployment()
    {
-      return Util.createDeployment(InjectConnectionTest.class);
+      JavaArchive a = Util.createDeployment(SimpleTransmitMessageTest.class);
+      a.addPackage(InjectMessageConsumer.class.getPackage());
+      return a;
    }
 
    @Inject
-   private Instance<Connection> c;
+   private Connection c;
    
    @Inject
-   private Instance<Connection> c2;
+   private Session s;
+  
+   @Inject
+   private Instance<InjectMessageConsumer> imc;
 
    @Inject
-   private Instance<Session> s;
+   private Instance<InjectMessageProducer> imp;
 
    @Test
-   public void injectConnection()
+   public void sendMessage_topic() throws JMSException
    {
-      Assert.assertNotNull(c.get());
-   }
-
-   @Test
-   public void injectSession()
-   {
-      Assert.assertNotNull(s.get());
+      sendMessage(imp.get().getTp(), imc.get().getTs());
    }
    
    @Test
-   public void sameConnection()
+   public void sendMessage_queue() throws JMSException
    {
-      Assert.assertEquals(c.get(), c2.get());
+      sendMessage(imp.get().getQs(), imc.get().getQr());
    }
-
+   
+   private void sendMessage(MessageProducer mp, MessageConsumer mc) throws JMSException
+   {
+      String expected = "test";
+      Message m = s.createTextMessage(expected);
+      c.start();
+      try
+      {
+         mp.send(m);
+         Message received = mc.receive(3000);
+         Assert.assertNotNull(received);
+         Assert.assertTrue(received instanceof TextMessage);
+         TextMessage tm = TextMessage.class.cast(received);
+         Assert.assertEquals(expected, tm.getText());
+      } finally
+      {
+         c.stop();
+      }
+   }
 }
