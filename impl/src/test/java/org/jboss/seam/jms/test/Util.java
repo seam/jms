@@ -52,4 +52,20 @@ public class Util
 
       return archive;
    }
+
+   public static JavaArchive addBeansXml(JavaArchive a, Class<?> c)
+   {
+      return addBeansXml(a, c, "beans.xml");
+   }
+   
+   public static JavaArchive addBeansXml(JavaArchive a, Class<?> c, String beansXmlLocalName)
+   {
+      return addManifestResource(a, c, beansXmlLocalName, "beans.xml");
+   }
+
+   public static JavaArchive addManifestResource(JavaArchive a, Class<?> c, String name, String archivePath)
+   {
+      String basePkg = c.getPackage().getName().replaceAll("\\.", "/");
+      return a.addManifestResource(basePkg + "/" + name, ArchivePaths.create(archivePath));
+   }
 }

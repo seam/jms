@@ -21,11 +21,19 @@
  */
 package org.jboss.seam.jms;
 
+import java.util.Set;
+
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Seam 3 JMS Portable Extension
@@ -34,8 +42,34 @@ import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
  */
 public class Seam3JmsExtension implements Extension
 {
+   private static final Logger log = LoggerFactory.getLogger(Seam3JmsExtension.class);
+   
+   public void afterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm)
+   {
+      Set<Bean<?>> configuration = bm.getBeans(JmsForwarding.class);
+      
+      if(configuration == null || configuration.isEmpty())
+      {
+         log.info("No {} registered.  Event forwarding disabled.", JmsForwarding.class.getSimpleName());
+      } else
+      {
+         for(Bean<?> c : configuration)
+         {
+            log.info("Creating {} for configuration {}", BridgedObserver.class.getSimpleName(), c);
+            CreationalContext<?> context = bm.createCreationalContext(c);
+            // TODO Verify configuration for correctness (e.g. getQualifiers() must contain only @Qualifier annotations)
+            JmsForwarding config = JmsForwarding.class.cast(bm.getReference(c, JmsForwarding.class, context));
+            BridgedObserver b = new BridgedObserver(bm, config);
+            abd.addObserverMethod(b);
+         }
+      }
+   }
+   
    public <X> void decorateAnnotatedType(@Observes ProcessAnnotatedType<X> pat)
    {
+      /**
+       * Flatten all @Annotated that define @JmsDestinations so that they may be injected  
+       */
       pat.setAnnotatedType(JmsAnnotatedTypeWrapper.decorate(pat.getAnnotatedType()));
    }
 }
