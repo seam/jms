@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -13,12 +12,12 @@
 	<artifactId>seam-jms-parent</artifactId>
 	<packaging>pom</packaging>
 	<name>Seam JMS Parent</name>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>3.0.0.Alpha1</version>
 
 	<url>http://sfwk.org/Seam3/JMSModule</url>
 
 	<properties>
-		<seam.jms.version>3.0.0-SNAPSHOT</seam.jms.version>
+		<seam.jms.version>3.0.0.Alpha1</seam.jms.version>
 		<weld.api.version>1.0-SP1</weld.api.version>
 		<emma.maven.plugin.version>1.0-alpha-2</emma.maven.plugin.version>
 		<emma4it.maven.plugin.version>1.3</emma4it.maven.plugin.version>
@@ -138,8 +137,7 @@
 									<configuration>
 										<tasks>
 											<echo message="Deploying emma jar to server lib directory" />
-											<copy file="${emma.jar.file}" todir="${env.JBOSS_HOME}/server/default/lib"
-												overwrite="true" />
+											<copy file="${emma.jar.file}" todir="${env.JBOSS_HOME}/server/default/lib" overwrite="true" />
 										</tasks>
 									</configuration>
 								</execution>
@@ -151,14 +149,12 @@
 									</goals>
 									<configuration>
 										<tasks>
-											<echo
-												message="Moving coverage.ec file to current modele from parent module" />
+											<echo message="Moving coverage.ec file to current modele from parent module" />
 											<property name="coverage.file" value="${basedir}/../coverage.ec" />
 											<waitfor maxwait="30" maxwaitunit="second">
 												<available file="${coverage.file}" />
 											</waitfor>
-											<move file="${coverage.file}" todir="${basedir}"
-												failonerror="false" />
+											<move file="${coverage.file}" todir="${basedir}" failonerror="false" />
 											<delete file="${basedir}/transaction.log" failonerror="false" />
 										</tasks>
 									</configuration>
@@ -251,8 +247,8 @@
 	</dependencyManagement>
 
 	<scm>
-		<connection>scm:svn:http://anonsvn.jboss.org/repos/seam/modules/jms/trunk</connection>
-		<developerConnection>scm:svn:https://svn.jboss.org/repos/seam/modules/jms/trunk</developerConnection>
-		<url>http://fisheye.jboss.org/browse/Seam/modules/jms/trunk</url>
+		<connection>scm:svn:http://anonsvn.jboss.org/repos/seam/modules/jms/tags/3.0.0.Alpha1</connection>
+		<developerConnection>scm:svn:https://svn.jboss.org/repos/seam/modules/jms/tags/3.0.0.Alpha1</developerConnection>
+		<url>http://fisheye.jboss.org/browse/Seam/modules/jms/tags/3.0.0.Alpha1</url>
 	</scm>
 </project>
