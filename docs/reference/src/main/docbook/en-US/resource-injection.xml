@@ -22,11 +22,11 @@
 -->
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
    "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
-<chapter id="gettingstarted">
-   <title>Getting Started</title>
+<chapter id="resource-injection">
+   <title>Resource Injection</title>
 
    <para>
-      In this chapter we'll look at how to inject JMS resources and route events over JMS.
+      In this chapter we'll look at how to inject some of the common JMS resource types.
    </para>
 
    <section id="injection">
@@ -64,15 +64,6 @@
             javax.jms.QueueReceiver
          </listitem>
       </itemizedlist>
-      
-      <!-- TODO  Clean up and move elsewhere
-      <tip>
-      You can use the <literal>@JmsSession</literal> qualifier when injecting <literal>javax.jms.Session</literal> to specify transacted and acknowledgement type:
-      <programlisting role="Java">
-@Inject @JmsSession(transacted=true, acknowledgementType=Session.CLIENT_ACKNOWLEDGE) Session s;
-</programlisting>
-      </tip>
-      -->
 
       <section id="injection.destination-based">
          <title>Destination Based Injection</title>
@@ -99,14 +90,25 @@ public @interface MyTopic {}</programlisting>
          You can then use it in place of the <literal>@JmsDestination</literal> qualifier anywhere it's required:
 
          <programlisting role="Java">
-@Inject @MyTopic TopicPublisher myPub;</programlisting>
+@Inject @MyTopic TopicPublisher myPub;
+...
+@Inject @MyTopic Topic myTopic;</programlisting>
          </para>
       </section>
-   </section>
-
-   <section id="routing-egress">
-      <title>Routing Events over JMS</title>
-
-      <para>TODO</para>
+      
+      <section id="injection.configuration">
+         <title>Resource Configuration</title>
+         
+         <para>
+             You can use the <literal>@JmsSession</literal> qualifier when injecting <literal>javax.jms.Session</literal> to specify transacted and acknowledgement type:
+      <programlisting role="Java">
+@Inject @JmsSession(transacted=true, acknowledgementType=Session.CLIENT_ACKNOWLEDGE) Session s;
+</programlisting>
+         </para>
+         
+         <para>
+            TODO Add other configuration options as they are implemented.
+         </para>
+      </section>
    </section>
 </chapter>

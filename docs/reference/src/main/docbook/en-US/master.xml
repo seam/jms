@@ -27,5 +27,6 @@
    <toc />
    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="intro.xml" />
    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="installation.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="gettingstarted.xml" />
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="resource-injection.xml" />
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="routing.xml" />
 </book>

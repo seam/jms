@@ -25,15 +25,20 @@
 <chapter id="installation">
 
    <title>Installation</title>
+   
+   <para>
+      Seam JMS can be used by including a few libraries in your application's library folder:
+   </para>
+   
+   <itemizedlist>
+      <listitem>seam-jms.jar</listitem>
+      <listitem>seam-jms-impl.jar</listitem>
+      <listitem>weld-extensions.jar</listitem>
+   </itemizedlist>
 
    <para>
-      Most features of Seam JMS are installed automatically by
-      including the seam-jms.jar in your application's library folder.
-      If you are using
-      <ulink
-         url="http://maven.apache.org/">Maven
-         </ulink>
-      as your build tool use the following dependency:
+      If you are using <ulink url="http://maven.apache.org/">Maven</ulink> as your build tool use the following 
+      dependency:
    </para>
       
    <programlisting role="XML"><![CDATA[<dependency>
@@ -43,6 +48,8 @@
 </dependency>]]></programlisting>
 
    <tip>
-      <para>Define or replace the property ${seam.jms.version} with a valid version of Seam JMS.</para>
+      <para>
+         Define or replace the property ${seam.jms.version} with a valid version of Seam JMS.
+      </para>
    </tip>
 </chapter>

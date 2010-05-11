@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source
+  Copyright 2010, Red Hat, Inc., and individual contributors
+  by the @authors tag. See the copyright.txt in the distribution for a
+  full listing of individual contributors.
+  
+  This is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation; either version 2.1 of
+  the License, or (at your option) any later version.
+  
+  This software is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  Lesser General Public License for more details.
+  
+  You should have received a copy of the GNU Lesser General Public
+  License along with this software; if not, write to the Free
+  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
+<chapter id="routing">
+   <title>Bridging the Gap</title>
+
+   <para>
+      This chapter is designed to detail how to configure the CDI to JMS event bridge.  Routing has two sides, sending
+      of events to JMS destinations and translating received messages from JMS destinations back into CDI events.  The
+      sections of this chapter will describe how to achieve both.
+   </para>
+
+   <section id="routing.egress">
+      <title>Routing CDI Events to JMS</title>
+
+      <para>
+         The act of simply sending a message to a JMS destination involves a few players:  Connection, Session, 
+         Destination, and the message itself.  Surely you can inject all required resources and perform the forwarding 
+         yourself but that takes away from the whole reason you're using a tool in the first place!  Let's let a little
+         configuration do the work for us.
+      </para>
+
+      <section id="routing.egress.config">
+         <title>Configuration</title>
+         <para>
+            Introducing the <literal>JmsForwarding</literal> interface:
+            <programlisting role="Java">@Named
+@ApplicationScoped
+public interface JmsForwarding
+{
+   public Set&lt;? extends Destination&gt; getDestinations();
+   public Type getEventType();
+   public Set&lt;Annotation&gt; getQualifiers();
+}</programlisting>
+         </para>
+
+         <para>
+            The <literal>JmsForwarding</literal> interface allows for simple mapping of event types, complete with 
+            qualifiers, to a set of destinations.  Every bean found implementing <literal>JmsForwarding</literal> will be 
+            used to create a bridge from CDI to the JMS world, forwarding all events that match the event type and 
+            qualifiers returned.
+         </para>
+
+         <caution>
+            <para>
+               <literal>JmsForwarding.getQualifiers()</literal> should only return annotations that are in fact 
+               qualifiers.  If not, Seam JMS will detect the problem and treat it as a deployment problem. 
+            </para>
+         </caution>
+
+         <tip>
+            <para>
+               Since your <literal>JmsForwarding</literal> objects are CDI Beans you can use dependency injection to 
+               obtain the destinations you wish to forward to.
+            </para>
+         </tip>
+      </section>
+
+      <section id="routing.egress.usage">
+      
+         <title>Usage</title>
+         <para>
+            With your configuration bean defined you can simply fire events that match a configuration's event type and
+            qualifiers and these events will be forwarded over JMS as object messages.
+            
+            <programlisting role="Java">@Inject @Bridged Event&lt;MyObject&gt; event;
+...
+event.fire(myObject);</programlisting>
+         </para>
+      </section>
+
+      <section id="routing.egress.sample">
+         <title>Egress Routing Sample</title>
+
+         <para>
+            Here's a sample configuration that will match any <literal>MyObject</literal> event fired with the 
+            qualifier <literal>@Bridged</literal>:
+
+            <programlisting role="Java">@Named
+@ApplicationScoped
+public class MyForwarding implements JmsForwarding
+{
+   @Inject @MyTopic private Topic t;
+
+   public Set&lt;? extends Destination&gt; getDestinations()
+   {
+      return Collections.singleton(t);
+   }
+
+   public Type getEventType()
+   {
+      return MyObject.class;
+   }
+
+   public Set&lt;Annotation&gt; getQualifiers()
+   {
+      return Collections.&lt;Annotation&gt; singleton(new AnnotationLiteral&lt;Bridged&gt;(){});
+   }
+}</programlisting>
+         </para>
+
+         <para>
+            And here's an event that will be sent to JMS due to the configuration above:
+            <programlisting role="Java">@Inject @Bridged Event&lt;MyObject&gt; event;
+...
+event.fire(myObject);</programlisting>
+         </para>
+   
+         <para>
+            TODO Reference to example showing this off
+         </para>
+      </section>
+   </section>
+
+   <section id="routing.ingress">
+      <title>CDI Events from JMS Messages</title>
+
+      <para>
+         
+      </para>
+      
+      <para>
+         TODO Add documentation when implemented
+      </para>
+   </section>
+</chapter>
+   
