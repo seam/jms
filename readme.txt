@@ -16,6 +16,6 @@ Injection of JMS Resources
  - Message Producer
  - Message Consumer
 
-Forwarding of Events
- - Implicit - use a stereotype annotation when firing events
- - Explicit - events and qualifiers are registered explicitly
+Event Bridge
+ - Egress: Routes CDI events to JMS destinations
+ - Ingress: Fires CDI events based on the reception of JMS messages
