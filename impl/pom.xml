@@ -3,19 +3,16 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.jboss.seam</groupId>
+		<groupId>org.jboss.seam.jms</groupId>
 		<artifactId>seam-jms-parent</artifactId>
 		<version>3.0.0.Alpha1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>seam-jms-impl</artifactId>
+	<artifactId>seam-jms</artifactId>
 	<name>Seam JMS Implementation</name>
 	<description>Implementation of the Seam JMS Module</description>
-
-	<properties>
-		<arquillian.version>1.0.0.Alpha1</arquillian.version>
-	</properties>
+   <packaging>jar</packaging>
 
 	<dependencies>
 		<dependency>
@@ -25,8 +22,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.jboss.seam</groupId>
-			<artifactId>seam-jms</artifactId>
+			<groupId>org.jboss.seam.jms</groupId>
+			<artifactId>seam-jms-api</artifactId>
+         <version>${project.version}</version>
 		</dependency>
 
 		<dependency>

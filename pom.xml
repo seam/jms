@@ -8,7 +8,7 @@
 		<version>9</version>
 	</parent>
 
-	<groupId>org.jboss.seam</groupId>
+	<groupId>org.jboss.seam.jms</groupId>
 	<artifactId>seam-jms-parent</artifactId>
 	<packaging>pom</packaging>
 	<name>Seam JMS Parent</name>
@@ -17,19 +17,18 @@
 	<url>http://sfwk.org/Seam3/JMSModule</url>
 
 	<properties>
-		<seam.jms.version>3.0.0.Alpha1</seam.jms.version>
 		<weld.api.version>1.0-SP1</weld.api.version>
 		<emma.maven.plugin.version>1.0-alpha-2</emma.maven.plugin.version>
 		<emma4it.maven.plugin.version>1.3</emma4it.maven.plugin.version>
 		<jboss.maven.plugin.version>1.4</jboss.maven.plugin.version>
 		<maven.antrun.plugin.version>1.3</maven.antrun.plugin.version>
 		<cargo.maven2.plugin.version>1.0-beta-2</cargo.maven2.plugin.version>
+		<arquillian.version>1.0.0.Alpha1</arquillian.version>
 	</properties>
 
 	<modules>
 		<module>api</module>
 		<module>impl</module>
-		<module>docs/reference</module>
 		<!-- 
 		<module>examples</module>
 		-->
@@ -40,6 +39,7 @@
 		<profile>
 			<id>distribution</id>
 			<modules>
+            <module>docs/reference</module>
 				<module>dist</module>
 			</modules>
 		</profile>
@@ -222,22 +222,6 @@
 				<version>1.0.0.Alpha1</version>
 			</dependency>
 
-			<!--
-				Modules defined again here to prevent need to explicitly specify
-				version where used
-			-->
-			<dependency>
-				<groupId>org.jboss.seam</groupId>
-				<artifactId>seam-jms</artifactId>
-				<version>${seam.jms.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.jboss.seam</groupId>
-				<artifactId>seam-jms-impl</artifactId>
-				<version>${seam.jms.version}</version>
-			</dependency>
-   
          <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

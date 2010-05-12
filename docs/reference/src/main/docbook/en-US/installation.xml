@@ -31,8 +31,8 @@
    </para>
    
    <itemizedlist>
+      <listitem>seam-jms-api.jar</listitem>
       <listitem>seam-jms.jar</listitem>
-      <listitem>seam-jms-impl.jar</listitem>
       <listitem>weld-extensions.jar</listitem>
    </itemizedlist>
 

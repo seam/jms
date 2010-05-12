@@ -1,6 +1,8 @@
 Seam JMS
 =============
 
+http://www.seamframework.org/Seam3/JMSModule
+
 Seam extends the CDI programming model into the messaging world by allowing you
 to inject JMS resources into your beans. Further, Seam bridges the CDI event 
 bus over JMS; this gives you the benefits of CDI-style type-safety for 

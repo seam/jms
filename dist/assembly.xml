@@ -25,6 +25,12 @@
          <directory>../docs/reference/target/docbook/publish</directory>
          <outputDirectory>seam-jms/doc/reference</outputDirectory>
       </fileSet>
+      
+      <!-- Pull in javadoc for api -->
+      <fileSet>
+         <directory>../api/target/site/apidocs</directory>
+         <outputDirectory>seam-jms/doc/apidocs</outputDirectory>
+      </fileSet>
 
       <!-- Layer sources from API and IMPL projects -->
       <fileSet>
@@ -50,8 +56,8 @@
          <outputDirectory>seam-jms/lib</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam:seam-jms</include>
-            <include>org.jboss.seam:seam-jms-impl</include>
+            <include>org.jboss.seam.jms:seam-jms-api</include>
+            <include>org.jboss.seam.jms:seam-jms</include>
             <include>org.jboss.weld:weld-extensions</include>
          </includes>
       </dependencySet>
