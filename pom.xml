@@ -12,7 +12,7 @@
 	<artifactId>seam-jms-parent</artifactId>
 	<packaging>pom</packaging>
 	<name>Seam JMS Parent</name>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>3.0.0.Alpha1</version>
 
 	<url>http://sfwk.org/Seam3/JMSModule</url>
 
@@ -231,8 +231,8 @@
 	</dependencyManagement>
 
 	<scm>
-		<connection>scm:svn:http://anonsvn.jboss.org/repos/seam/modules/jms/trunk</connection>
-		<developerConnection>scm:svn:https://svn.jboss.org/repos/seam/modules/jms/trunk</developerConnection>
-		<url>http://fisheye.jboss.org/browse/Seam/modules/jms/trunk</url>
+		<connection>scm:svn:http://anonsvn.jboss.org/repos/seam/modules/jms/tags/3.0.0.Alpha1</connection>
+		<developerConnection>scm:svn:https://svn.jboss.org/repos/seam/modules/jms/tags/3.0.0.Alpha1</developerConnection>
+		<url>http://fisheye.jboss.org/browse/Seam/modules/jms/tags/3.0.0.Alpha1</url>
 	</scm>
 </project>
