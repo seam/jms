@@ -9,7 +9,7 @@
       <relativePath>../pom.xml</relativePath>
    </parent>
 
-   <artifactId>seam-jms-dist</artifactId>
+   <artifactId>seam-jms-distribution</artifactId>
    <name>Seam JMS Distribution</name>
    <description>Builds a proper Seam JMS release distribution</description>
    <packaging>pom</packaging>
