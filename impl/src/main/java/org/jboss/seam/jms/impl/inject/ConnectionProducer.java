@@ -31,6 +31,16 @@ import javax.jms.JMSException;
 
 import org.jboss.seam.jms.annotations.Module;
 
+/**
+ * <p>Provides a producer of an unqualified (i.e., @Default) application-scoped JMS {@link Connection} object.</p>
+ *
+ * <p>According to the documentation, a {@link Connection} is a relatively heavyweight object because its creation
+ * involves setting up authentication and communication. Most clients will do all their messaging with a single
+ * connection. Only more advanced applications may use several connections, though it's considered atypical.
+ * Therefore, use of the application-scope is justified.</p>
+ *
+ * @author Jordan Ganoff
+ */
 public class ConnectionProducer
 {
    @Produces
