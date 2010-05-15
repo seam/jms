@@ -197,7 +197,18 @@
 			<roles>
 				<role>Project Lead</role>
 			</roles>
+         <url>http://community.jboss.org/people/jganoff</url>
 		</developer>
+      <developer>
+         <name>Dan Allen</name>
+         <organization>JBoss, by Red Hat</organization>
+         <organizationUrl>http://jboss.org</organizationUrl>
+         <timezone>EST</timezone>
+         <roles>
+            <role>Advisor</role>
+            <role>Contributor</role>
+         </roles>
+      </developer>
 	</developers>
 
 	<dependencyManagement>
