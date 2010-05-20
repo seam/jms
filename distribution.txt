@@ -1,5 +1,5 @@
 To create the Seam JMS distribution, run the following Maven command:
 
-mvn clean package -P distribution
+mvn clean package -Drelease
 
 Release binaries will be produced in: dist/target
