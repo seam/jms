@@ -23,7 +23,7 @@ package org.jboss.seam.jms.impl.inject;
 
 import static org.jboss.seam.jms.impl.inject.InjectionUtil.getExpectedQualifier;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.jms.Queue;
@@ -34,7 +34,7 @@ import javax.naming.NamingException;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Module;
 
-public @RequestScoped class DestinationProducer
+public @ApplicationScoped class DestinationProducer
 {
 
    @Produces
