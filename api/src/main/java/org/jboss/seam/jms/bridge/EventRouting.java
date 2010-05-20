@@ -19,20 +19,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms.test;
+package org.jboss.seam.jms.bridge;
 
+import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-import javax.inject.Qualifier;
-
-import org.jboss.seam.jms.annotations.JmsDestination;
-
-@Qualifier
+/**
+ * <p>
+ * Identifies an Event Routing configuration method. May be applied to a method
+ * of a bean class.
+ * </p>
+ * 
+ * <p>
+ * The method may return {@link EventBridge} or {@code List<}{@link EventBridge}{@code>}.
+ * </p>
+ * 
+ * <pre>
+ * &#064;Inject
+ * EventBridge bridge;
+ * 
+ * &#064;EventRouting
+ * public static Route eventRoutingConfig()
+ * {
+ *    return bridge.createRoute(EGRESS, Object.class).addQualifier(SPECIAL).connectTo(Topic.class, myTopic);
+ * }
+ * </pre>
+ * 
+ * @author Jordan Ganoff
+ */
+@Target( { METHOD })
 @Retention(RUNTIME)
-@JmsDestination(jndiName = "jms/Q")
-public @interface MyQueue
+@Documented
+public @interface EventRouting
 {
-
 }

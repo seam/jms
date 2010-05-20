@@ -19,31 +19,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms.test.bridge.simple;
+package org.jboss.seam.jms.bridge;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import javax.inject.Qualifier;
+import java.lang.reflect.Type;
 
 /**
- * Bridged Event Qualifer that denotes the implicit forwarding over JMS
+ * Facilitates bridging of events between CDI and a messaging system.
  * 
  * @author Jordan Ganoff
+ * 
  */
-@Qualifier
-@Documented
-@Inherited
-@Target( { FIELD, METHOD, TYPE, PARAMETER })
-@Retention(RUNTIME)
-public @interface Bridged
+public interface EventBridge
 {
+   /**
+    * Creates a routing for the provided payload (event) type.
+    * 
+    * @param type Type or direction of routing.
+    * @param payloadType Payload type to route. This is the event type we wish
+    *           to observe events for.
+    * @return 
+    */
+   public Route createRoute(RouteType type, Type payloadType);
 }

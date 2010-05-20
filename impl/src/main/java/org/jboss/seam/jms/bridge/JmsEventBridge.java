@@ -19,20 +19,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms.test;
+package org.jboss.seam.jms.bridge;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.reflect.Type;
 
-import java.lang.annotation.Retention;
-
-import javax.inject.Qualifier;
-
-import org.jboss.seam.jms.annotations.JmsDestination;
-
-@Qualifier
-@Retention(RUNTIME)
-@JmsDestination(jndiName = "jms/Q")
-public @interface MyQueue
+/**
+ * Default JMS Event Bridge
+ * 
+ * @author Jordan Ganoff
+ * 
+ */
+public class JmsEventBridge implements EventBridge
 {
-
+   public Route createRoute(RouteType type, Type payloadType)
+   {
+      return new RouteImpl(type, payloadType);
+   }
 }

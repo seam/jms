@@ -19,19 +19,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms.test.bridge.simple;
+package org.jboss.seam.jms.test.bridge;
 
-import javax.enterprise.event.Event;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-import javax.jms.TopicSubscriber;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.jms.annotations.JmsDestination;
+import org.jboss.seam.jms.bridge.EventBridge;
+import org.jboss.seam.jms.bridge.Route;
+import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
@@ -39,27 +36,32 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class SimpleBridgedEventTest
+public class JmsEventBridgeTest
 {
+
    @Deployment
    public static JavaArchive createDeployment()
    {
-      return Util.createDeployment(SimpleBridgedEventTest.class);
+      return Util.createDeployment(JmsEventBridgeTest.class);
    }
    
-   @Inject Connection c;
-   @Inject @JmsDestination(jndiName="jms/T") TopicSubscriber ts;
-   @Inject @Bridged Event<String> event;
+   @Inject Instance<EventBridge> bridge;
    
    @Test
-   public void forwardSimpleEvent() throws JMSException
+   public void injectBridge()
    {
-      String expected = "test";
-      c.start();
-      event.fire(expected);
-      Message m = ts.receive(3000);
-      Assert.assertTrue(m != null);
-      Assert.assertTrue(m instanceof ObjectMessage);
-      Assert.assertEquals(expected, ((ObjectMessage) m).getObject());
+      Assert.assertNotNull(bridge.get());
    }
+   
+   @Test
+   public void createRoute()
+   {
+      EventBridge b = bridge.get();
+      Route r = b.createRoute(RouteType.EGRESS, Object.class);
+      Assert.assertNotNull(r);
+      Assert.assertEquals(RouteType.EGRESS, r.getType());
+      Assert.assertEquals(Object.class, r.getPayloadType());
+   }
+   
+   
 }

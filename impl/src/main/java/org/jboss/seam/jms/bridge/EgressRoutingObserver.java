@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms;
+package org.jboss.seam.jms.bridge;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -42,23 +42,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Observer Method to observe events and forward (bridge) them over JMS.
+ * Forwards CDI events that match the provided {@link Route} configuration to
+ * the configured destinations.
  * 
  * @author Jordan Ganoff
+ * 
  */
 @Named
 @ApplicationScoped
-public class BridgedObserver implements ObserverMethod<Object>
+public class EgressRoutingObserver implements ObserverMethod<Object>
 {
-   private Logger log = LoggerFactory.getLogger(getClass());
-
+   private Logger log;
    private BeanManager bm;
-   private JmsForwarding config;
+   private Route routing;
 
-   public BridgedObserver(BeanManager bm, JmsForwarding config)
+   public EgressRoutingObserver(BeanManager bm, Route routing)
    {
       this.bm = bm;
-      this.config = config;
+      this.routing = routing;
+      log = LoggerFactory.getLogger(routing.getClass());
    }
 
    public Class<?> getBeanClass()
@@ -68,12 +70,12 @@ public class BridgedObserver implements ObserverMethod<Object>
 
    public Set<Annotation> getObservedQualifiers()
    {
-      return config.getQualifiers();
+      return routing.getQualifiers();
    }
 
    public Type getObservedType()
    {
-      return config.getEventType();
+      return routing.getPayloadType();
    }
 
    public Reception getReception()
@@ -95,13 +97,15 @@ public class BridgedObserver implements ObserverMethod<Object>
 
    private void forwardEvent(Object event, Set<Annotation> qualifiers)
    {
+      // TODO Allow session to be configured
       Set<Bean<?>> beans = bm.getBeans(Session.class);
       Bean<?> bean = bm.resolve(beans);
       Session s = (Session) bm.getReference(bean, Session.class, bm.createCreationalContext(bean));
       try
       {
-         for (Destination d : config.getDestinations())
+         for (Destination d : routing.getDestinations())
          {
+            log.info("Routing event {} over destination {}", event, d);
             try
             {
                Message m = s.createObjectMessage((Serializable) event);

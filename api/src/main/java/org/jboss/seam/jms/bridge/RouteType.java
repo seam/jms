@@ -19,20 +19,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms.test;
+package org.jboss.seam.jms.bridge;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Retention;
-
-import javax.inject.Qualifier;
-
-import org.jboss.seam.jms.annotations.JmsDestination;
-
-@Qualifier
-@Retention(RUNTIME)
-@JmsDestination(jndiName = "jms/Q")
-public @interface MyQueue
+/**
+ * All valid {@link Route} types.
+ * 
+ * @author Jordan Ganoff
+ * 
+ */
+public enum RouteType
 {
+   /**
+    * Inbound route. Any route defined as INGRESS will listen for objects
+    * delivered to the registered destinations and fire events for all that
+    * match the configuration as defined by the route.
+    */
+   INGRESS,
 
+   /**
+    * Outbound route. Any route defined as EGRESS will forward CDI events that
+    * match the configuration as defined by the route to the registered
+    * destinations.
+    */
+   EGRESS;
 }

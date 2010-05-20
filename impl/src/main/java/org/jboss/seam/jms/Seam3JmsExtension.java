@@ -21,16 +21,23 @@
  */
 package org.jboss.seam.jms;
 
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
+import org.jboss.seam.jms.bridge.EgressRoutingObserver;
+import org.jboss.seam.jms.bridge.EventRouting;
+import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,24 +51,62 @@ public class Seam3JmsExtension implements Extension
 {
    private static final Logger log = LoggerFactory.getLogger(Seam3JmsExtension.class);
    
-   public void afterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm)
+   private Set<AnnotatedMethod<?>> eventRoutingRegistry = new HashSet<AnnotatedMethod<?>>();
+   
+   public void buildRoutes(@Observes final AfterBeanDiscovery abd, final BeanManager bm)
    {
-      Set<Bean<?>> configuration = bm.getBeans(JmsForwarding.class);
-      
-      if(configuration == null || configuration.isEmpty())
+      for (AnnotatedMethod<?> m : eventRoutingRegistry)
       {
-         log.info("No {} registered.  Event forwarding disabled.", JmsForwarding.class.getSimpleName());
-      } else
-      {
-         for(Bean<?> c : configuration)
+         Type beanType = m.getDeclaringType().getBaseType();
+         Set<Bean<?>> configBeans = bm.getBeans(beanType);
+         for (Bean<?> configBean : configBeans)
          {
-            log.info("Creating {} for configuration {}", BridgedObserver.class.getSimpleName(), c);
-            CreationalContext<?> context = bm.createCreationalContext(c);
-            // TODO Verify configuration for correctness (e.g. getQualifiers() must contain only @Qualifier annotations)
-            JmsForwarding config = JmsForwarding.class.cast(bm.getReference(c, JmsForwarding.class, context));
-            BridgedObserver b = new BridgedObserver(bm, config);
-            abd.addObserverMethod(b);
+            CreationalContext<?> context = bm.createCreationalContext(configBean);
+            Object config = null;
+            try
+            {
+               Object bean = bm.getReference(configBean, beanType, context);
+               config = m.getJavaMember().invoke(bean);
+            } catch (Exception ex)
+            {
+               abd.addDefinitionError(new IllegalArgumentException(EventRouting.class.getSimpleName() + " could not be loaded from bean " + beanType + ": " + ex.getMessage(), ex));
+            }
+            log.debug("Building " + Route.class.getSimpleName() + "s from " + beanType);
+            if (config != null)
+            {
+               if (Collection.class.isAssignableFrom(config.getClass()))
+               {
+                  Collection<?> routes = Collection.class.cast(config);
+                  for (Object route : routes)
+                  {
+                     if(route == null || !Route.class.isAssignableFrom(route.getClass()))
+                     {
+                        abd.addDefinitionError(new IllegalArgumentException("Non-" + Route.class.getSimpleName() + " found when loading " + EventRouting.class.getSimpleName() + " from " + beanType + ": " + route));
+                     }
+                     createRoute(abd, bm, (Route) route);
+                  }
+               } else if(Route.class.isAssignableFrom(config.getClass()))
+               {
+                  createRoute(abd, bm, Route.class.cast(config));
+               } else
+               {
+                  abd.addDefinitionError(new IllegalArgumentException(EventRouting.class + " methods must return a " + Collection.class + "<? extends " + Route.class + "> or " + Route.class + " directly."));
+               }
+            }
          }
+      }
+   }
+   
+   private void createRoute(final AfterBeanDiscovery abd, final BeanManager bm, final Route route)
+   {
+      switch(route.getType())
+      {
+         case EGRESS:
+            abd.addObserverMethod(new EgressRoutingObserver(bm, route));
+            log.debug("Built " + route);
+            break;
+         default:
+            abd.addDefinitionError(new IllegalArgumentException("Unsupported routing type: " + route.getType()));
       }
    }
    
@@ -71,5 +116,16 @@ public class Seam3JmsExtension implements Extension
        * Flatten all @Annotated that define @JmsDestinations so that they may be injected  
        */
       pat.setAnnotatedType(JmsAnnotatedTypeWrapper.decorate(pat.getAnnotatedType()));
+   }
+   
+   public void registerEventRouting(@Observes ProcessAnnotatedType<?> pat)
+   {
+      for(AnnotatedMethod<?> m : pat.getAnnotatedType().getMethods())
+      {
+         if(m.isAnnotationPresent(EventRouting.class))
+         {
+            eventRoutingRegistry.add(m);
+         }
+      }
    }
 }

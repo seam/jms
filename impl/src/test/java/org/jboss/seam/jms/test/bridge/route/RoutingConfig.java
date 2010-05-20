@@ -19,52 +19,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms.test.bridge.simple;
+package org.jboss.seam.jms.test.bridge.route;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Set;
+import static org.jboss.seam.jms.bridge.RouteType.EGRESS;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.jms.Destination;
-import javax.jms.Topic;
+import javax.jms.Queue;
 
-import org.jboss.seam.jms.JmsForwarding;
 import org.jboss.seam.jms.annotations.JmsDestination;
+import org.jboss.seam.jms.bridge.EventBridge;
+import org.jboss.seam.jms.bridge.EventRouting;
+import org.jboss.seam.jms.bridge.Route;
 
-@Named
-@ApplicationScoped
-public class MyForwarding implements JmsForwarding
+public class RoutingConfig
 {
-   private static final Set<Annotation> BRIDGED = Collections.<Annotation> singleton(new AnnotationLiteral<Bridged>()
+   @Inject EventBridge bridge;
+
+   @Inject @JmsDestination(jndiName = "queue/DLQ") Queue q;
+   
+   private static final AnnotationLiteral<Bridged> BRIDGED = new AnnotationLiteral<Bridged>()
    {
       private static final long serialVersionUID = 1L;
-   });
-
-   // Use Instance<?> here to get around problem of topic not being deployed before Weld processes 
-   // deployment and tries to inject topics
-   @Inject
-   @JmsDestination(jndiName="jms/T")
-   private Instance<Topic> t;
+   };
    
-   public Set<? extends Destination> getDestinations()
+   @EventRouting
+   public Route getRoute()
    {
-      return Collections.singleton(t.get());
+      return bridge.createRoute(EGRESS, String.class).addQualifiers(BRIDGED).connectTo(Queue.class, q);
    }
-
-   public Type getEventType()
-   {
-      return Object.class;
-   }
-
-   public Set<Annotation> getQualifiers()
-   {
-      return BRIDGED;
-   }
-
 }

@@ -19,15 +19,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms.test.bridge.simple;
+package org.jboss.seam.jms.bridge;
 
-import javax.inject.Qualifier;
+import javax.enterprise.context.ApplicationScoped;
+import javax.jms.Message;
+import javax.jms.MessageListener;
 
-import org.jboss.seam.jms.annotations.JmsDestination;
-
-@Qualifier
-@JmsDestination(jndiName="jms/T")
-public @interface MyTopic
+@ApplicationScoped
+public class RoutingListener implements MessageListener
 {
+
+   public void onMessage(Message arg0)
+   {
+      // TODO Auto-generated method stub
+      
+   }
 
 }
