@@ -42,7 +42,7 @@
    </para>
       
    <programlisting role="XML"><![CDATA[<dependency>
-   <groupId>org.jboss.seam</groupId>
+   <groupId>org.jboss.seam.jms</groupId>
    <artifactId>seam-jms</artifactId>
    <version>${seam.jms.version}</version>
 </dependency>]]></programlisting>
