@@ -24,10 +24,12 @@ package org.jboss.seam.jms.test.inject;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.jms.Connection;
+import javax.jms.JMSException;
 import javax.jms.Session;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.jms.annotations.JmsSession;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
@@ -52,6 +54,10 @@ public class InjectConnectionTest
 
    @Inject
    private Instance<Session> s;
+   
+   @Inject
+   @JmsSession(transacted=false, acknowledgementMode=Session.CLIENT_ACKNOWLEDGE)
+   private Instance<Session> configuredSession;
 
    @Test
    public void injectConnection()
@@ -70,5 +76,13 @@ public class InjectConnectionTest
    {
       Assert.assertEquals(c.get(), c2.get());
    }
-
+   
+   @Test
+   public void configuredSession() throws JMSException
+   {
+      Session s = configuredSession.get();
+      Assert.assertNotNull(s);
+      Assert.assertFalse(s.getTransacted());
+      Assert.assertEquals(Session.CLIENT_ACKNOWLEDGE, s.getAcknowledgeMode());
+   }
 }

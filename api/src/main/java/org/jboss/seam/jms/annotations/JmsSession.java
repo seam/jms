@@ -23,7 +23,6 @@ package org.jboss.seam.jms.annotations;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -31,23 +30,22 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.enterprise.util.Nonbinding;
-import javax.inject.Qualifier;
-
 /**
- * Seam 3 JMS Qualifier for {@link javax.jms.Session} types
+ * Specifies configuration for injected {@link javax.jms.Session}
  * 
  * @author Jordan Ganoff
  */
-@Qualifier
 @Documented
-@Target( { FIELD, METHOD, TYPE, PARAMETER })
+@Target( { FIELD, METHOD, PARAMETER })
 @Retention(RUNTIME)
 public @interface JmsSession
 {
-   @Nonbinding
-   public abstract boolean transacted() default false;
-
-   @Nonbinding
-   public abstract int acknowledgementType() default javax.jms.Session.AUTO_ACKNOWLEDGE;
+   /**
+    * @see javax.jms.Session#getTransacted()
+    */
+   boolean transacted() default false;
+   /**
+    * @see javax.jms.Session#getAcknowledgeMode()
+    */
+   int acknowledgementMode() default javax.jms.Session.AUTO_ACKNOWLEDGE;
 }

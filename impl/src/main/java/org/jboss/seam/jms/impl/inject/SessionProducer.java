@@ -21,8 +21,6 @@
  */
 package org.jboss.seam.jms.impl.inject;
 
-import static org.jboss.seam.jms.impl.inject.InjectionUtil.getExpectedQualifier;
-
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
@@ -37,17 +35,17 @@ public @RequestScoped
 class SessionProducer
 {
    @Produces
-   public Session getGenericSession(InjectionPoint ip, Connection c) throws JMSException
-   {
-      return c.createSession(false, Session.AUTO_ACKNOWLEDGE);
-   }
-
-   @Produces
-   @JmsSession
    public Session getSession(InjectionPoint ip, Connection c) throws JMSException
    {
-      JmsSession s = getExpectedQualifier(JmsSession.class, ip.getQualifiers());
-      return c.createSession(s.transacted(), s.acknowledgementType());
+      if (ip != null && ip.getAnnotated().isAnnotationPresent(JmsSession.class))
+      {
+         JmsSession s = ip.getAnnotated().getAnnotation(JmsSession.class);
+         return c.createSession(s.transacted(), s.acknowledgementMode());
+      }
+      else
+      {
+         return c.createSession(false, Session.AUTO_ACKNOWLEDGE);
+      }
    }
 
    public void closeSession(@Disposes Session s) throws JMSException
