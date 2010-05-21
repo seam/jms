@@ -30,105 +30,88 @@
       of events to JMS destinations and translating received messages from JMS destinations back into CDI events.  The
       sections of this chapter will describe how to achieve both.
    </para>
+   
+   <section id="routing.bridge">
+      <title>Event Routing</title>
+      
+      <para>
+         Simply sending or receiving a message over JMS involves a few players:  Connection, Session, Destination, and
+         the message itself.  Surely you can inject all required resources and perform the routing yourself but that 
+         takes away from the whole reason you're using a tool in the first place!  Let's let a little configuration do 
+         the work for us.
+      </para>
+      
+      <section id="routing.bridge.route">
+         <title>Routes</title>
+         
+         <para>
+            Routing CDI events to and from JMS can be configured by defining a <literal>Route</literal>. As you would
+            normally create an observer method for an event you can define a route to control which events get 
+            forwarded to what destination.  Or conversely, what message types sent to which destinations generate CDI 
+            events.
+
+            <programlisting role="Java">public interface Route
+   {
+      public &lt;D extends Destination&gt; Route connectTo(Class&lt;D&gt; d, D destination);
+      public Route addQualifiers(Annotation... qualifiers);
+   }</programlisting>
+         </para>
+
+         <para>
+            Routes allows for simple mapping of event types, complete with qualifiers, to a set of destinations.  They 
+            can be configured by adding qualifiers and providing destinations they should interact with and are created
+            from an <literal>EventBridge</literal>. Here's a simple route that forwards CDI events on to a queue:
+            
+            <programlisting role="Java">@Inject EventBridge bridge;
+@EventRouting public Route registerMyRoute()
+{
+   return bridge.createRoute(RouteType.EGRESS, MyEvent.class).connectTo(Queue.class, myQueue);
+}</programlisting>
+         </para>
+      </section>
+      
+      <section id="routing.bridge.eventrouting">
+         <title>@EventRouting</title>
+
+         <para>
+            Routes are registered by returning them from a bean method annotated with <literal>@EventRouting</literal>:
+            
+            <programlisting role="Java">@Inject EventBridge bridge;
+@EventRouting public Route myConfig()
+{
+   return bridge.createRoute(RouteType.INGRESS, MyEvent.class).connectTo(Queue.class, myTopic);
+}</programlisting>
+         </para>
+      </section>
+   </section>
 
    <section id="routing.egress">
       <title>Routing CDI Events to JMS</title>
 
       <para>
-         The act of simply sending a message to a JMS destination involves a few players:  Connection, Session, 
-         Destination, and the message itself.  Surely you can inject all required resources and perform the forwarding 
-         yourself but that takes away from the whole reason you're using a tool in the first place!  Let's let a little
-         configuration do the work for us.
-      </para>
-
-      <section id="routing.egress.config">
-         <title>Configuration</title>
-         <para>
-            Introducing the <literal>JmsForwarding</literal> interface:
-            <programlisting role="Java">@Named
-@ApplicationScoped
-public interface JmsForwarding
+         Forwarding CDI events to JMS is configured by creating an egress route.  Let's say you wanted to forward all
+         <literal>MyEvent</literal> events with <literal>@Bridged</literal> qualifier to the queue 
+         <literal>jms/EventQueue</literal>.  Simple,  register a route:
+         
+         <programlisting role="Java">@Inject EventBridge bridge;
+@Inject @JmsDestination(jndiName="jms/EventQueue") Queue eventQueue;
+AnnotationLiteral&lt;Bridged&gt; BRIDGED = new AnnotationLiteral&lt;Bridged&gt;() {};
+@EventRouting public Route registerMyEventRoute()
 {
-   public Set&lt;? extends Destination&gt; getDestinations();
-   public Type getEventType();
-   public Set&lt;Annotation&gt; getQualifiers();
+   return bridge.createRoute(RouteType.EGRESS, MyEvent.class).addQualifiers(BRIDGED).connectTo(Queue.class, eventQueue);
 }</programlisting>
-         </para>
-
-         <para>
-            The <literal>JmsForwarding</literal> interface allows for simple mapping of event types, complete with 
-            qualifiers, to a set of destinations.  Every bean found implementing <literal>JmsForwarding</literal> will be 
-            used to create a bridge from CDI to the JMS world, forwarding all events that match the event type and 
-            qualifiers returned.
-         </para>
-
-         <caution>
-            <para>
-               <literal>JmsForwarding.getQualifiers()</literal> should only return annotations that are in fact 
-               qualifiers.  If not, Seam JMS will detect the problem and treat it as a deployment problem. 
-            </para>
-         </caution>
-
-         <tip>
-            <para>
-               Since your <literal>JmsForwarding</literal> objects are CDI Beans you can use dependency injection to 
-               obtain the destinations you wish to forward to.
-            </para>
-         </tip>
-      </section>
+      </para>
 
       <section id="routing.egress.usage">
       
          <title>Usage</title>
          <para>
-            With your configuration bean defined you can simply fire events that match a configuration's event type and
+            With your routing defined you can simply fire events that match the route's payload type and
             qualifiers and these events will be forwarded over JMS as object messages.
             
-            <programlisting role="Java">@Inject @Bridged Event&lt;MyObject&gt; event;
+            <programlisting role="Java">@Inject @Bridged Event&lt;MyEvent&gt; event;
 ...
-event.fire(myObject);</programlisting>
-         </para>
-      </section>
-
-      <section id="routing.egress.sample">
-         <title>Egress Routing Sample</title>
-
-         <para>
-            Here's a sample configuration that will match any <literal>MyObject</literal> event fired with the 
-            qualifier <literal>@Bridged</literal>:
-
-            <programlisting role="Java">@Named
-@ApplicationScoped
-public class MyForwarding implements JmsForwarding
-{
-   @Inject @MyTopic private Topic t;
-
-   public Set&lt;? extends Destination&gt; getDestinations()
-   {
-      return Collections.singleton(t);
-   }
-
-   public Type getEventType()
-   {
-      return MyObject.class;
-   }
-
-   public Set&lt;Annotation&gt; getQualifiers()
-   {
-      return Collections.&lt;Annotation&gt; singleton(new AnnotationLiteral&lt;Bridged&gt;(){});
-   }
-}</programlisting>
-         </para>
-
-         <para>
-            And here's an event that will be sent to JMS due to the configuration above:
-            <programlisting role="Java">@Inject @Bridged Event&lt;MyObject&gt; event;
-...
-event.fire(myObject);</programlisting>
-         </para>
-   
-         <para>
-            TODO Reference to example showing this off
+event.fire(myEvent);</programlisting>
          </para>
       </section>
    </section>
@@ -136,10 +119,6 @@ event.fire(myObject);</programlisting>
    <section id="routing.ingress">
       <title>CDI Events from JMS Messages</title>
 
-      <para>
-         
-      </para>
-      
       <para>
          TODO Add documentation when implemented
       </para>
