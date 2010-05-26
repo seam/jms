@@ -15,7 +15,6 @@
 	<description>Reference Guide for the Seam JMS Module</description>
 
 	<properties>
-		<mpjdocbook.version>2.2.0</mpjdocbook.version>
 		<pdf.name>${project.artifactId}.pdf</pdf.name>
 	</properties>
 
@@ -24,67 +23,11 @@
 			<plugin>
 				<groupId>org.jboss.maven.plugins</groupId>
 				<artifactId>maven-jdocbook-plugin</artifactId>
-				<version>${mpjdocbook.version}</version>
-				<extensions>true</extensions>
-
-				<dependencies>
-					<dependency>
-						<groupId>org.jboss</groupId>
-						<artifactId>jbossorg-docbook-xslt</artifactId>
-						<version>1.1.0</version>
-					</dependency>
-					<dependency>
-						<groupId>org.jboss</groupId>
-						<artifactId>jbossorg-jdocbook-style</artifactId>
-						<version>1.1.0</version>
-						<type>jdocbook-style</type>
-					</dependency>
-				</dependencies>
-
 				<configuration>
 					<sourceDirectory>src/main/docbook</sourceDirectory>
-					<sourceDocumentName>master.xml</sourceDocumentName>
-					<masterTranslation>en-US</masterTranslation>
 					<imageResource>
 						<directory>${pom.basedir}/src/main/docbook/en-US</directory>
-						<includes>
-							<include>images/*.png</include>
-							<include>images/*.jpg</include>
-						</includes>
 					</imageResource>
-					<formats>
-						<format>
-							<formatName>pdf</formatName>
-							<stylesheetResource>classpath://xslt/org/jboss/pdf.xsl</stylesheetResource>
-							<finalName>${pdf.name}</finalName>
-						</format>
-						<format>
-							<formatName>html</formatName>
-							<stylesheetResource>classpath://xslt/org/jboss/xhtml.xsl</stylesheetResource>
-							<finalName>index.html</finalName>
-						</format>
-						<format>
-							<formatName>html_single</formatName>
-							<stylesheetResource>classpath://xslt/org/jboss/xhtml-single.xsl</stylesheetResource>
-							<finalName>index.html</finalName>
-						</format>
-					</formats>
-					<options>
-						<xincludeSupported>true</xincludeSupported>
-						<xmlTransformerType>saxon</xmlTransformerType>
-						<docbookVersion>1.72.0</docbookVersion>
-						<transformerParameters>
-							<property>
-								<name>javax.xml.parsers.DocumentBuilderFactory</name>
-								<value>org.apache.xerces.jaxp.DocumentBuilderFactoryImpl</value>
-							</property>
-							<property>
-								<name>javax.xml.parsers.SAXParserFactory</name>
-								<value>org.apache.xerces.jaxp.SAXParserFactoryImpl</value>
-							</property>
-						</transformerParameters>
-						<localeSeparator>-</localeSeparator>
-					</options>
 				</configuration>
 			</plugin>
          <plugin>
