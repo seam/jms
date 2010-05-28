@@ -8,58 +8,63 @@
       <format>zip</format>
    </formats>
    
-   <includeBaseDirectory>false</includeBaseDirectory>
+   <baseDirectory>${project.build.finalName}-${project.version}</baseDirectory>
 
+   <!-- Add distribution files -->
    <fileSets>
       <fileSet>
-         <directory>..</directory>
-         <outputDirectory>seam-jms</outputDirectory>
+         <directory>src/main/assembly</directory>
+         <outputDirectory>.</outputDirectory>
          <includes>
             <include>readme.txt</include>
             <include>lgpl.txt</include>
          </includes>
       </fileSet>
-      
-      <!-- Pull in docbook artifacts -->
-      <fileSet>
-         <directory>../docs/reference/target/docbook/publish</directory>
-         <outputDirectory>seam-jms/doc/reference</outputDirectory>
-      </fileSet>
-      
-      <!-- Pull in javadoc for api -->
-      <fileSet>
-         <directory>../api/target/site/apidocs</directory>
-         <outputDirectory>seam-jms/doc/apidocs</outputDirectory>
-      </fileSet>
-
-      <!-- Layer sources from API and IMPL projects -->
-      <fileSet>
-         <directory>../api/src/main/java</directory>
-         <outputDirectory>seam-jms/source</outputDirectory>
-         <includes>
-            <include>**</include>
-         </includes>
-      </fileSet>
-
-      <fileSet>
-         <directory>../impl/src/main/java</directory>
-         <outputDirectory>seam-jms/source</outputDirectory>
-         <includes>
-            <include>**</include>
-         </includes>
-      </fileSet>
    </fileSets>
 
-   <!-- Add necessary binaries -->
    <dependencySets>
+      <!-- Add necessary binaries -->
       <dependencySet>
-         <outputDirectory>seam-jms/lib</outputDirectory>
+         <outputDirectory>artifacts</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
             <include>org.jboss.seam.jms:seam-jms-api</include>
             <include>org.jboss.seam.jms:seam-jms</include>
-            <include>org.jboss.weld:weld-extensions</include>
          </includes>
+         <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      </dependencySet>
+      <!-- Add necessary dependencies -->
+      <dependencySet>
+         <outputDirectory>lib</outputDirectory>
+         <useProjectArtifact>false</useProjectArtifact>
+         <useTransitiveDependencies>true</useTransitiveDependencies>
+         <excludes>
+            <exclude>org.jboss.seam.jms:*</exclude>
+         </excludes>
+         <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      </dependencySet>
+      <!-- Pull in javadoc for api -->
+      <dependencySet>
+         <outputDirectory>doc/apidocs</outputDirectory>
+         <unpack>true</unpack>
+         <useProjectArtifact>false</useProjectArtifact>
+         <includes>
+            <include>org.jboss.seam.jms:seam-jms-api:jar:javadoc</include>
+         </includes>
+      </dependencySet>
+      <!-- Pull in docbook artifacts -->
+      <dependencySet>
+         <outputDirectory>doc/reference</outputDirectory>
+         <unpack>true</unpack>
+         <useProjectArtifact>false</useProjectArtifact>
+         <includes>
+            <include>org.jboss.seam.jms:seam-jms-reference-guide</include>
+         </includes>
+         <unpackOptions>
+            <excludes>
+               <exclude>META-INF/</exclude>
+            </excludes>
+         </unpackOptions>
       </dependencySet>
    </dependencySets>
 </assembly>

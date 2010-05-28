@@ -13,6 +13,24 @@
    <name>Seam JMS API</name>
    <description>Client View of the Seam JMS Module</description>
    <packaging>jar</packaging>
+   
+   <!-- TODO Remove -->
+   <!-- Snapshots repo to get parent -->
+   <repositories>
+      <repository>
+         <id>oss.sonatype.org/jboss-snapshots</id>
+         <name>JBoss (Nexus) Snapshots Repository</name>
+         <url>http://oss.sonatype.org/content/repositories/jboss-snapshots
+         </url>
+         <releases>
+            <enabled>false</enabled>
+         </releases>
+         <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+         </snapshots>
+      </repository>
+   </repositories>
 
    <dependencies>
       <dependency>
@@ -31,7 +49,12 @@
    
    <profiles>
       <profile>
-         <id>distribution</id>
+         <id>javadoc</id>
+         <activation>
+            <property>
+               <name>dist</name>
+            </property>
+         </activation>
          <build>
             <plugins>
                <plugin>

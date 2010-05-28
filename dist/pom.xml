@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
@@ -13,12 +14,48 @@
    <name>Seam JMS Distribution</name>
    <description>Builds a proper Seam JMS release distribution</description>
    <packaging>pom</packaging>
+   
+   <!-- TODO Remove -->
+   <!-- Snapshots repo to get parent -->
+   <repositories>
+      <repository>
+         <id>oss.sonatype.org/jboss-snapshots</id>
+         <name>JBoss (Nexus) Snapshots Repository</name>
+         <url>http://oss.sonatype.org/content/repositories/jboss-snapshots
+         </url>
+         <releases>
+            <enabled>false</enabled>
+         </releases>
+         <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+         </snapshots>
+      </repository>
+   </repositories>
+
+   <properties>
+      <maven.deploy.skip>true</maven.deploy.skip>
+   </properties>
 
    <dependencies>
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms-api</artifactId>
          <version>${project.version}</version>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.jboss.seam.jms</groupId>
+         <artifactId>seam-jms-api</artifactId>
+         <version>${project.version}</version>
+         <classifier>sources</classifier>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.jboss.seam.jms</groupId>
+         <artifactId>seam-jms-api</artifactId>
+         <version>${project.version}</version>
+         <classifier>javadoc</classifier>
       </dependency>
 
       <dependency>
@@ -28,31 +65,34 @@
       </dependency>
       
       <dependency>
-         <groupId>org.jboss.weld</groupId>
-         <artifactId>weld-extensions</artifactId>
+         <groupId>org.jboss.seam.jms</groupId>
+         <artifactId>seam-jms</artifactId>
+         <version>${project.version}</version>
+         <classifier>sources</classifier>
       </dependency>
+      
+      <dependency>
+         <groupId>org.jboss.seam.jms</groupId>
+         <artifactId>seam-jms</artifactId>
+         <version>${project.version}</version>
+         <classifier>javadoc</classifier>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.jms</groupId>
+         <artifactId>seam-jms-reference-guide</artifactId>
+         <version>${project.version}</version>
+         <type>war</type>
+      </dependency>
+
    </dependencies>
-   
+
    <build>
+      <finalName>seam-jms</finalName>
       <plugins>
          <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <executions>
-               <execution>
-                  <id>distribution</id>
-                  <phase>package</phase>
-                  <goals>
-                     <goal>single</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin>
-         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <configuration>
-               <skip>true</skip>
-            </configuration>
+            <artifactId>maven-assembly-plugin</artifactId>
          </plugin>
       </plugins>
    </build>
