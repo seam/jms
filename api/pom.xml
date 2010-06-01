@@ -47,31 +47,4 @@
       </dependency>
    </dependencies>
    
-   <profiles>
-      <profile>
-         <id>javadoc</id>
-         <activation>
-            <property>
-               <name>dist</name>
-            </property>
-         </activation>
-         <build>
-            <plugins>
-               <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-javadoc-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>javadoc-api</id>
-                        <phase>package</phase>
-                        <goals>
-                           <goal>javadoc</goal>
-                        </goals>
-                     </execution>
-                  </executions>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-   </profiles>   
 </project>
