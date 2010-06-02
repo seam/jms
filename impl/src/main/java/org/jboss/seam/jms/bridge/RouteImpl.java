@@ -71,7 +71,7 @@ public class RouteImpl implements Route
    {
       destinations.add(Destination.class.cast(destination));
       return this;
-   };
+   }
 
    public RouteType getType()
    {
