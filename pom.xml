@@ -17,24 +17,6 @@
 
    <url>http://sfwk.org/Seam3/JMSModule</url>
 
-   <!-- TODO Remove -->
-   <!-- Snapshots repo to get parent -->
-   <repositories>
-      <repository>
-         <id>oss.sonatype.org/jboss-snapshots</id>
-         <name>JBoss (Nexus) Snapshots Repository</name>
-         <url>http://oss.sonatype.org/content/repositories/jboss-snapshots
-         </url>
-         <releases>
-            <enabled>false</enabled>
-         </releases>
-         <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-         </snapshots>
-      </repository>
-   </repositories>
-
    <properties>
       <seam.version>3.0.0.b01</seam.version>
    </properties>
@@ -99,7 +81,6 @@
                   <plugin>
                      <groupId>org.codehaus.cargo</groupId>
                      <artifactId>cargo-maven2-plugin</artifactId>
-                     <version>${cargo.maven2.plugin.version}</version>
                      <executions>
                         <execution>
                            <id>start-container</id>
