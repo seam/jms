@@ -23,7 +23,7 @@
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms-api</artifactId>
-         <scope>provided</scope>
+         <optional>true</optional>
       </dependency>
 
       <dependency>
@@ -31,7 +31,7 @@
          <artifactId>seam-jms-api</artifactId>
          <version>${project.version}</version>
          <classifier>sources</classifier>
-         <scope>provided</scope>
+         <optional>true</optional>
       </dependency>
 
       <dependency>
@@ -39,13 +39,13 @@
          <artifactId>seam-jms-api</artifactId>
          <version>${project.version}</version>
          <classifier>javadoc</classifier>
-         <scope>provided</scope>
+         <optional>true</optional>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms</artifactId>
-         <scope>provided</scope>
+         <optional>true</optional>
       </dependency>
 
       <dependency>
@@ -53,7 +53,7 @@
          <artifactId>seam-jms</artifactId>
          <version>${project.version}</version>
          <classifier>sources</classifier>
-         <scope>provided</scope>
+         <optional>true</optional>
       </dependency>
 
       <dependency>
@@ -61,7 +61,7 @@
          <artifactId>seam-jms</artifactId>
          <version>${project.version}</version>
          <classifier>javadoc</classifier>
-         <scope>provided</scope>
+         <optional>true</optional>
       </dependency>
 
       <dependency>
@@ -69,7 +69,7 @@
          <artifactId>seam-jms-reference-guide</artifactId>
          <version>${project.version}</version>
          <type>war</type>
-         <scope>provided</scope>
+         <optional>true</optional>
       </dependency>
 
    </dependencies>
