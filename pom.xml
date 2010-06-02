@@ -43,6 +43,10 @@
       <module>api</module>
       <module>impl</module>
    </modules>
+   
+   <prerequisites>
+      <maven>3.0</maven>
+   </prerequisites>
 
 
    <dependencyManagement>
