@@ -29,7 +29,7 @@ import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.impl.inject.ConnectionProducer;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.Archives;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
 
@@ -38,7 +38,7 @@ public class Util
 
    public static JavaArchive createDeployment(Class<?> c)
    {
-      JavaArchive archive = Archives.create("test.jar", JavaArchive.class);
+      JavaArchive archive = ShrinkWrap.create("test.jar", JavaArchive.class);
       archive.addPackage(Util.class.getPackage());
       archive.addPackage(Seam3JmsExtension.class.getPackage());
       archive.addPackage(JmsSession.class.getPackage());

@@ -14,24 +14,6 @@
    <name>Seam JMS Distribution</name>
    <description>Builds a proper Seam JMS release distribution</description>
    <packaging>pom</packaging>
-   
-   <!-- TODO Remove -->
-   <!-- Snapshots repo to get parent -->
-   <repositories>
-      <repository>
-         <id>oss.sonatype.org/jboss-snapshots</id>
-         <name>JBoss (Nexus) Snapshots Repository</name>
-         <url>http://oss.sonatype.org/content/repositories/jboss-snapshots
-         </url>
-         <releases>
-            <enabled>false</enabled>
-         </releases>
-         <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-         </snapshots>
-      </repository>
-   </repositories>
 
    <properties>
       <maven.deploy.skip>true</maven.deploy.skip>
@@ -41,10 +23,9 @@
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms-api</artifactId>
-         <version>${project.version}</version>
          <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms-api</artifactId>
@@ -52,7 +33,7 @@
          <classifier>sources</classifier>
          <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms-api</artifactId>
@@ -64,10 +45,9 @@
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms</artifactId>
-         <version>${project.version}</version>
          <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms</artifactId>
@@ -75,7 +55,7 @@
          <classifier>sources</classifier>
          <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms</artifactId>

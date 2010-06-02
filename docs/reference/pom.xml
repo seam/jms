@@ -24,12 +24,6 @@
          <plugin>
             <groupId>org.jboss.maven.plugins</groupId>
             <artifactId>maven-jdocbook-plugin</artifactId>
-            <configuration>
-               <sourceDirectory>src/main/docbook</sourceDirectory>
-               <imageResource>
-                  <directory>${pom.basedir}/src/main/docbook/en-US</directory>
-               </imageResource>
-            </configuration>
          </plugin>
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
