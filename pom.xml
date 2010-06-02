@@ -111,8 +111,7 @@
                            <type>existing</type>
                            <home>${env.JBOSS_HOME}/server/default</home>
                            <properties>
-                              <cargo.jboss.configuration>default
-                              </cargo.jboss.configuration>
+                              <cargo.jboss.configuration>default</cargo.jboss.configuration>
                               <cargo.rmi.port>1099</cargo.rmi.port>
                            </properties>
                         </configuration>
