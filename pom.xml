@@ -82,7 +82,7 @@
                   <plugin>
                      <groupId>org.codehaus.cargo</groupId>
                      <artifactId>cargo-maven2-plugin</artifactId>
-                     <version>1.0-beta-2</version>
+                     <version>1.0.1</version>
                      <executions>
                         <execution>
                            <id>start-container</id>
@@ -103,7 +103,7 @@
                      <configuration>
                         <wait>false</wait>
                         <container>
-                           <containerId>jboss5x</containerId>
+                           <containerId>jboss6x</containerId>
                            <home>${env.JBOSS_HOME}</home>
                            <timeout>300000</timeout> <!-- 5 minutes -->
                         </container>
@@ -112,7 +112,7 @@
                            <home>${env.JBOSS_HOME}/server/default</home>
                            <properties>
                               <cargo.jboss.configuration>default</cargo.jboss.configuration>
-                              <cargo.rmi.port>1099</cargo.rmi.port>
+                              <cargo.rmi.port>1090</cargo.rmi.port>
                            </properties>
                         </configuration>
                      </configuration>
