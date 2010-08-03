@@ -19,34 +19,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms.annotations;
+package org.jboss.seam.jms.test.inject.session;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import java.lang.annotation.RetentionPolicy;
 
-/**
- * Specifies configuration for injected {@link javax.jms.Session}
- * 
- * @author Jordan Ganoff
- */
-@Documented
-@Target( { FIELD, METHOD, ANNOTATION_TYPE, PARAMETER })
-@Retention(RUNTIME)
-public @interface JmsSession
+import javax.jms.Session;
+
+import org.jboss.seam.jms.annotations.JmsSession;
+
+@Retention(RetentionPolicy.RUNTIME)
+@JmsSession(transacted = false, acknowledgementMode = Session.DUPS_OK_ACKNOWLEDGE)
+public @interface EventSession
 {
-   /**
-    * @see javax.jms.Session#getTransacted()
-    */
-   boolean transacted() default false;
-   /**
-    * @see javax.jms.Session#getAcknowledgeMode()
-    */
-   int acknowledgementMode() default javax.jms.Session.AUTO_ACKNOWLEDGE;
 }

@@ -33,7 +33,7 @@ import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.test.Util;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +42,7 @@ import org.junit.runner.RunWith;
 public class RouteTest
 {
    @Deployment
-   public static JavaArchive createDeployment()
+   public static Archive<?> createDeployment()
    {
       return Util.createDeployment(RouteTest.class);
    }

@@ -19,6 +19,7 @@
 
    <properties>
       <seam.version>3.0.0.b01</seam.version>
+      <arquillian.version>1.0.0.Alpha3</arquillian.version>
    </properties>
 
    <modules>

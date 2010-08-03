@@ -28,46 +28,37 @@ import org.jboss.seam.jms.annotations.JmsSession;
 import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.impl.inject.ConnectionProducer;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
+import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.shrinkwrap.impl.base.asset.ByteArrayAsset;
 
 public class Util
 {
+   private static final String HORNETQ_JMS_DEPLOYMENT_CONFIG = "hornetq-jms.xml";
 
-   public static JavaArchive createDeployment(Class<?> c)
+   public static Archive<?> createDeployment(Class<?>... classes)
    {
-      JavaArchive archive = ShrinkWrap.create("test.jar", JavaArchive.class);
-      archive.addPackage(Util.class.getPackage());
-      archive.addPackage(Seam3JmsExtension.class.getPackage());
-      archive.addPackage(JmsSession.class.getPackage());
-      archive.addPackage(ConnectionProducer.class.getPackage());
-      archive.addPackage(JmsAnnotatedTypeWrapper.class.getPackage());
-      archive.addPackage(Route.class.getPackage());
-      archive.addManifestResource(new ByteArrayAsset("<beans/>".getBytes()), ArchivePaths.create("beans.xml"));
-      archive.addServiceProvider(Extension.class, Seam3JmsExtension.class);
-      archive.addManifestResource("topic_T-service.xml");
-      archive.addManifestResource("queue_Q-service.xml");
+      JavaArchive ejbModule = ShrinkWrap.create(JavaArchive.class, "test.jar");
+      ejbModule.addPackage(Util.class.getPackage());
+      ejbModule.addPackage(Seam3JmsExtension.class.getPackage());
+      ejbModule.addPackage(JmsSession.class.getPackage());
+      ejbModule.addPackage(ConnectionProducer.class.getPackage());
+      ejbModule.addPackage(JmsAnnotatedTypeWrapper.class.getPackage());
+      ejbModule.addPackage(Route.class.getPackage());
+      ejbModule.addManifestResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
+      ejbModule.addServiceProvider(Extension.class, Seam3JmsExtension.class);
+      for (Class<?> c : classes)
+      {
+         ejbModule.addPackage(c.getPackage());
+      }
 
-      archive.addPackage(c.getPackage());
+      EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "test.ear");
+      ear.addModule(ejbModule);
+      ear.addResource(HORNETQ_JMS_DEPLOYMENT_CONFIG); // TODO Add this conditionally based on test profile to support other containers
 
-      return archive;
-   }
-
-   public static JavaArchive addBeansXml(JavaArchive a, Class<?> c)
-   {
-      return addBeansXml(a, c, "beans.xml");
-   }
-   
-   public static JavaArchive addBeansXml(JavaArchive a, Class<?> c, String beansXmlLocalName)
-   {
-      return addManifestResource(a, c, beansXmlLocalName, "beans.xml");
-   }
-
-   public static JavaArchive addManifestResource(JavaArchive a, Class<?> c, String name, String archivePath)
-   {
-      String basePkg = c.getPackage().getName().replaceAll("\\.", "/");
-      return a.addManifestResource(basePkg + "/" + name, ArchivePaths.create(archivePath));
+      return ear;
    }
 }

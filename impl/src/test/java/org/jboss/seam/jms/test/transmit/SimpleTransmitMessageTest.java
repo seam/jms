@@ -36,7 +36,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.seam.jms.test.inject.InjectMessageConsumer;
 import org.jboss.seam.jms.test.inject.InjectMessageProducer;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,11 +45,9 @@ import org.junit.runner.RunWith;
 public class SimpleTransmitMessageTest
 {
    @Deployment
-   public static JavaArchive createDeployment()
+   public static Archive<?> createDeployment()
    {
-      JavaArchive a = Util.createDeployment(SimpleTransmitMessageTest.class);
-      a.addPackage(InjectMessageConsumer.class.getPackage());
-      return a;
+      return Util.createDeployment(SimpleTransmitMessageTest.class, InjectMessageConsumer.class);
    }
 
    @Inject

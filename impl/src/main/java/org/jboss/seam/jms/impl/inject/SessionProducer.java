@@ -21,6 +21,8 @@
  */
 package org.jboss.seam.jms.impl.inject;
 
+import java.lang.annotation.Annotation;
+
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
@@ -30,6 +32,7 @@ import javax.jms.JMSException;
 import javax.jms.Session;
 
 import org.jboss.seam.jms.annotations.JmsSession;
+import org.jboss.seam.jms.annotations.JmsSessionSelector;
 
 public @RequestScoped
 class SessionProducer
@@ -37,18 +40,49 @@ class SessionProducer
    @Produces
    public Session getSession(InjectionPoint ip, Connection c) throws JMSException
    {
-      if (ip != null && ip.getAnnotated().isAnnotationPresent(JmsSession.class))
+      JmsSession s = null;
+      if (ip != null)
       {
-         JmsSession s = ip.getAnnotated().getAnnotation(JmsSession.class);
-         return c.createSession(s.transacted(), s.acknowledgementMode());
+         // Check for JmsSession annotation
+         if (ip.getAnnotated().isAnnotationPresent(JmsSession.class))
+         {
+            s = ip.getAnnotated().getAnnotation(JmsSession.class);
+         }
+         else
+         {
+            // Check meta-annotations
+            for (Annotation a : ip.getAnnotated().getAnnotations())
+            {
+               if (a.annotationType().isAnnotationPresent(JmsSession.class))
+               {
+                  s = a.annotationType().getAnnotation(JmsSession.class);
+               }
+            }
+         }
+         if (s != null)
+         {
+            return c.createSession(s.transacted(), s.acknowledgementMode());
+         }
       }
-      else
-      {
-         return c.createSession(false, Session.AUTO_ACKNOWLEDGE);
-      }
+
+      // Default case where we cannot find an annotation
+      return c.createSession(false, Session.AUTO_ACKNOWLEDGE);
    }
 
    public void closeSession(@Disposes Session s) throws JMSException
+   {
+      s.close();
+   }
+
+   @Produces
+   @JmsSessionSelector
+   public Session getSelectedSession(InjectionPoint ip, Connection c) throws JMSException
+   {
+      JmsSessionSelector s = ip.getAnnotated().getAnnotation(JmsSessionSelector.class);
+      return c.createSession(s.transacted(), s.acknowledgementMode());
+   }
+   
+   public void closeSelectedSession(@Disposes @JmsSessionSelector Session s) throws JMSException
    {
       s.close();
    }

@@ -100,9 +100,9 @@ public @interface MyTopic {}</programlisting>
          <title>Resource Configuration</title>
          
          <para>
-             You can use the <literal>@JmsSession</literal> qualifier when injecting <literal>javax.jms.Session</literal> to specify transacted and acknowledgement type:
+             You can use the <literal>@JmsSession</literal> annotation when injecting <literal>javax.jms.Session</literal> to specify transacted and acknowledgement mode:
       <programlisting role="Java">
-@Inject @JmsSession(transacted=true, acknowledgementType=Session.CLIENT_ACKNOWLEDGE) Session s;
+@Inject @JmsSession(transacted=false, acknowledgementMode=Session.CLIENT_ACKNOWLEDGE) Session s;
 </programlisting>
          </para>
          

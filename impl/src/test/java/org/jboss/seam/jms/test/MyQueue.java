@@ -31,7 +31,7 @@ import org.jboss.seam.jms.annotations.JmsDestination;
 
 @Qualifier
 @Retention(RUNTIME)
-@JmsDestination(jndiName = "jms/Q")
+@JmsDestination(jndiName = "/jms/Q")
 public @interface MyQueue
 {
 

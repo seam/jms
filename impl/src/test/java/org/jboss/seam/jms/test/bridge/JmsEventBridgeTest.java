@@ -30,7 +30,7 @@ import org.jboss.seam.jms.bridge.EventBridge;
 import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.test.Util;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +40,7 @@ public class JmsEventBridgeTest
 {
 
    @Deployment
-   public static JavaArchive createDeployment()
+   public static Archive<?> createDeployment()
    {
       return Util.createDeployment(JmsEventBridgeTest.class);
    }
@@ -62,6 +62,4 @@ public class JmsEventBridgeTest
       Assert.assertEquals(RouteType.EGRESS, r.getType());
       Assert.assertEquals(Object.class, r.getPayloadType());
    }
-   
-   
 }

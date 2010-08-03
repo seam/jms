@@ -27,17 +27,17 @@ import javax.jms.JMSException;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.test.Util;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(Arquillian.class)
+@RunWith(Arquillian.class) 
 public class InjectDestinationTest
 {
    @Deployment
-   public static JavaArchive createDeployment()
+   public static Archive<?> createDeployment()
    {
       return Util.createDeployment(InjectDestinationTest.class);
    }
