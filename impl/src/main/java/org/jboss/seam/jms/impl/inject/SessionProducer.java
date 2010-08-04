@@ -22,6 +22,7 @@
 package org.jboss.seam.jms.impl.inject;
 
 import java.lang.annotation.Annotation;
+import java.util.Iterator;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Disposes;
@@ -78,7 +79,21 @@ class SessionProducer
    @JmsSessionSelector
    public Session getSelectedSession(InjectionPoint ip, Connection c) throws JMSException
    {
-      JmsSessionSelector s = ip.getAnnotated().getAnnotation(JmsSessionSelector.class);
+      JmsSessionSelector s = null;
+      Iterator<Annotation> qualifiers = ip.getQualifiers().iterator();
+      while(qualifiers.hasNext())
+      {
+         Annotation qualifier = qualifiers.next();
+         if(JmsSessionSelector.class.isAssignableFrom(qualifier.getClass()))
+         {
+            s = (JmsSessionSelector) qualifier;
+            break;
+         }
+      }
+      if(s == null)
+      {
+         throw new IllegalArgumentException("Injection point " + ip + " does not have @" + JmsSessionSelector.class.getSimpleName() + " qualifier");
+      }
       return c.createSession(s.transacted(), s.acknowledgementMode());
    }
    

@@ -98,8 +98,6 @@ public class InjectSessionTest
       Assert.assertEquals(Session.AUTO_ACKNOWLEDGE, s.getAcknowledgeMode());
    }
 
-   // TODO Fix this so session selectors work
-   @Ignore
    @Test
    public void injectSessionWithLiteral() throws JMSException
    {
