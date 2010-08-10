@@ -78,47 +78,6 @@
          <build>
             <pluginManagement>
                <plugins>
-
-                  <!-- Specify this locally. Arquillian will support this properly soon -->
-                  <plugin>
-                     <groupId>org.codehaus.cargo</groupId>
-                     <artifactId>cargo-maven2-plugin</artifactId>
-                     <version>1.0.1</version>
-                     <executions>
-                        <execution>
-                           <id>start-container</id>
-                           <phase>process-test-classes</phase>
-                           <goals>
-                              <goal>start</goal>
-                           </goals>
-                        </execution>
-                        <execution>
-                           <id>stop-container</id>
-                           <phase>test</phase>
-                           <goals>
-                              <goal>stop</goal>
-                           </goals>
-                        </execution>
-                     </executions>
-
-                     <configuration>
-                        <wait>false</wait>
-                        <container>
-                           <containerId>jboss6x</containerId>
-                           <home>${env.JBOSS_HOME}</home>
-                           <timeout>300000</timeout> <!-- 5 minutes -->
-                        </container>
-                        <configuration>
-                           <type>existing</type>
-                           <home>${env.JBOSS_HOME}/server/default</home>
-                           <properties>
-                              <cargo.jboss.configuration>default</cargo.jboss.configuration>
-                              <cargo.rmi.port>1090</cargo.rmi.port>
-                           </properties>
-                        </configuration>
-                     </configuration>
-                  </plugin>
-
                   <plugin>
                      <groupId>org.apache.maven.plugins</groupId>
                      <artifactId>maven-antrun-plugin</artifactId>
@@ -131,8 +90,7 @@
                            </goals>
                            <configuration>
                               <tasks>
-                                 <echo
-                                    message="Deploying emma jar to server lib directory" />
+                                 <echo message="Deploying emma jar to server lib directory" />
                                  <copy file="${emma.jar.file}"
                                     todir="${env.JBOSS_HOME}/server/default/lib"
                                     overwrite="true" />
@@ -147,15 +105,7 @@
                            </goals>
                            <configuration>
                               <tasks>
-                                 <echo
-                                    message="Moving coverage.ec file to current modele from parent module" />
-                                 <property name="coverage.file"
-                                    value="${basedir}/../coverage.ec" />
-                                 <waitfor maxwait="30"
-                                    maxwaitunit="second">
-                                    <available file="${coverage.file}" />
-                                 </waitfor>
-                                 <move file="${coverage.file}"
+                                 <move file="${env.JBOSS_HOME}/bin/coverage.ec"
                                     todir="${basedir}" failonerror="false" />
                                  <delete file="${basedir}/transaction.log"
                                     failonerror="false" />
@@ -164,7 +114,6 @@
                         </execution>
                      </executions>
                   </plugin>
-
                </plugins>
             </pluginManagement>
          </build>

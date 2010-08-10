@@ -76,10 +76,6 @@
                   <artifactId>maven-surefire-plugin</artifactId>
                </plugin>
                <plugin>
-                  <groupId>org.codehaus.cargo</groupId>
-                  <artifactId>cargo-maven2-plugin</artifactId>
-               </plugin>
-               <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-antrun-plugin</artifactId>
                </plugin>
