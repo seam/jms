@@ -143,10 +143,10 @@
    </developers>
 
    <scm>
-      <connection>scm:svn:http://anonsvn.jboss.org/repos/seam/modules/jms/trunk
+      <connection>scm:git:git://github.com/seam/jms.git
       </connection>
-      <developerConnection>scm:svn:https://svn.jboss.org/repos/seam/modules/jms/trunk
+      <developerConnection>scm:git:git@github.com:seam/jms.git
       </developerConnection>
-      <url>http://fisheye.jboss.org/browse/Seam/modules/jms/trunk</url>
+      <url>http://github.com/seam/jms</url>
    </scm>
 </project>
