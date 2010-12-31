@@ -34,13 +34,12 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import org.jboss.logging.Logger;
 
 import org.jboss.seam.jms.bridge.EgressRoutingObserver;
 import org.jboss.seam.jms.bridge.EventRouting;
 import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Seam 3 JMS Portable Extension
@@ -49,7 +48,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Seam3JmsExtension implements Extension
 {
-   private static final Logger log = LoggerFactory.getLogger(Seam3JmsExtension.class);
+   private static final Logger log = Logger.getLogger(Seam3JmsExtension.class);
    
    private Set<AnnotatedMethod<?>> eventRoutingRegistry = new HashSet<AnnotatedMethod<?>>();
    
