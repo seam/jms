@@ -18,7 +18,7 @@
    <url>http://sfwk.org/Seam3/JMSModule</url>
 
    <properties>
-      <seam.version>3.0.0.b01</seam.version>
+      <seam.version>3.0.0.b04</seam.version>
       <arquillian.version>1.0.0.Alpha3</arquillian.version>
    </properties>
 
@@ -37,7 +37,7 @@
       
          <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>seam</artifactId>
+            <artifactId>seam-bom</artifactId>
             <version>${seam.version}</version>
             <scope>import</scope>
             <type>pom</type>
