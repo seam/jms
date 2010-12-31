@@ -19,7 +19,7 @@
 
    <properties>
       <seam.version>3.0.0.b04</seam.version>
-      <arquillian.version>1.0.0.Alpha3</arquillian.version>
+      <arquillian.version>1.0.0.Alpha4</arquillian.version>
    </properties>
 
    <modules>
@@ -56,6 +56,12 @@
             <version>${project.version}</version>
          </dependency>
          
+         <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>jms</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
       </dependencies>
    </dependencyManagement>
 

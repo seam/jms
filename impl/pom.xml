@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <jbossas.version>6.0.0.20100721-M4</jbossas.version>
+        <jbossas.version>6.0.0.Final</jbossas.version>
     </properties>
 
     <dependencies>
@@ -40,8 +40,6 @@
         <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>jms</artifactId>
-            <version>1.1</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
