@@ -55,10 +55,10 @@ public class Util
          ejbModule.addPackage(c.getPackage());
       }
 
-      EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "test.ear");
+      /*EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "test.ear");
       ear.addModule(ejbModule);
       ear.addResource(HORNETQ_JMS_DEPLOYMENT_CONFIG); // TODO Add this conditionally based on test profile to support other containers
-
-      return ear;
+      */
+      return ejbModule;//ear;
    }
 }
