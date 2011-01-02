@@ -40,7 +40,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-@Ignore
 public class RouteTest
 {
    @Deployment

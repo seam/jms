@@ -63,7 +63,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object>
 
    public Class<?> getBeanClass()
    {
-      return null;
+      return getClass();
    }
 
    public Set<Annotation> getObservedQualifiers()
