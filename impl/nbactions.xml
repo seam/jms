@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>test.single</actionName>
+            <goals>
+                <goal>test-compile</goal>
+                <goal>surefire:test</goal>
+            </goals>
+            <properties>
+                <test>${className}</test>
+                <Env.JBOSS_HOME>/apps/jboss/jboss-6.0.0.Final</Env.JBOSS_HOME>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>jbossas-managed-6</activatedProfile>
+            </activatedProfiles>
+        </action>
+    </actions>

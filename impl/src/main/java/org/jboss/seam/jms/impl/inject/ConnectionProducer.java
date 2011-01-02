@@ -41,13 +41,19 @@ import org.jboss.seam.jms.annotations.Module;
  *
  * @author Jordan Ganoff
  */
+@ApplicationScoped
 public class ConnectionProducer
 {
+   @Resource(mappedName = "ConnectionFactory")
+   private ConnectionFactory cf;
+
    @Produces
    @ApplicationScoped
    @Module
-   @Resource(mappedName = "ConnectionFactory")
-   private ConnectionFactory cf;
+   public ConnectionFactory getConnectionFactory()
+   {
+       return cf;
+   }
 
    @Produces
    @ApplicationScoped

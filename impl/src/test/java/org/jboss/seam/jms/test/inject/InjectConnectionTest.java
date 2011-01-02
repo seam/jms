@@ -22,13 +22,23 @@
 package org.jboss.seam.jms.test.inject;
 
 import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.Extension;
 import javax.inject.Inject;
 import javax.jms.Connection;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.jms.Seam3JmsExtension;
+import org.jboss.seam.jms.annotations.JmsSession;
+import org.jboss.seam.jms.bridge.Route;
+import org.jboss.seam.jms.impl.inject.ConnectionProducer;
+import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +50,7 @@ public class InjectConnectionTest
    @Deployment
    public static Archive<?> createDeployment()
    {
-      return Util.createDeployment(InjectConnectionTest.class);
+       return Util.createDeployment(InjectConnectionTest.class);
    }
 
    @Inject

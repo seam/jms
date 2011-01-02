@@ -37,9 +37,7 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.logging.Logger;
 
 /**
  * Forwards CDI events that match the provided {@link Route} configuration to
@@ -60,7 +58,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object>
    {
       this.bm = bm;
       this.routing = routing;
-      log = LoggerFactory.getLogger(routing.getClass());
+      log = Logger.getLogger(routing.getClass());
    }
 
    public Class<?> getBeanClass()
@@ -105,7 +103,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object>
       {
          for (Destination d : routing.getDestinations())
          {
-            log.info("Routing event {} over destination {}", event, d);
+            log.infof("Routing event {} over destination {}", event, d);
             try
             {
                Message m = s.createObjectMessage((Serializable) event);

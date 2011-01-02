@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.jboss.seam</groupId>
       <artifactId>seam-parent</artifactId>
-      <version>3</version>
+      <version>5</version>
    </parent>
 
    <groupId>org.jboss.seam.jms</groupId>
@@ -18,8 +18,8 @@
    <url>http://sfwk.org/Seam3/JMSModule</url>
 
    <properties>
-      <seam.version>3.0.0.b01</seam.version>
-      <arquillian.version>1.0.0.Alpha3</arquillian.version>
+      <seam.version>3.0.0.b04</seam.version>
+      <arquillian.version>1.0.0.Alpha4</arquillian.version>
    </properties>
 
    <modules>
@@ -37,7 +37,7 @@
       
          <dependency>
             <groupId>org.jboss.seam</groupId>
-            <artifactId>seam</artifactId>
+            <artifactId>seam-bom</artifactId>
             <version>${seam.version}</version>
             <scope>import</scope>
             <type>pom</type>
@@ -56,6 +56,12 @@
             <version>${project.version}</version>
          </dependency>
          
+         <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>jms</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
       </dependencies>
    </dependencyManagement>
 
