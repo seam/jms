@@ -32,8 +32,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 public class Util
 {
@@ -55,10 +55,9 @@ public class Util
          ejbModule.addPackage(c.getPackage());
       }
 
-      EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class, "test.ear");
-      ear.addModule(ejbModule);
-      ear.addResource(HORNETQ_JMS_DEPLOYMENT_CONFIG); // TODO Add this conditionally based on test profile to support other containers
-
-      return ear;
+      WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
+      war.addLibraries(ejbModule);
+      war.addManifestResource(HORNETQ_JMS_DEPLOYMENT_CONFIG); // TODO Add this conditionally based on test profile to support other containers
+      return war;
    }
 }
