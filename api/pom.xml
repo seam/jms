@@ -10,9 +10,12 @@
    </parent>
 
    <artifactId>seam-jms-api</artifactId>
+   <packaging>jar</packaging>
+
    <name>Seam JMS API</name>
    <description>Client View of the Seam JMS Module</description>
-   <packaging>jar</packaging>
+   <!-- url required for JAR Manifest -->
+   <url>${project.parent.url}</url>
 
    <dependencies>
       <dependency>
@@ -22,8 +25,8 @@
       </dependency>
 
       <dependency>
-         <groupId>javax.jms</groupId>
-         <artifactId>jms</artifactId>
+         <groupId>org.jboss.spec.javax.jms</groupId>
+         <artifactId>jboss-jms-api_1.1_spec</artifactId>
          <scope>provided</scope>
       </dependency>
    </dependencies>

@@ -29,7 +29,6 @@ import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.impl.inject.ConnectionProducer;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
@@ -48,7 +47,7 @@ public class Util
       ejbModule.addPackage(ConnectionProducer.class.getPackage());
       ejbModule.addPackage(JmsAnnotatedTypeWrapper.class.getPackage());
       ejbModule.addPackage(Route.class.getPackage());
-      ejbModule.addManifestResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
+      ejbModule.addManifestResource(EmptyAsset.INSTANCE, "beans.xml");
       ejbModule.addServiceProvider(Extension.class, Seam3JmsExtension.class);
       for (Class<?> c : classes)
       {
