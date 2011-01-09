@@ -12,7 +12,7 @@
 
    <artifactId>seam-jms-distribution</artifactId>
    <name>Seam JMS Distribution</name>
-   <description>Builds a proper Seam JMS release distribution</description>
+   <description>Builds a Seam JMS release distribution</description>
    <packaging>pom</packaging>
 
    <properties>
@@ -44,13 +44,13 @@
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
-         <artifactId>seam-jms</artifactId>
+         <artifactId>seam-jms-impl</artifactId>
          <optional>true</optional>
       </dependency>
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
-         <artifactId>seam-jms</artifactId>
+         <artifactId>seam-jms-impl</artifactId>
          <version>${project.version}</version>
          <classifier>sources</classifier>
          <optional>true</optional>
@@ -58,7 +58,7 @@
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
-         <artifactId>seam-jms</artifactId>
+         <artifactId>seam-jms-impl</artifactId>
          <version>${project.version}</version>
          <classifier>javadoc</classifier>
          <optional>true</optional>

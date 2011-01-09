@@ -29,7 +29,7 @@
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
             <include>org.jboss.seam.jms:seam-jms-api</include>
-            <include>org.jboss.seam.jms:seam-jms</include>
+            <include>org.jboss.seam.jms:seam-jms-impl</include>
          </includes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>

@@ -11,7 +11,7 @@
    </parent>
 
    <artifactId>seam-jms-reference-guide</artifactId>
-   <name>Seam JMS Reference Guide</name>
+   <name>Seam JMS Module Reference Guide</name>
    <packaging>jdocbook</packaging>
    <description>Reference Guide for the Seam JMS Module</description>
 
