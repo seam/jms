@@ -6,7 +6,7 @@
    <parent>
       <groupId>org.jboss.seam</groupId>
       <artifactId>seam-parent</artifactId>
-      <version>6</version>
+      <version>8</version>
    </parent>
 
    <groupId>org.jboss.seam.jms</groupId>
@@ -18,7 +18,7 @@
    <url>http://sfwk.org/Seam3/JMS</url>
 
    <properties>
-      <seam.version>3.0.0.b05</seam.version>
+      <seam.version>3.0.0.b07</seam.version>
       <arquillian.version>1.0.0.Alpha4</arquillian.version>
    </properties>
 
