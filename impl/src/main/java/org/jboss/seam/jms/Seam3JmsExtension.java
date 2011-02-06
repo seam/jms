@@ -22,22 +22,25 @@
 package org.jboss.seam.jms;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.AnnotatedMember;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import org.jboss.logging.Logger;
+import javax.enterprise.inject.spi.ProcessProducer;
 
+import org.jboss.logging.Logger;
 import org.jboss.seam.jms.bridge.EgressRoutingObserver;
-import org.jboss.seam.jms.bridge.EventRouting;
 import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 
@@ -68,28 +71,29 @@ public class Seam3JmsExtension implements Extension
                config = m.getJavaMember().invoke(bean);
             } catch (Exception ex)
             {
-               abd.addDefinitionError(new IllegalArgumentException(EventRouting.class.getSimpleName() + " could not be loaded from bean " + beanType + ": " + ex.getMessage(), ex));
+               abd.addDefinitionError(new IllegalArgumentException("Routing could not be configured from bean " + beanType + ": " + ex.getMessage(), ex));
             }
             log.debug("Building " + Route.class.getSimpleName() + "s from " + beanType);
             if (config != null)
             {
                if (Collection.class.isAssignableFrom(config.getClass()))
                {
-                  Collection<?> routes = Collection.class.cast(config);
-                  for (Object route : routes)
+                  @SuppressWarnings("unchecked")
+                  Collection<Route> routes = Collection.class.cast(config);
+                  for (Route route : routes)
                   {
-                     if(route == null || !Route.class.isAssignableFrom(route.getClass()))
+                     if(route == null)
                      {
-                        abd.addDefinitionError(new IllegalArgumentException("Non-" + Route.class.getSimpleName() + " found when loading " + EventRouting.class.getSimpleName() + " from " + beanType + ": " + route));
+                        log.warn("No routes found for " + m);
                      }
-                     createRoute(abd, bm, (Route) route);
+                     createRoute(abd, bm, route);
                   }
                } else if(Route.class.isAssignableFrom(config.getClass()))
                {
                   createRoute(abd, bm, Route.class.cast(config));
                } else
                {
-                  abd.addDefinitionError(new IllegalArgumentException(EventRouting.class + " methods must return a " + Collection.class + "<? extends " + Route.class + "> or " + Route.class + " directly."));
+                  abd.addDefinitionError(new IllegalArgumentException("Unsupported route configuration type: " + config));
                }
             }
          }
@@ -116,15 +120,28 @@ public class Seam3JmsExtension implements Extension
        */
       pat.setAnnotatedType(JmsAnnotatedTypeWrapper.decorate(pat.getAnnotatedType()));
    }
+
+   /**
+    * Register method producers of {@link org.jboss.seam.jms.bridge.Route}s.
+    */
+   public void registerRouteCollectionProducer(@Observes ProcessProducer<?, ? extends Collection<Route>> pp) {
+      registerRouteProducer(pp.getAnnotatedMember());
+   }
    
-   public void registerEventRouting(@Observes ProcessAnnotatedType<?> pat)
-   {
-      for(AnnotatedMethod<?> m : pat.getAnnotatedType().getMethods())
-      {
-         if(m.isAnnotationPresent(EventRouting.class))
-         {
-            eventRoutingRegistry.add(m);
-         }
+   /**
+    * Register method producers of a single {@link org.jboss.seam.jms.bridge.Route}.
+    */
+   public void registerRouteProducer(@Observes ProcessProducer<?, ? extends Route> pp) {
+      registerRouteProducer(pp.getAnnotatedMember());
+   }
+   
+   private boolean registerRouteProducer(AnnotatedMember<?> m) {
+      if (AnnotatedMethod.class.isAssignableFrom(m.getClass())) {
+         eventRoutingRegistry.add((AnnotatedMethod<?>) m);
+         return true;
+      } else {
+         log.warnf("Producer of routes not registered. Must declare a method producer. (%s)", m);
+         return false;
       }
    }
 }

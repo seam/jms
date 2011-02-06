@@ -35,7 +35,6 @@ import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -50,28 +49,50 @@ public class RouteTest
    
    @Inject Connection c;
    @Inject @JmsDestination(jndiName="queue/DLQ") QueueReceiver qr;
-   @Inject @Bridged Event<String> event;
+   @Inject @BridgedViaCollection Event<String> event_viaCollectionRouteConfig;
+   @Inject @BridgedViaRoute Event<String> event_viaSingleRouteConfig;
    @Inject Event<String> plainEvent;
-   
+
+   private void clear(QueueReceiver qr) throws JMSException {
+      while (qr.receiveNoWait() != null);
+   }
+
    @Test
    public void forwardSimpleEvent() throws JMSException
    {
-      String expected = "test";
+      String expected = "'configured via Collection<Route>'";
       c.start();
-      event.fire(expected);
+      clear(qr);
+      event_viaCollectionRouteConfig.fire(expected);
       Message m = qr.receive(3000);
+      qr.close();
       Assert.assertTrue(m != null);
       Assert.assertTrue(m instanceof ObjectMessage);
       Assert.assertEquals(expected, ((ObjectMessage) m).getObject());
    }
-   
+
    @Test
    public void noMatchingRoutes() throws JMSException
    {
-      String expected = "test";
+      String expected = "'no matching route'";
       c.start();
+      clear(qr);
       plainEvent.fire(expected);
       Message m = qr.receive(3000);
-      Assert.assertNull(m);
+      qr.close();
+      Assert.assertNull("Unexpectedly received a message", m);
+   }
+
+   @Test
+   public void forwardSimpleEvent_via_single_route_config() throws JMSException {
+      String expected = "'configured via Route'";
+      c.start();
+      clear(qr);
+      event_viaSingleRouteConfig.fire(expected);
+      Message m = qr.receive(3000);
+      qr.close();
+      Assert.assertTrue(m != null);
+      Assert.assertTrue(m instanceof ObjectMessage);
+      Assert.assertEquals(expected, ((ObjectMessage) m).getObject());
    }
 }

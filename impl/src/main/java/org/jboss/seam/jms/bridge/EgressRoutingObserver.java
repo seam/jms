@@ -103,7 +103,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object>
       {
          for (Destination d : routing.getDestinations())
          {
-            log.infof("Routing event {} over destination {}", event, d);
+            log.debugf("Routing event %s over destination %s", event, d);
             try
             {
                Message m = s.createObjectMessage((Serializable) event);

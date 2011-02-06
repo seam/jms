@@ -29,6 +29,6 @@ import javax.inject.Qualifier;
 
 @Qualifier
 @Retention(RUNTIME)
-public @interface Bridged
+public @interface BridgedViaCollection
 {
 }
