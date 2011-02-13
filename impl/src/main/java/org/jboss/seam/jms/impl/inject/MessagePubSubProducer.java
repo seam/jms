@@ -25,6 +25,7 @@ import static org.jboss.seam.jms.impl.inject.InjectionUtil.getExpectedQualifier;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -60,6 +61,10 @@ class MessagePubSubProducer
       return TopicPublisher.class.cast(s.createProducer(t));
    }
 
+   public void disposeTopicProducer(@Disposes @Any TopicPublisher tp) throws JMSException {
+       tp.close();
+   }
+
    @Produces
    @JmsDestination
    public TopicSubscriber createTopicSubscriber(InjectionPoint ip, Session s) throws JMSException
@@ -67,6 +72,10 @@ class MessagePubSubProducer
       JmsDestination d = getExpectedQualifier(JmsDestination.class, ip.getQualifiers());
       Topic t = anyTopic.select(d).get();
       return TopicSubscriber.class.cast(s.createConsumer(t));
+   }
+
+   public void disposesTopicSubscriber(@Disposes @Any TopicSubscriber ts) throws JMSException {
+       ts.close();
    }
 
    @Produces
@@ -78,6 +87,10 @@ class MessagePubSubProducer
       return QueueSender.class.cast(s.createProducer(q));
    }
 
+   public void disposesQueueSender(@Disposes @Any QueueSender qs) throws JMSException {
+       qs.close();
+   }
+
    @Produces
    @JmsDestination
    public QueueReceiver createQueueReceiver(InjectionPoint ip, Session s) throws JMSException
@@ -85,5 +98,9 @@ class MessagePubSubProducer
       JmsDestination d = getExpectedQualifier(JmsDestination.class, ip.getQualifiers());
       Queue q = anyQueue.select(d).get();
       return QueueReceiver.class.cast(s.createConsumer(q));
+   }
+
+   public void disposesQueueReceiver(@Disposes @Any QueueReceiver qr) throws JMSException {
+       qr.close();
    }
 }
