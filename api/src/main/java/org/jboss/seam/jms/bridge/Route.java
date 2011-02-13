@@ -23,6 +23,7 @@ package org.jboss.seam.jms.bridge;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Set;
 
 import javax.jms.Destination;
@@ -46,6 +47,20 @@ public interface Route
     */
    public <D extends Destination> Route connectTo(Class<D> d, D destination);
 
+   /**Add multiple destinations to this route
+    *
+    * @param d destinations to be added.
+    * @return this
+    */
+   public Route addDestinations(Destination... d);
+
+   /**Adds a collection of destinations to this route.
+    *
+    * @param d Destinations to be added
+    * @return this
+    */
+   public Route addDestinations(Collection<Destination> d);
+
    /**
     * Apply the qualifiers listed to this route.
     * 
@@ -54,6 +69,13 @@ public interface Route
     */
    public Route addQualifiers(Annotation... qualifiers);
 
+   /**
+    * Apply the collection of qualifiers to this route.
+    *
+    * @param q qualifiers to be added
+    * @return this
+    */
+   public Route addQualifiers(Collection<Annotation> q);
    /**
     * @return the routing type
     */

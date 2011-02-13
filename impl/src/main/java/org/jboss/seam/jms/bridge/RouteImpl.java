@@ -23,6 +23,8 @@ package org.jboss.seam.jms.bridge;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,22 +52,34 @@ public class RouteImpl implements Route
       destinations = new HashSet<Destination>();
    }
 
-   public Route addQualifiers(Annotation... q)
+   public Route addQualifiers(Collection<Annotation> q)
    {
       if (q != null)
       {
-         for (int i = 0; i < q.length; i++)
+         for (Annotation qualifier : q)
          {
-            Annotation qualifier = q[i];
             if (!qualifier.annotationType().isAnnotationPresent(Qualifier.class))
             {
                throw new IllegalArgumentException("not a qualifier: " + qualifier);
             }
-            qualifiers.add(q[i]);
+            qualifiers.add(qualifier);
          }
       }
       return this;
    }
+
+   public Route addQualifiers(Annotation... q)
+   {
+      return addQualifiers(Arrays.asList(q));
+   }
+    public Route addDestinations(Destination... d) {
+        return addDestinations(Arrays.asList(d));
+    }
+
+    public Route addDestinations(Collection<Destination> d) {
+        this.destinations.addAll(d);
+        return this;
+    }
 
    public <D extends Destination> Route connectTo(java.lang.Class<D> d, D destination)
    {
