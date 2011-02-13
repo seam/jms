@@ -6,6 +6,10 @@
       <entry name="/jms/T" />
    </topic>
 
+   <topic name="Topic2">
+      <entry name="/jms/T2" />
+   </topic>
+
    <queue name="Q">
       <entry name="/jms/Q" />
    </queue>

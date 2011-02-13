@@ -21,28 +21,38 @@
  */
 package org.jboss.seam.jms;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Resource;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedMember;
 import javax.enterprise.inject.spi.AnnotatedMethod;
+import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.enterprise.inject.spi.ProcessProducer;
+import javax.inject.Qualifier;
+import javax.jms.Destination;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.bridge.EgressRoutingObserver;
 import org.jboss.seam.jms.bridge.Route;
+import org.jboss.seam.jms.bridge.RouteImpl;
+import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
+import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 
 /**
  * Seam 3 JMS Portable Extension
@@ -54,6 +64,7 @@ public class Seam3JmsExtension implements Extension
    private static final Logger log = Logger.getLogger(Seam3JmsExtension.class);
    
    private Set<AnnotatedMethod<?>> eventRoutingRegistry = new HashSet<AnnotatedMethod<?>>();
+   private Set<AnnotatedMethod<?>> observerMethodRegistry = new HashSet<AnnotatedMethod<?>>();
    
    public void buildRoutes(@Observes final AfterBeanDiscovery abd, final BeanManager bm)
    {
@@ -98,6 +109,55 @@ public class Seam3JmsExtension implements Extension
             }
          }
       }
+      /* when going through the observer method registry, we pick up cases where we dynamically build routes based on
+       * observer interfaces.  An example method of this can be seen in the test case ObserverInterface. */
+      for (AnnotatedMethod<?> m : observerMethodRegistry) {
+            //When adding support for SEAMJMS-3, we only work on EGRESS support
+            //Ingress to come at a later date.
+            for(AnnotatedParameter<?> ap : m.getParameters()) {
+                log.debug("In method "+m.getJavaMember().getName()+" with param type "+ap.getBaseType());
+            }
+            boolean isResourced = m.isAnnotationPresent(Resource.class);
+            Set<Destination> d = new HashSet<Destination>();
+            Type type = null;
+            Set<Annotation> qualifiers = new HashSet<Annotation>();
+            if(isResourced) {
+                Resource r = m.getAnnotation(Resource.class);
+                log.info("Loading resource "+r.mappedName());
+                d.add(locateDestination(r.mappedName()));
+            }
+            /* in this case, each method has one non destination and multiple
+             * destinations.  this can take the form of resources or qualified
+             * resources.
+             */
+            try{
+                for(AnnotatedParameter<?> ap : m.getParameters()) {
+                    if(ap.getBaseType() instanceof Class) {
+                        Class<?> clazz = (Class<?>)ap.getBaseType();
+                        if(Destination.class.isAssignableFrom(clazz)) {
+                            log.info("Found another type of qualifier.");
+                            d.add(resolveDestination(bm,ap));
+                        } else if (ap.isAnnotationPresent(Observes.class)){
+                            type = ap.getBaseType();
+                            qualifiers.addAll(getQualifiersFrom(ap.getAnnotations()));
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("Exception mapping for method "+m.getJavaMember().getDeclaringClass()+"."+m.getJavaMember().getName()+", ",e);
+            }
+
+            if(type == null) {
+                log.debug("Unable to bind mapping for method "+m.getJavaMember().getDeclaringClass()+"."+m.getJavaMember().getName()+", no Observes identified.");
+            } else if(d.isEmpty()) {
+                log.debug("Unable to bind mapping for method "+m.getJavaMember().getDeclaringClass()+"."+m.getJavaMember().getName()+", no Destinations found.");
+            } else {
+                Route egress = new RouteImpl(RouteType.EGRESS,type).addQualifiers(qualifiers)
+                        .addDestinations(d);
+                log.debugf("About to add a new observer of %s to %s destination",type,d);
+                this.createRoute(abd, bm, egress);
+            }
+        }
    }
    
    private void createRoute(final AfterBeanDiscovery abd, final BeanManager bm, final Route route)
@@ -134,6 +194,18 @@ public class Seam3JmsExtension implements Extension
    public void registerRouteProducer(@Observes ProcessProducer<?, ? extends Route> pp) {
       registerRouteProducer(pp.getAnnotatedMember());
    }
+
+   /**
+    * Generates the observer method registry for all interfaces that have observer methods.
+    * @param pat
+    */
+    public void registerObserverMethods(@Observes ProcessAnnotatedType<?> pat) {
+        if (pat.getAnnotatedType().getJavaClass().isInterface()) {
+            for (AnnotatedMethod<?> m : pat.getAnnotatedType().getMethods()) {
+                this.observerMethodRegistry.add(m);
+            }
+        }
+    }
    
    private boolean registerRouteProducer(AnnotatedMember<?> m) {
       if (AnnotatedMethod.class.isAssignableFrom(m.getClass())) {
@@ -144,4 +216,33 @@ public class Seam3JmsExtension implements Extension
          return false;
       }
    }
+   private static Destination locateDestination(String jndiName) {
+        try {
+            InitialContext ic = new InitialContext();
+            return (Destination) ic.lookup(jndiName);
+        } catch (NamingException e) {
+            log.error("Unable to locate resource " + jndiName, e);
+            return null;
+        }
+    }
+
+    private static Set<Annotation> getQualifiersFrom(Set<Annotation> annotations) {
+        Set<Annotation> q = new HashSet<Annotation>();
+        for (Annotation a : annotations) {
+            if (a.annotationType().isAnnotationPresent(Qualifier.class)) {
+                q.add(a);
+            }
+        }
+        return q;
+    }
+
+    private static Destination resolveDestination(BeanManager bm, AnnotatedParameter<?> ap) {
+        Set<Annotation> qs = getQualifiersFrom(ap.getAnnotations());
+        Set<Bean<?>> beans = bm.getBeans(ap.getBaseType(), qs.toArray(new Annotation[]{}));
+        Bean<?> bean = bm.resolve(beans);
+        CreationalContext<?> context = bm.createCreationalContext(bean);
+        ImmutableInjectionPoint iip = new ImmutableInjectionPoint(ap,qs,bean,false,false);
+        Object ref = bm.getInjectableReference(iip, context);
+        return (Destination) ref;
+    }
 }
