@@ -21,6 +21,7 @@
  */
 package org.jboss.seam.jms.test.bridge.intf;
 
+import javax.jms.Connection;
 import org.junit.Ignore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +49,6 @@ import static org.junit.Assert.*;
  *
  * @author johnament
  */
-@Ignore
 @RunWith(Arquillian.class)
 public class ObserverTest {
 
@@ -58,19 +58,22 @@ public class ObserverTest {
     }
     @Inject
     Event<String> stringEvent;
+    @Inject Connection c;
     @Inject @JmsDestination(jndiName="jms/T2") TopicSubscriber ts;
 
     @Test
     public void testObserve() throws JMSException {
-        ts.setMessageListener(new ObserverListener());
+        c.start();
+        //ts.setMessageListener(new ObserverListener());
         stringEvent.fire("hello, world!");
         try {
-            Thread.sleep(10*60 * 1000);
-            /*ObjectMessage msg = (ObjectMessage)ts.receive(3000);
+            Thread.sleep(5 * 1000);
+            ObjectMessage msg = (ObjectMessage)ts.receive(3000);
             assertNotNull(msg);
             String data = msg.getObject().toString();
             assertEquals(data,"hello, world!");
-            ts.close();*/
+            ts.close();
+            c.stop();
         } catch (InterruptedException ex) {
             Logger.getLogger(ObserverTest.class.getName()).log(Level.SEVERE, null, ex);
         }
