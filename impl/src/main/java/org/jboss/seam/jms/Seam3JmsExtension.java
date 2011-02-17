@@ -47,6 +47,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.jboss.logging.Logger;
+import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.bridge.EgressRoutingObserver;
 import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.bridge.RouteImpl;
@@ -61,14 +62,17 @@ import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
  */
 public class Seam3JmsExtension implements Extension
 {
+    public Seam3JmsExtension() {
+        log.info("Creating a new instance of Seam3JmsExtension");
+    }
    private static final Logger log = Logger.getLogger(Seam3JmsExtension.class);
-   
+   private List<Route> ingressRoutes = new ArrayList<Route>();
    private Set<AnnotatedMethod<?>> eventRoutingRegistry = new HashSet<AnnotatedMethod<?>>();
    private Set<AnnotatedMethod<?>> observerMethodRegistry = new HashSet<AnnotatedMethod<?>>();
    
    public void buildRoutes(@Observes final AfterBeanDiscovery abd, final BeanManager bm)
    {
-      for (AnnotatedMethod<?> m : eventRoutingRegistry)
+      /*for (AnnotatedMethod<?> m : eventRoutingRegistry)
       {
          Type beanType = m.getDeclaringType().getBaseType();
          Set<Bean<?>> configBeans = bm.getBeans(beanType);
@@ -108,7 +112,7 @@ public class Seam3JmsExtension implements Extension
                }
             }
          }
-      }
+      }*/
       /* when going through the observer method registry, we pick up cases where we dynamically build routes based on
        * observer interfaces.  An example method of this can be seen in the test case ObserverInterface. */
       for (AnnotatedMethod<?> m : observerMethodRegistry) {
@@ -136,7 +140,7 @@ public class Seam3JmsExtension implements Extension
                         Class<?> clazz = (Class<?>)ap.getBaseType();
                         if(Destination.class.isAssignableFrom(clazz)) {
                             log.info("Found another type of qualifier.");
-                            d.add(resolveDestination(bm,ap));
+                            d.add(resolveDestination(ap));
                         } else if (ap.isAnnotationPresent(Observes.class)){
                             type = ap.getBaseType();
                             qualifiers.addAll(getQualifiersFrom(ap.getAnnotations()));
@@ -154,7 +158,8 @@ public class Seam3JmsExtension implements Extension
             } else {
                 Route egress = new RouteImpl(RouteType.EGRESS,type).addQualifiers(qualifiers)
                         .addDestinations(d);
-                log.debugf("About to add a new observer of %s to %s destination",type,d);
+                this.ingressRoutes.add(egress);
+                log.infof("About to add a new observer of %s to %s destination",type,d);
                 this.createRoute(abd, bm, egress);
             }
         }
@@ -201,12 +206,17 @@ public class Seam3JmsExtension implements Extension
     */
     public void registerObserverMethods(@Observes ProcessAnnotatedType<?> pat) {
         if (pat.getAnnotatedType().getJavaClass().isInterface()) {
+            log.info("Found a possible interface... "+pat.getAnnotatedType().getJavaClass());
             for (AnnotatedMethod<?> m : pat.getAnnotatedType().getMethods()) {
                 this.observerMethodRegistry.add(m);
             }
         }
     }
-   
+
+    public List<Route> getIngressRoutes() {
+        return this.ingressRoutes;
+    }
+
    private boolean registerRouteProducer(AnnotatedMember<?> m) {
       if (AnnotatedMethod.class.isAssignableFrom(m.getClass())) {
          eventRoutingRegistry.add((AnnotatedMethod<?>) m);
@@ -236,13 +246,15 @@ public class Seam3JmsExtension implements Extension
         return q;
     }
 
-    private static Destination resolveDestination(BeanManager bm, AnnotatedParameter<?> ap) {
-        Set<Annotation> qs = getQualifiersFrom(ap.getAnnotations());
-        Set<Bean<?>> beans = bm.getBeans(ap.getBaseType(), qs.toArray(new Annotation[]{}));
-        Bean<?> bean = bm.resolve(beans);
-        CreationalContext<?> context = bm.createCreationalContext(bean);
-        ImmutableInjectionPoint iip = new ImmutableInjectionPoint(ap,qs,bean,false,false);
-        Object ref = bm.getInjectableReference(iip, context);
-        return (Destination) ref;
+    private static Destination resolveDestination(AnnotatedParameter<?> ap) {
+        JmsDestination dest = ap.getAnnotation(JmsDestination.class);
+        Destination d = null;
+        try{
+            InitialContext ic = new InitialContext();
+            d = (Destination)ic.lookup(dest.jndiName());
+        } catch (NamingException e) {
+            log.warnf("Unable to look up object found at %s",dest.jndiName(),e);
+        }
+        return d;
     }
 }
