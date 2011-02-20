@@ -24,7 +24,9 @@ package org.jboss.seam.jms.bridge;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import javax.enterprise.inject.spi.AnnotatedParameter;
 
 import javax.jms.Destination;
 
@@ -34,65 +36,81 @@ import javax.jms.Destination;
  * @author Jordan Ganoff
  * 
  */
-public interface Route
-{
+public interface Route {
 
-   /**
-    * Connect this route to a destination. Multiple destinations may be defined.
-    * 
-    * @param <D> Destination type
-    * @param d Destination type (e.g. javax.jms.Topic)
-    * @param destination Destination to connect this route to
-    * @return this
-    */
-   public <D extends Destination> Route connectTo(Class<D> d, D destination);
+    /**
+     * Connect this route to a destination. Multiple destinations may be defined.
+     *
+     * @param <D> Destination type
+     * @param d Destination type (e.g. javax.jms.Topic)
+     * @param destination Destination to connect this route to
+     * @return this
+     */
+    public <D extends Destination> Route connectTo(Class<D> d, D destination);
 
-   /**Add multiple destinations to this route
-    *
-    * @param d destinations to be added.
-    * @return this
-    */
-   public Route addDestinations(Destination... d);
+    /**Add multiple destinations to this route
+     *
+     * @param d destinations to be added.
+     * @return this
+     */
+    public Route addDestinations(Destination... d);
 
-   /**Adds a collection of destinations to this route.
-    *
-    * @param d Destinations to be added
-    * @return this
-    */
-   public Route addDestinations(Collection<Destination> d);
+    /**Adds a collection of destinations to this route.
+     *
+     * @param d Destinations to be added
+     * @return this
+     */
+    public Route addDestinations(Collection<Destination> d);
 
-   /**
-    * Apply the qualifiers listed to this route.
-    * 
-    * @param qualifiers Qualifiers for the payload type
-    * @return this
-    */
-   public Route addQualifiers(Annotation... qualifiers);
+    /**
+     * Apply the qualifiers listed to this route.
+     *
+     * @param qualifiers Qualifiers for the payload type
+     * @return this
+     */
+    public Route addQualifiers(Annotation... qualifiers);
 
-   /**
-    * Apply the collection of qualifiers to this route.
-    *
-    * @param q qualifiers to be added
-    * @return this
-    */
-   public Route addQualifiers(Collection<Annotation> q);
-   /**
-    * @return the routing type
-    */
-   public RouteType getType();
+    /**
+     * Apply the collection of qualifiers to this route.
+     *
+     * @param q qualifiers to be added
+     * @return this
+     */
+    public Route addQualifiers(Collection<Annotation> q);
 
-   /**
-    * @return the type this route routes
-    */
-   public Type getPayloadType();
+    /**
+     * @return the routing type
+     */
+    public RouteType getType();
 
-   /**
-    * @return the qualifiers
-    */
-   public Set<Annotation> getQualifiers();
+    /**
+     * @return the type this route routes
+     */
+    public Type getPayloadType();
 
-   /**
-    * @return The destinations involved in this routing
-    */
-   public Set<? extends Destination> getDestinations();
+    /**
+     * @return the qualifiers
+     */
+    public Set<Annotation> getQualifiers();
+
+    /**
+     * @return The destinations involved in this routing
+     */
+    public Set<? extends Destination> getDestinations();
+
+    public Set<String> getDestinationJndiNames();
+
+    public List<Set<Annotation>> getDestinationQualifiers();
+
+    public Route addDestinationQualifiers(Set<Annotation> qualifiers);
+
+    public Route addAnnotatedParameter(AnnotatedParameter<?> ap);
+
+    public Set<AnnotatedParameter<?>> getAnnotatedParameters();
+
+    public Route addDestinationJndiName(String jndi);
+
+    public Route setType(Type type);
+
+    public boolean validate();
 }

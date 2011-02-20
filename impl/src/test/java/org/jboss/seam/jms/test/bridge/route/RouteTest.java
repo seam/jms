@@ -35,10 +35,12 @@ import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
+@Ignore
 public class RouteTest
 {
    @Deployment

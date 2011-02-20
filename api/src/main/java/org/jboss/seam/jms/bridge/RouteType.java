@@ -41,5 +41,7 @@ public enum RouteType
     * match the configuration as defined by the route to the registered
     * destinations.
     */
-   EGRESS;
+   EGRESS,
+
+   BOTH;
 }

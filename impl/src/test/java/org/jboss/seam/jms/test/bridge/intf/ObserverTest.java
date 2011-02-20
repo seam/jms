@@ -21,10 +21,9 @@
  */
 package org.jboss.seam.jms.test.bridge.intf;
 
+import org.jboss.logging.Logger;
 import javax.jms.Connection;
 import org.junit.Ignore;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jms.ObjectMessage;
 import javax.jms.JMSException;
 import org.jboss.seam.jms.impl.inject.MessagePubSubProducer;
@@ -56,10 +55,11 @@ public class ObserverTest {
     Event<String> stringEvent;
     @Inject Connection c;
     @Inject @JmsDestination(jndiName="jms/T2") TopicSubscriber ts;
-
+    Logger log = Logger.getLogger(ObserverTest.class);
     @Test
     public void testObserve() throws JMSException {
         c.start();
+        log.info("Running ObserverTest");
         //ts.setMessageListener(new ObserverListener());
         stringEvent.fire("hello, world!");
         try {
@@ -71,7 +71,7 @@ public class ObserverTest {
             ts.close();
             c.stop();
         } catch (InterruptedException ex) {
-            Logger.getLogger(ObserverTest.class.getName()).log(Level.SEVERE, null, ex);
+            log.info("Error",ex);
         }
 
     }

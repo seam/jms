@@ -24,6 +24,8 @@ package org.jboss.seam.jms.test.bridge.intf;
 import javax.enterprise.event.Observes;
 import javax.jms.Topic;
 import org.jboss.seam.jms.annotations.JmsDestination;
+import org.jboss.seam.jms.annotations.Routing;
+import org.jboss.seam.jms.bridge.RouteType;
 
 /**
  *
@@ -31,4 +33,6 @@ import org.jboss.seam.jms.annotations.JmsDestination;
  */
 public interface ObserverInterface {
     public void obsStringToTopic(@Observes String s, @JmsDestination(jndiName="jms/T2") Topic t);
+    @Routing(RouteType.INGRESS)
+    public void obsLongToTopic(@Observes Long l, @JmsDestination(jndiName="jms/T2") Topic t);
 }

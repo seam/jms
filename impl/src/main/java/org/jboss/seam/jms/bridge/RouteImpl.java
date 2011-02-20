@@ -23,13 +23,17 @@ package org.jboss.seam.jms.bridge;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import javax.enterprise.inject.spi.AnnotatedParameter;
 
 import javax.inject.Qualifier;
 import javax.jms.Destination;
+import org.jboss.logging.Logger;
 
 /**
  * JMS Event Bridge Routing
@@ -43,13 +47,26 @@ public class RouteImpl implements Route
    private Type payloadType;
    private Set<Annotation> qualifiers;
    private Set<Destination> destinations;
+   private List<Set<Annotation>> destinationQualifiers;
+   private Set<String> destinationJndiNames;
+   private Set<AnnotatedParameter<?>> annotatedParameters;
+   private Logger logger;
 
    public RouteImpl(RouteType type, Type payloadType)
    {
-      this.type = type;
+      this(type);
       this.payloadType = payloadType;
+   }
+
+   public RouteImpl(RouteType type)
+   {
+      logger = Logger.getLogger(RouteImpl.class);
+      this.type = type;
       qualifiers = new HashSet<Annotation>();
       destinations = new HashSet<Destination>();
+      destinationQualifiers = new ArrayList<Set<Annotation>>();
+      destinationJndiNames = new HashSet<String>();
+      annotatedParameters = new HashSet<AnnotatedParameter<?>>();
    }
 
    public Route addQualifiers(Collection<Annotation> q)
@@ -87,6 +104,16 @@ public class RouteImpl implements Route
       return this;
    }
 
+   public Route addDestinationQualifiers(Set<Annotation> qualifiers) {
+       this.destinationQualifiers.add(qualifiers);
+       return this;
+   }
+
+   public Route addDestinationJndiName(String jndi) {
+       this.destinationJndiNames.add(jndi);
+       return this;
+   }
+
    public RouteType getType()
    {
       return type;
@@ -106,4 +133,40 @@ public class RouteImpl implements Route
    {
       return destinations;
    }
+
+    public Set<String> getDestinationJndiNames() {
+        return destinationJndiNames;
+    }
+
+    public List<Set<Annotation>> getDestinationQualifiers() {
+        return destinationQualifiers;
+    }
+
+    public Route addAnnotatedParameter(AnnotatedParameter<?> ap) {
+        this.annotatedParameters.add(ap);
+        return this;
+    }
+
+    public Set<AnnotatedParameter<?>> getAnnotatedParameters() {
+        return this.annotatedParameters;
+    }
+
+    @Override
+    public Route setType(Type type) {
+        this.payloadType = type;
+        return this;
+    }
+
+    public boolean validate() {
+        if(this.payloadType == null) {
+            logger.warn("No payload type found.");
+            return false;
+        }
+        if(this.annotatedParameters.isEmpty() && this.destinationJndiNames.isEmpty() && this.destinations.isEmpty()) {
+            logger.warn("No destinations configured.");
+            return false;
+        }
+
+        return true;
+    }
 }
