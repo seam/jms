@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:s="http://jboss.com/products/seam/taglib">
+
+<h:head>
+   <title>Messaging example</title>
+   <link rel="stylesheet" href="style/style.css" type="text/css" media="screen" />
+   <meta http-equiv="refresh" content="20" />
+</h:head>
+<h:body>
+<h:form >
+   
+   <div class="watchmenu">
+      <div class="watchtitle">StatusWatcher</div>
+      <div class="menuitem"><h:selectBooleanCheckbox id="changeFollowing" onchange="submit();" 
+           value="#{receivingClient.followAll}" 
+           valueChangeListener="#{receivingClient.changeFollowing}"/>Follow all</div>
+      <div class="divider"></div>
+      <div class="menuitem"><h:commandLink id="receive" value="Receive" action="#{receivingClient.receive}"/></div>
+      <div class="divider"></div>
+      <div class="menuitem"><h:commandLink id="history" value="History" action="#{receivingClient.history}"/></div>
+   </div>
+   
+   <div class="watchcontent">
+      <h:dataTable id="receivedStatuses" value="#{receivingClient.receivedStatuses}" var="status">
+         <h:column>
+            <span class="username"><h:outputText value="#{status.username}"/></span>
+            <span class="statuslabel"> changed his/her status </span>
+            <span class="date"><h:outputText value=" #{status.friendlyDate}"/></span>
+            <span class="statuslabel"> to ...</span>
+            <div class="statusupdate">
+               <h:outputText value="#{status.statusMessage}"></h:outputText>
+            </div>
+         </h:column>
+      </h:dataTable>
+   </div>
+   
+</h:form>       
+</h:body>
+</html> 

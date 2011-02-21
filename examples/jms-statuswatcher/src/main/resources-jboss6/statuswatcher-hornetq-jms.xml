@@ -1,0 +1,13 @@
+<configuration xmlns="urn:hornetq"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="urn:hornetq /schema/hornetq-jms.xsd">
+
+   <queue name="UpdateStatusQueue">
+      <entry name="/jms/updateStatusQueue" />
+   </queue>
+
+   <topic name="StatusInfoTopic">
+      <entry name="/jms/statusInfoTopic"/>
+   </topic>
+   
+</configuration>

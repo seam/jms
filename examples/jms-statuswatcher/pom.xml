@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.jboss.seam.jms</groupId>
+      <artifactId>seam-jms-parent</artifactId>
+      <version>3.0.0-SNAPSHOT</version>
+      <relativePath>../../pom.xml</relativePath>
+   </parent>
+
+   <artifactId>seam-jms-example-statuswatcher</artifactId>
+   <packaging>war</packaging>
+
+   <name>Seam StatusWatcher Example (JMS)</name>
+
+   <properties>
+      <jboss.home>${env.JBOSS_HOME}</jboss.home>
+      <jboss.domain>default</jboss.domain>
+      <seam.jms.version>3.0.0-SNAPSHOT</seam.jms.version>
+      <jsf.version>2.0.2-FCS</jsf.version>
+      <ajax4jsf.version>1.0.5</ajax4jsf.version>
+   </properties>
+
+   <dependencies>
+
+      <dependency>
+         <groupId>org.jboss.seam.jms</groupId>
+         <artifactId>seam-jms-api</artifactId>
+         <version>${seam.jms.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.jms</groupId>
+         <artifactId>seam-jms-impl</artifactId>
+         <version>${seam.jms.version}</version>
+         <exclusions>
+            <exclusion>
+               <artifactId>slf4j-api</artifactId>
+               <groupId>org.slf4j</groupId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.spec.javax.jms</groupId>
+         <artifactId>jboss-jms-api_1.1_spec</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.spec.javax.ejb</groupId>
+         <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.hibernate.javax.persistence</groupId>
+         <artifactId>hibernate-jpa-2.0-api</artifactId>
+         <version>1.0.0.Final</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- Common to JEE and Servlet containers -->
+      <dependency>
+         <groupId>javax.enterprise</groupId>
+         <artifactId>cdi-api</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.spec.javax.annotation</groupId>
+         <artifactId>jboss-annotations-api_1.1_spec</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <classifier>jdk15</classifier>
+      </dependency>
+
+      <dependency>
+         <groupId>javax.faces</groupId>
+         <artifactId>jsf-api</artifactId>
+         <version>${jsf.version}</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.glassfish.web</groupId>
+         <artifactId>el-impl</artifactId>
+         <scope>runtime</scope>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.el</groupId>
+               <artifactId>el-api</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <finalName>jms-statuswatcher</finalName>
+   </build>
+
+   <profiles>
+      <profile>
+         <id>distribution</id>
+         <activation>
+            <property>
+               <name>release</name>
+            </property>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-assembly-plugin</artifactId>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+      <profile>
+         <id>jbossas</id>
+         <activation>
+            <activeByDefault>true</activeByDefault>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>jboss-maven-plugin</artifactId>
+                  <version>1.4.1</version>
+                  <configuration>
+                     <jbossHome>${jboss.home}</jbossHome>
+                     <serverName>${jboss.domain}</serverName>
+                     <fileNames>
+                        <param>${basedir}/src/main/resources-jboss6/statuswatcher-hornetq-jms.xml</param>
+                        <param>${project.build.directory}/${project.build.finalName}.${project.packaging}</param>
+                     </fileNames>
+                  </configuration>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
+
+</project>
