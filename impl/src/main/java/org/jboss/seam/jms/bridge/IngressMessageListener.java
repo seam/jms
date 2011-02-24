@@ -59,6 +59,7 @@ public class IngressMessageListener implements MessageListener {
             annotations.addAll(route.getQualifiers());
         }
         annotations.add(new AsyncLiteral());
+        logger.info("Qualifiers: "+annotations);
         this.qualifiers = annotations.toArray(new Annotation[]{});
     }
 
