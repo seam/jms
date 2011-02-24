@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +50,7 @@ import javax.naming.NamingException;
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
+import org.jboss.seam.solder.literal.DefaultLiteral;
 
 /**
  * Forwards CDI events that match the provided {@link Route} configuration to
@@ -87,6 +89,13 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     }
 
     public Set<Annotation> getObservedQualifiers() {
+        log.info(("Inidicating that i observe these qualifiers: "+routing.getQualifiers()));
+        Set<Annotation> as = routing.getQualifiers();
+        if(as.isEmpty()) {
+            Set<Annotation> a = new HashSet<Annotation>();
+            a.add(new DefaultLiteral());
+            return a;
+        }
         return routing.getQualifiers();
     }
 
