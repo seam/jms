@@ -100,6 +100,8 @@ public interface Route {
 
     public Set<String> getDestinationJndiNames();
 
+    public void setDestinations(Collection<Destination> destinations);
+
     public List<Set<Annotation>> getDestinationQualifiers();
 
     public Route addDestinationQualifiers(Set<Annotation> qualifiers);

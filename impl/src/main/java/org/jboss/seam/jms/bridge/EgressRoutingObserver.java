@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Reception;
@@ -37,6 +38,7 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.ObserverMethod;
 import javax.inject.Named;
+import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -77,6 +79,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
 
     public void setBeanManager(BeanManager beanManager) {
         this.bm = beanManager;
+        this.loadDestinations();
     }
 
     public Class<?> getBeanClass() {
@@ -103,9 +106,11 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
         // FIXME Include qualifiers once CDI 1.0 MR is complete and
         // notify(Event, Set<Annotation>) is added
         if(this.extension.isReadyToRoute())
-            forwardEvent(evt, null);
-        else
+            forwardEvent(evt);
+        else {
+            this.log.warn("Adding event to evt cache "+evt);
             evtCache.add(evt);
+        }
     }
 
     private List<Object> evtCache = new ArrayList<Object>();
@@ -115,6 +120,33 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
         Bean<?> bean = bm.resolve(beans);
         Session s = (Session) bm.getReference(bean, Session.class, bm.createCreationalContext(bean));
         return s;
+    }
+
+    private Connection getConnection() {
+        Set<Bean<?>> beans = bm.getBeans(Connection.class);
+        Bean<?> bean = bm.resolve(beans);
+        Connection conn = (Connection) bm.getReference(bean, Session.class, bm.createCreationalContext(bean));
+        try {
+            conn.start();
+        } catch (JMSException ex) {
+            log.warn("Unable to start connection",ex);
+        }
+        return conn;
+    }
+
+    private void loadDestinations() {
+        Set<Destination> destinations = new HashSet<Destination>();
+        destinations.addAll(routing.getDestinations());
+        for(String dest : routing.getDestinationJndiNames()) {
+            Destination destination = lookupDestination(dest);
+            destinations.add(destination);
+        }
+        for(AnnotatedParameter<?> ap : routing.getAnnotatedParameters()) {
+            Destination destination = lookupDestination(ap);
+            destinations.add(destination);
+        }
+        log.infof("Routing destinations: [%s]",destinations);
+        this.routing.setDestinations(destinations);
     }
 
     private Destination lookupDestination(String jndiName) {
@@ -128,6 +160,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     }
 
     private Destination lookupDestination(AnnotatedParameter<?> ap) {
+        log.info("Looking up destination: "+ap);
         Set<Bean<?>> beans = bm.getBeans(Destination.class);
         Bean<?> bean = bm.resolve(beans);
         ImmutableInjectionPoint iip = new ImmutableInjectionPoint(ap,bm,bean,false,false);
@@ -135,21 +168,12 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
         return (Destination)o;
     }
 
-    private void forwardEvent(Object event, Set<Annotation> qualifiers) {
+    private void forwardEvent(Object event) {
         // TODO Allow session to be configured
+        Connection conn = getConnection();
         Session s = getSession();
-        Set<Destination> destinations = new HashSet<Destination>();
-        destinations.addAll(routing.getDestinations());
-        for(String dest : routing.getDestinationJndiNames()) {
-            Destination destination = lookupDestination(dest);
-            destinations.add(destination);
-        }
-        for(AnnotatedParameter<?> ap : routing.getAnnotatedParameters()) {
-            Destination destination = lookupDestination(ap);
-            destinations.add(destination);
-        }
         try {
-            for (Destination d : destinations) {
+            for (Destination d : routing.getDestinations()) {
                 log.infof("Routing event %s over destination %s", event, d);
                 try {
                     Message m = s.createObjectMessage((Serializable) event);

@@ -41,7 +41,7 @@ import javax.jms.TopicSubscriber;
 
 import org.jboss.seam.jms.annotations.JmsDestination;
 
-public @RequestScoped
+public
 class MessagePubSubProducer
 {
    @Inject

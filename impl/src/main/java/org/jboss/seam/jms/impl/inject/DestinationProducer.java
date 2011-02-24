@@ -24,6 +24,7 @@ package org.jboss.seam.jms.impl.inject;
 import static org.jboss.seam.jms.impl.inject.InjectionUtil.getExpectedQualifier;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.jms.Queue;

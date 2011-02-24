@@ -21,7 +21,10 @@
  */
 package org.jboss.seam.jms.bridge;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.HashSet;
+import java.util.Set;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.jms.JMSException;
@@ -29,24 +32,34 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import org.jboss.logging.Logger;
+import org.jboss.seam.jms.annotations.AsyncLiteral;
 
 /**
  *
  * @author johnament
  */
-
 public class IngressMessageListener implements MessageListener {
+
     private BeanManager beanManager;
     private Annotation[] qualifiers = null;
     private Logger logger;
-    public IngressMessageListener(BeanManager beanManager) {
-        this.logger      = Logger.getLogger(IngressMessageListener.class);
+    private ClassLoader classLoader;
+
+    public IngressMessageListener(BeanManager beanManager, ClassLoader classLoader) {
+        this.logger = Logger.getLogger(IngressMessageListener.class);
         this.beanManager = beanManager;
+        this.classLoader = classLoader;
+        logger.info("Creating new IngressMessageListener.");
     }
 
     public void setRoute(Route route) {
-        if(!route.getQualifiers().isEmpty())
-            this.qualifiers  = route.getQualifiers().toArray(new Annotation[]{});
+        logger.info("Setting route. "+route);
+        Set<Annotation> annotations = new HashSet<Annotation>();
+        if (!route.getQualifiers().isEmpty()) {
+            annotations.addAll(route.getQualifiers());
+        }
+        annotations.add(new AsyncLiteral());
+        this.qualifiers = annotations.toArray(new Annotation[]{});
     }
 
     public BeanManager getBeanManager() {
@@ -59,27 +72,32 @@ public class IngressMessageListener implements MessageListener {
 
     public void onMessage(Message msg) {
         logger.info("Received a message");
-        if(msg instanceof ObjectMessage) {
-            ObjectMessage om = (ObjectMessage)msg;
-            try {
-                String data = om.getObject().toString();
-                logger.info(" data was: "+om.getObject());
-                //if(qualifiers == null) {
-                //BeanManager beanManager = Utils.lookupBM();
-                    try{
-                       //beanManager.fireEvent(data, getAnnotations());
+        ClassLoader prevCl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(classLoader);
+        try{
+            if (msg instanceof ObjectMessage) {
+                ObjectMessage om = (ObjectMessage) msg;
+                try {
+                    Serializable data = (Serializable)om.getObject();
+                    logger.info(" data was: " + om.getObject());
+                    //if(qualifiers == null) {
+                    //BeanManager beanManager = Utils.lookupBM();
+                    try {
+                        beanManager.fireEvent(data, getAnnotations());
                     } catch (Exception e) {
-                        logger.error("Unable to fire event",e);
+                        logger.error("Unable to fire event", e);
                     }
-                /*} else {
+                    /*} else {
                     beanManager.fireEvent(data, qualifiers);
-                }*/
-            } catch (JMSException ex) {
-                logger.warn("Unable to read data in message "+msg);
+                    }*/
+                } catch (JMSException ex) {
+                    logger.warn("Unable to read data in message " + msg);
+                }
+            } else {
+                logger.warn("Received the wrong type of message " + msg);
             }
-        } else {
-            logger.warn("Received the wrong type of message "+msg);
+        } finally {
+            Thread.currentThread().setContextClassLoader(prevCl);
         }
     }
-
 }

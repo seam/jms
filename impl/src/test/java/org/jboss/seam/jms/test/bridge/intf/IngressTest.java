@@ -65,7 +65,7 @@ public class IngressTest {
     @Inject @JmsDestination(jndiName="jms/T2") Topic t;
     @Test
     public void testObserveMessage() throws JMSException, InterruptedException {
-        conn.start();
+        //conn.start();
         MessageProducer mp = session.createProducer(t);
         ObjectMessage om = session.createObjectMessage();
         om.setObject("hello, world!");

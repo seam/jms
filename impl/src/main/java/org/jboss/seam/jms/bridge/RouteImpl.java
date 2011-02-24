@@ -159,14 +159,18 @@ public class RouteImpl implements Route
 
     public boolean validate() {
         if(this.payloadType == null) {
-            logger.warn("No payload type found.");
+            logger.debug("No payload type found.");
             return false;
         }
         if(this.annotatedParameters.isEmpty() && this.destinationJndiNames.isEmpty() && this.destinations.isEmpty()) {
-            logger.warn("No destinations configured.");
+            logger.debug("No destinations configured.");
             return false;
         }
 
         return true;
+    }
+
+    public void setDestinations(Collection<Destination> destinations) {
+        this.destinations = new HashSet<Destination>(destinations);
     }
 }

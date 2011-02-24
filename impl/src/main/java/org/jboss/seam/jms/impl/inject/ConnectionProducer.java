@@ -25,9 +25,11 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import org.jboss.logging.Logger;
 
 import org.jboss.seam.jms.annotations.Module;
 
@@ -46,7 +48,7 @@ public class ConnectionProducer
 {
    @Resource(mappedName = "ConnectionFactory")
    private ConnectionFactory cf;
-
+   @Inject Logger log;
    @Produces
    @ApplicationScoped
    @Module
@@ -59,7 +61,10 @@ public class ConnectionProducer
    @ApplicationScoped
    public Connection getConnection() throws Exception
    {
-      return cf.createConnection();
+       log.info("Creating a new connection.");
+      Connection conn = cf.createConnection();
+      //conn.start();
+      return conn;
    }
 
    public void closeConnection(@Disposes Connection c) throws JMSException

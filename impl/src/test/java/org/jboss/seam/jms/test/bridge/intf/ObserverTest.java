@@ -58,7 +58,7 @@ public class ObserverTest {
     Logger log = Logger.getLogger(ObserverTest.class);
     @Test
     public void testObserve() throws JMSException {
-        c.start();
+        //c.start();
         log.info("Running ObserverTest");
         //ts.setMessageListener(new ObserverListener());
         stringEvent.fire("hello, world!");
@@ -69,7 +69,7 @@ public class ObserverTest {
             String data = msg.getObject().toString();
             assertEquals(data,"hello, world!");
             ts.close();
-            c.stop();
+            //c.stop();
         } catch (InterruptedException ex) {
             log.info("Error",ex);
         }

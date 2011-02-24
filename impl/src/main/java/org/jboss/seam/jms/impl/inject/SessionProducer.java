@@ -35,7 +35,7 @@ import javax.jms.Session;
 import org.jboss.seam.jms.annotations.JmsSession;
 import org.jboss.seam.jms.annotations.JmsSessionSelector;
 
-public @RequestScoped
+public
 class SessionProducer
 {
    @Produces

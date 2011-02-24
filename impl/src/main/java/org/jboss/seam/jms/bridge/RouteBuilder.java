@@ -6,6 +6,7 @@ package org.jboss.seam.jms.bridge;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Instance;
@@ -39,7 +40,9 @@ public class RouteBuilder implements java.io.Serializable {
    @PostConstruct
    public void init() throws JMSException {
        log.info("Calling RouteBuilder.init");
+       extension.setBeanManager(beanManager);
        ingressRoutes = extension.getIngressRoutes();
+       log.info("Ingress routes size: ("+ingressRoutes.size()+") "+ingressRoutes);
        connection.start();
        for(Route ingressRoute : ingressRoutes)
             createListener(ingressRoute);
@@ -56,9 +59,11 @@ public class RouteBuilder implements java.io.Serializable {
     @Inject BeanManager beanManager;
 
     private void createListener(Route ingressRoute) {
+        ClassLoader prevCl = Thread.currentThread().getContextClassLoader();
         log.info("About to create listener for route "+ingressRoute);
+        log.info("Routes: "+ingressRoute.getDestinations());
         for (Destination d : ingressRoute.getDestinations()) {
-            IngressMessageListener listener = new IngressMessageListener(beanManager);
+            IngressMessageListener listener = new IngressMessageListener(beanManager,Thread.currentThread().getContextClassLoader());
             listener.setRoute(ingressRoute);
             try {
                 MessageConsumer consumer = session.createConsumer(d);

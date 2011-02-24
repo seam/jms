@@ -126,7 +126,7 @@ public class Seam3JmsExtension implements Extension {
             boolean isResourced = m.isAnnotationPresent(Resource.class);
             if (isResourced) {
                 Resource r = m.getAnnotation(Resource.class);
-                log.info("Loading resource " + r.mappedName());
+                log.debug("Loading resource " + r.mappedName());
                 route.addDestinationJndiName(r.mappedName());
             }
 
@@ -139,7 +139,7 @@ public class Seam3JmsExtension implements Extension {
                     if (ap.getBaseType() instanceof Class) {
                         Class<?> clazz = (Class<?>) ap.getBaseType();
                         if (Destination.class.isAssignableFrom(clazz)) {
-                            log.info("Found another type of qualifier.");
+                            log.debug("Found another type of qualifier.");
                             //route.addDestinationQualifiers(ap.getAnnotations());
                             route.addAnnotatedParameter(ap);
                         } else if (ap.isAnnotationPresent(Observes.class)) {
@@ -174,15 +174,16 @@ public class Seam3JmsExtension implements Extension {
         registerRouteProducer(pp.getAnnotatedMember());
     }
 
-    public void handleAfterDeploymentValidation(@Observes AfterDeploymentValidation adv, BeanManager beanManager) {
-        log.debug("Handling AfterDeploymentValidation, loading active bean manager into all beans.");
+    public void setBeanManager(BeanManager beanManager) {
+        log.info("Handling AfterDeploymentValidation, loading active bean manager into all beans.");
         if(!this.readyToRoute) {
             for(EgressRoutingObserver ero : this.observerMethods) {
-                log.debug("Setting observer method beanmanager. "+beanManager);
+                log.info("Setting observer method beanmanager. "+beanManager);
                 ero.setBeanManager(beanManager);
             }
             this.readyToRoute = true;
         }
+        log.info("Ingress routes: "+this.ingressRoutes);
     }
 
     public boolean isReadyToRoute() {
@@ -209,17 +210,19 @@ public class Seam3JmsExtension implements Extension {
         }
     }
     private void addRoute(Route route) {
+        log.debug("RouteType is: "+route.getType());
         if(route.validate()) {
             if(route.getType() == RouteType.EGRESS) {
                 this.egressRoutes.add(route);
             } else if(route.getType() == RouteType.INGRESS) {
                 this.ingressRoutes.add(route);
             } else {
+                log.debug("Adding both types of routes.");
                 this.egressRoutes.add(route);
                 this.ingressRoutes.add(route);
             }
         } else {
-            log.debugf("Not adding route %s to routes, it was not valid.");
+            log.debugf("Not adding route %s to routes, it was not valid.",route);
         }
     }
     public List<Route> getIngressRoutes() {
@@ -231,7 +234,7 @@ public class Seam3JmsExtension implements Extension {
             eventRoutingRegistry.add((AnnotatedMethod<?>) m);
             return true;
         } else {
-            log.warnf("Producer of routes not registered. Must declare a method producer. (%s)", m);
+            log.debugf("Producer of routes not registered. Must declare a method producer. (%s)", m);
             return false;
         }
     }
