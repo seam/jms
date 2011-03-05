@@ -68,14 +68,14 @@ public class IngressTest {
         //conn.start();
         MessageProducer mp = session.createProducer(t);
         ObjectMessage om = session.createObjectMessage();
-        om.setObject("hello, world!");
+        om.setObject(7l);
         mp.send(om);
         Thread.sleep(5 * 1000);
         mp.close();
         //conn.stop();
     }
 
-    public void observeString(@Observes String s) {
-        System.out.println("Received message "+s);
+    public void observeString(@Observes Long l) {
+        System.out.println("Received message "+l);
     }
 }

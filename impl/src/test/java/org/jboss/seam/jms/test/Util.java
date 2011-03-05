@@ -30,6 +30,8 @@ import org.jboss.seam.jms.impl.inject.ConnectionProducer;
 import org.jboss.seam.jms.impl.inject.ContextProducer;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 import org.jboss.seam.jms.test.bridge.IngressInterfaceProducer;
+import org.jboss.seam.solder.bean.defaultbean.DefaultBean;
+import org.jboss.seam.solder.literal.DefaultLiteral;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -50,6 +52,7 @@ public class Util
       ejbModule.addPackage(JmsAnnotatedTypeWrapper.class.getPackage());
       ejbModule.addPackage(Route.class.getPackage());
       ejbModule.addClasses(IngressInterfaceProducer.class);
+      ejbModule.addClasses(DefaultLiteral.class,DefaultBean.class);
       ejbModule.addManifestResource(EmptyAsset.INSTANCE, "beans.xml");
       ejbModule.addServiceProvider(Extension.class, Seam3JmsExtension.class);
       for (Class<?> c : classes)

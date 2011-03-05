@@ -48,7 +48,7 @@ public class ConnectionProducer
 {
    @Resource(mappedName = "ConnectionFactory")
    private ConnectionFactory cf;
-   @Inject Logger log;
+   private Logger log = Logger.getLogger(ConnectionProducer.class);
    @Produces
    @ApplicationScoped
    @Module
@@ -63,7 +63,7 @@ public class ConnectionProducer
    {
        log.info("Creating a new connection.");
       Connection conn = cf.createConnection();
-      //conn.start();
+      conn.start();
       return conn;
    }
 

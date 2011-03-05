@@ -89,11 +89,12 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     }
 
     public Set<Annotation> getObservedQualifiers() {
-        log.info(("Inidicating that i observe these qualifiers: "+routing.getQualifiers()));
+        log.debugf("Inidicating that i observe these qualifiers: [%s]",routing.getQualifiers());
         Set<Annotation> as = routing.getQualifiers();
         if(as.isEmpty()) {
             Set<Annotation> a = new HashSet<Annotation>();
             a.add(new DefaultLiteral());
+            log.debug("Return default literal, no qualifiers found.");
             return a;
         }
         return routing.getQualifiers();
@@ -114,6 +115,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     public void notify(Object evt) {
         // FIXME Include qualifiers once CDI 1.0 MR is complete and
         // notify(Event, Set<Annotation>) is added
+        log.debugf("Notified of an event: %s",evt);
         if(this.extension.isReadyToRoute())
             forwardEvent(evt);
         else {
@@ -169,7 +171,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     }
 
     private Destination lookupDestination(AnnotatedParameter<?> ap) {
-        log.info("Looking up destination: "+ap);
+        log.debug("Looking up destination: "+ap);
         Set<Bean<?>> beans = bm.getBeans(Destination.class);
         Bean<?> bean = bm.resolve(beans);
         ImmutableInjectionPoint iip = new ImmutableInjectionPoint(ap,bm,bean,false,false);
@@ -183,7 +185,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
         Session s = getSession();
         try {
             for (Destination d : routing.getDestinations()) {
-                log.infof("Routing event %s over destination %s", event, d);
+                log.debugf("Routing event %s over destination %s", event, d);
                 try {
                     Message m = s.createObjectMessage((Serializable) event);
                     // Safe to create producers here always? In an app server these

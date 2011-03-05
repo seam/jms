@@ -120,6 +120,8 @@ public class Seam3JmsExtension implements Extension {
             Routing routing = null;
             if (m.isAnnotationPresent(Routing.class)) {
                 routing = m.getAnnotation(Routing.class);
+            } else {
+                log.debug("Routing not found on method "+m.getJavaMember().getName());
             }
             RouteType routeType = (routing == null) ? RouteType.BOTH : routing.value();
             Route route = new RouteImpl(routeType);
@@ -183,6 +185,7 @@ public class Seam3JmsExtension implements Extension {
             }
             this.readyToRoute = true;
         }
+        log.info("EgressRoutingObservers: "+this.observerMethods);
         log.info("Ingress routes: "+this.ingressRoutes);
     }
 
@@ -241,9 +244,12 @@ public class Seam3JmsExtension implements Extension {
 
     private static Set<Annotation> getQualifiersFrom(Set<Annotation> annotations) {
         Set<Annotation> q = new HashSet<Annotation>();
+        log.info("Annotations in getQualifiersFrom: "+annotations);
         for (Annotation a : annotations) {
             if (a.annotationType().isAnnotationPresent(Qualifier.class)) {
                 q.add(a);
+            } else {
+                log.infof("Skipping annotation %s",a);
             }
         }
         return q;

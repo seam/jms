@@ -32,6 +32,7 @@ import org.jboss.seam.jms.bridge.RouteType;
  * @author johnament
  */
 public interface ObserverInterface {
+    @Routing(RouteType.EGRESS)
     public void obsStringToTopic(@Observes String s, @JmsDestination(jndiName="jms/T2") Topic t);
     @Routing(RouteType.INGRESS)
     public void obsLongToTopic(@Observes Long l, @JmsDestination(jndiName="jms/T2") Topic t);

@@ -19,21 +19,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.seam.jms.annotations;
+package org.jboss.seam.jms.test.bridge.intf;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-import javax.inject.Qualifier;
-import org.jboss.seam.jms.bridge.RouteType;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.ObjectMessage;
+
 /**
  *
  * @author johnament
  */
-@Qualifier
-@Retention(RUNTIME)
-@Target({METHOD})
-public @interface Routing {
-    public RouteType value();
+public class SimpleListener implements javax.jms.MessageListener {
+    private boolean observed=false;
+    private String data=null;
+    @Override
+    public void onMessage(Message msg) {
+        if(msg instanceof ObjectMessage) {
+            observed =true;
+            ObjectMessage om = (ObjectMessage) msg;
+            try {
+                data = om.getObject().toString();
+            } catch (JMSException ex) {
+            }
+        }
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public boolean isObserved() {
+        return observed;
+    }
+
 }

@@ -21,14 +21,17 @@
  */
 package org.jboss.seam.jms.test.bridge.intf;
 
+import javax.enterprise.inject.Default;
+import org.jboss.seam.jms.bridge.RouteBuilder;
+import javax.jms.MessageConsumer;
+import javax.jms.Session;
+import javax.jms.Topic;
 import org.jboss.logging.Logger;
 import javax.jms.Connection;
-import org.junit.Ignore;
 import javax.jms.ObjectMessage;
 import javax.jms.JMSException;
 import org.jboss.seam.jms.impl.inject.MessagePubSubProducer;
 import org.jboss.seam.jms.annotations.JmsDestination;
-import javax.jms.TopicSubscriber;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -51,24 +54,29 @@ public class ObserverTest {
     public static Archive<?> createDeployment() {
         return Util.createDeployment(ObserverInterface.class, ImmutableInjectionPoint.class, MessagePubSubProducer.class);
     }
-    @Inject
+    private static final String EVENT_MSG = "hello, world!";
+
+    @Inject @Default
     Event<String> stringEvent;
     @Inject Connection c;
-    @Inject @JmsDestination(jndiName="jms/T2") TopicSubscriber ts;
+    @Inject @JmsDestination(jndiName="jms/T2") Topic t;
+    @Inject RouteBuilder routeBuilder;
     Logger log = Logger.getLogger(ObserverTest.class);
     @Test
     public void testObserve() throws JMSException {
-        //c.start();
-        log.info("Running ObserverTest");
-        //ts.setMessageListener(new ObserverListener());
-        stringEvent.fire("hello, world!");
+        c.start();
+        log.debug("Running ObserverTest");
+        stringEvent.fire(EVENT_MSG);
         try {
-            Thread.sleep(5 * 1000);
-            ObjectMessage msg = (ObjectMessage)ts.receive(3000);
-            assertNotNull(msg);
-            String data = msg.getObject().toString();
-            assertEquals(data,"hello, world!");
-            ts.close();
+            SimpleListener sl = new SimpleListener();
+            Session session = c.createSession(true, Session.DUPS_OK_ACKNOWLEDGE);
+            MessageConsumer mc = session.createConsumer(t);
+            mc.setMessageListener(sl);
+            Thread.sleep(10 * 1000);
+            assertTrue(sl.isObserved());
+            String data = sl.getData();
+            assertEquals(data,EVENT_MSG);
+            mc.close();
             //c.stop();
         } catch (InterruptedException ex) {
             log.info("Error",ex);
