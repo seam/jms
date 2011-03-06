@@ -38,10 +38,12 @@ import org.jboss.seam.jms.test.inject.InjectMessageConsumer;
 import org.jboss.seam.jms.test.inject.InjectMessageProducer;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
+@Ignore
 public class SimpleTransmitMessageTest
 {
    @Deployment
@@ -77,6 +79,7 @@ public class SimpleTransmitMessageTest
    private void sendMessage(MessageProducer mp, MessageConsumer mc) throws JMSException
    {
       String expected = "test";
+      Session s = c.createSession(false, Session.AUTO_ACKNOWLEDGE);
       Message m = s.createTextMessage(expected);
       c.start();
       try

@@ -59,14 +59,14 @@ public class PubSubTest {
     @Test
     public void testPubAndSub() throws JMSException {
         conn.start();
-        Session session = conn.createSession(true, Session.DUPS_OK_ACKNOWLEDGE);
+        Session session = conn.createSession(false, Session.DUPS_OK_ACKNOWLEDGE);
         MessageProducer mp = session.createProducer(t2);
         MessageConsumer mc = session.createConsumer(t2);
         TextMessage m = (TextMessage)session.createTextMessage("hello");
         boolean observed = false;
         mp.send(m);
         Message out;
-        while((out = mc.receive(50000)) != null) {
+        while((out = mc.receive(10000)) != null) {
             if(out instanceof TextMessage) {
                 TextMessage tm = (TextMessage)out;
                 logger.info("The data received is: "+tm.getText());

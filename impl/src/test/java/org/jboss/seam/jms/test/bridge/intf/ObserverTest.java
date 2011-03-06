@@ -69,7 +69,7 @@ public class ObserverTest {
         stringEvent.fire(EVENT_MSG);
         try {
             SimpleListener sl = new SimpleListener();
-            Session session = c.createSession(true, Session.DUPS_OK_ACKNOWLEDGE);
+            Session session = c.createSession(false, Session.DUPS_OK_ACKNOWLEDGE);
             MessageConsumer mc = session.createConsumer(t);
             mc.setMessageListener(sl);
             Thread.sleep(10 * 1000);
