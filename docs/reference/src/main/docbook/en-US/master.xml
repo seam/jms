@@ -29,4 +29,5 @@
    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="installation.xml" />
    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="resource-injection.xml" />
    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="routing.xml" />
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="mapping-interfaces.xml" />
 </book>

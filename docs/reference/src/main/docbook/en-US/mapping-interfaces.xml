@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source
+  Copyright 2010, Red Hat, Inc., and individual contributors
+  by the @authors tag. See the copyright.txt in the distribution for a
+  full listing of individual contributors.
+
+  This is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation; either version 2.1 of
+  the License, or (at your option) any later version.
+
+  This software is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this software; if not, write to the Free
+  Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="mapping-interfaces">
+   <title>Annotation Routing APIs</title>
+
+   <para>
+      This chapter is meant to describe the behavior of mapping interfaces, where event mapping to data flowing through
+      JMS Queues and Topics are handled via events.  Currently, the mapping interfaces only support single direction
+      mappings, a route defined can only be one of egress or ingress, never both.
+   </para>
+   <tip>
+       You should never create a bi-directional route via the API.  The results will not be what you expect.
+   </tip>
+
+   <section id="obs-methods">
+       <title>Observer Method Interfaces</title>
+       <para>
+           Observer Method Interfaces are simple Plain Old Java Interfaces (POJIs) that define either an ingress or
+           an egress route.  This is a sample interface:
+       </para>
+       <programlisting role="Java">
+           public interface MappingInterface {
+               @Routing(RouteType.INGRESS)
+               public void routeStringsFromTopic(@Observes String s, @JmsDestination(jndiName="jms/MyTopic") Topic t);
+               
+               @Routing(RouteType.EGRESS)
+               public void routeLongsToQueue(@Observes Long l, @JmsDestination(jndiName="jms/MyQueue") Queue q);
+           }
+       </programlisting>
+       <para>
+           This interface defines two routes.  One being an ingress route - messages coming in to the topic jms/MyTopic
+           will be fired as events with the type String.  The second being an egress route - events fired of type Long will
+           be turned into ObjectMessages and using a MessageProducer sent to the queue jms/MyQueue.
+       </para>
+       <para>
+           The object being observed can have qualifiers.  These qualifiers will be carried over in the fired event and follow
+           the CDI rules for observer method selection.  In all cases, the return type of the method is ignored.
+       </para>
+       <para>
+           The destinations can have any qualifier.  In addition, there is basic support for @Resource on the method level to
+           define the destination.  This in general not 100% portable from the application developer perspective, we recommend
+           heavy testing of the behavior on your application server.
+       </para>
+       <tip>
+           In JBoss AS 6, if the return type is void, the mapping will generally fail (when using @Resource).  You can change the return type to another
+           object to make it pass.
+       </tip>
+   </section>
+</chapter>

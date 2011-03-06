@@ -120,8 +120,23 @@ event.fire(myEvent);</programlisting>
       <title>CDI Events from JMS Messages</title>
 
       <para>
-         TODO Add documentation when implemented
+         Similar to egress routes, ingress routes are defined the same way.  In this case, they listen for messages on
+         the specified destination(s) and fire events.  In order to receive them, you need to define a CDI Observer Method
+         to watch for the events that get fired.  All of the data will be type safe, assuming you have defined your routes correctly.
       </para>
+
+      <para>
+          Similar to the above example, this creates ingress routes from the Queue jms/EventQueue and fires events based on the MyEvent
+          objects that are carried over the wire.
+      </para>
+
+      <programlisting role="Java">@Inject EventBridge bridge;
+@Inject @JmsDestination(jndiName="jms/EventQueue") Queue eventQueue;
+AnnotationLiteral&lt;Bridged&gt; BRIDGED = new AnnotationLiteral&lt;Bridged&gt;() {};
+@EventRouting public Route registerMyEventRoute()
+{
+   return bridge.createRoute(RouteType.INGRESS, MyEvent.class).addQualifiers(BRIDGED).connectTo(Queue.class, eventQueue);
+}</programlisting>
    </section>
 </chapter>
    
