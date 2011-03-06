@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import javax.enterprise.inject.spi.AnnotatedParameter;
+import javax.enterprise.inject.spi.BeanManager;
 
 import javax.jms.Destination;
 
@@ -115,4 +116,6 @@ public interface Route {
     public Route setType(Type type);
 
     public boolean validate();
+
+    public void build(BeanManager beanManager);
 }

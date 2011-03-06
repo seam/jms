@@ -80,11 +80,11 @@ public class IngressMessageListener implements MessageListener {
                 ObjectMessage om = (ObjectMessage) msg;
                 try {
                     Serializable data = (Serializable)om.getObject();
-                    logger.info(" data was: " + om.getObject());
+                    logger.info(" data was: " + om.getObject()+" of type "+data.getClass().getCanonicalName());
                     //if(qualifiers == null) {
                     //BeanManager beanManager = Utils.lookupBM();
                     try {
-                        beanManager.fireEvent(data, getAnnotations());
+                        beanManager.fireEvent(data);
                     } catch (Exception e) {
                         logger.error("Unable to fire event", e);
                     }

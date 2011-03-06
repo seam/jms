@@ -30,10 +30,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.enterprise.inject.spi.AnnotatedParameter;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 
 import javax.inject.Qualifier;
 import javax.jms.Destination;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import org.jboss.logging.Logger;
+import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 
 /**
  * JMS Event Bridge Routing
@@ -145,6 +151,51 @@ public class RouteImpl implements Route
     public Route addAnnotatedParameter(AnnotatedParameter<?> ap) {
         this.annotatedParameters.add(ap);
         return this;
+    }
+
+    private boolean built = false;
+    private BeanManager bm;
+
+    public void build(BeanManager beanManager) {
+        if(!built) {
+            this.bm = beanManager;
+            loadDestinations();
+            this.built=true;
+        }
+    }
+
+    private void loadDestinations() {
+        Set<Destination> destinations = new HashSet<Destination>();
+        destinations.addAll(getDestinations());
+        for(String dest : getDestinationJndiNames()) {
+            Destination destination = lookupDestination(dest);
+            destinations.add(destination);
+        }
+        for(AnnotatedParameter<?> ap : getAnnotatedParameters()) {
+            Destination destination = lookupDestination(ap);
+            destinations.add(destination);
+        }
+        logger.infof("Routing destinations: [%s]",destinations);
+        setDestinations(destinations);
+    }
+
+    private Destination lookupDestination(String jndiName) {
+        try{
+            Context c = new InitialContext();
+            return (Destination)c.lookup(jndiName);
+        } catch (NamingException e) {
+            logger.warn("Unable to lookup "+jndiName,e);
+        }
+        return null;
+    }
+
+    private Destination lookupDestination(AnnotatedParameter<?> ap) {
+        logger.debug("Looking up destination: "+ap);
+        Set<Bean<?>> beans = bm.getBeans(Destination.class);
+        Bean<?> bean = bm.resolve(beans);
+        ImmutableInjectionPoint iip = new ImmutableInjectionPoint(ap,bm,bean,false,false);
+        Object o = bm.getInjectableReference(iip, bm.createCreationalContext(bean));
+        return (Destination)o;
     }
 
     public Set<AnnotatedParameter<?>> getAnnotatedParameters() {

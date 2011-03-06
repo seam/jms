@@ -35,7 +35,7 @@ import javax.naming.NamingException;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Module;
 
-public @ApplicationScoped class DestinationProducer
+public class DestinationProducer
 {
 
    @Produces

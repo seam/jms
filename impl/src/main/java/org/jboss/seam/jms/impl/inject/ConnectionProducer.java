@@ -61,9 +61,9 @@ public class ConnectionProducer
    @ApplicationScoped
    public Connection getConnection() throws Exception
    {
-       log.info("Creating a new connection.");
+       log.debug("Creating a new connection.");
       Connection conn = cf.createConnection();
-      conn.start();
+      //conn.start();
       return conn;
    }
 

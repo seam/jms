@@ -93,8 +93,8 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
         Set<Annotation> as = routing.getQualifiers();
         if(as.isEmpty()) {
             Set<Annotation> a = new HashSet<Annotation>();
-            a.add(new DefaultLiteral());
-            log.debug("Return default literal, no qualifiers found.");
+            //a.add(new DefaultLiteral());
+            log.debug("Return empty set, no qualifiers found.");
             return a;
         }
         return routing.getQualifiers();

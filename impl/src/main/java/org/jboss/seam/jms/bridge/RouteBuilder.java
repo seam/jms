@@ -14,6 +14,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
@@ -21,6 +22,7 @@ import javax.jms.Session;
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.jms.annotations.Closeable;
+import org.jboss.seam.jms.annotations.Module;
 import org.jboss.seam.solder.literal.NewLiteral;
 
 /**
@@ -33,6 +35,7 @@ public class RouteBuilder implements java.io.Serializable {
     private Logger log = Logger.getLogger(RouteBuilder.class);
     private List<Route> ingressRoutes;
     @Inject Seam3JmsExtension extension;
+    @Inject @Module ConnectionFactory cf;
    public RouteBuilder() {
         Logger log = Logger.getLogger(RouteBuilder.class);
         log.info("Creating a new RouteBuilder()");
@@ -44,8 +47,10 @@ public class RouteBuilder implements java.io.Serializable {
        ingressRoutes = extension.getIngressRoutes();
        log.info("Ingress routes size: ("+ingressRoutes.size()+") "+ingressRoutes);
        connection.start();
-       for(Route ingressRoute : ingressRoutes)
-            createListener(ingressRoute);
+       for(Route ingressRoute : ingressRoutes) {
+           ingressRoute.build(beanManager);
+           createListener(ingressRoute,cf);
+       }
    }
     @Inject
     @Closeable
@@ -58,7 +63,7 @@ public class RouteBuilder implements java.io.Serializable {
     Instance<IngressMessageListener> listeners;
     @Inject BeanManager beanManager;
 
-    private void createListener(Route ingressRoute) {
+    private void createListener(Route ingressRoute,ConnectionFactory cf) {
         ClassLoader prevCl = Thread.currentThread().getContextClassLoader();
         log.info("About to create listener for route "+ingressRoute);
         log.info("Routes: "+ingressRoute.getDestinations());
@@ -66,7 +71,11 @@ public class RouteBuilder implements java.io.Serializable {
             IngressMessageListener listener = new IngressMessageListener(beanManager,Thread.currentThread().getContextClassLoader());
             listener.setRoute(ingressRoute);
             try {
-                MessageConsumer consumer = session.createConsumer(d);
+                Connection conn = cf.createConnection();
+                conn.start();
+                Session sess = conn.createSession(true, Session.DUPS_OK_ACKNOWLEDGE);
+                log.info("Creating a consumer for destination "+d);
+                MessageConsumer consumer = sess.createConsumer(d);
                 consumer.setMessageListener(listener);
             } catch (JMSException ex) {
                 log.warnf("Unable to create consumer for destination %s", d, ex);
