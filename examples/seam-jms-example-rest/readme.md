@@ -1,4 +1,4 @@
-#sample-jms-app
+#seam-jms-example-rest 
 
 This application is deployed as a web application and shows off the 
 
