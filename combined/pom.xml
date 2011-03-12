@@ -40,7 +40,7 @@
                      <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
                      <artifactSet>
                         <includes>
-                           <include>org.jboss.seam.jcr:*</include>
+                           <include>org.jboss.seam.jms:*</include>
                         </includes>
                      </artifactSet>
                   </configuration>
