@@ -18,7 +18,7 @@
    <url>http://sfwk.org/Seam3/JMS</url>
 
    <properties>
-      <seam.version>3.0.0.b07</seam.version>
+      <seam.version>3.0.0.CR1</seam.version>
       <arquillian.version>1.0.0.Alpha4</arquillian.version>
       <emma.version>2.0.5312</emma.version>
    </properties>
@@ -26,6 +26,7 @@
    <modules>
       <module>api</module>
       <module>impl</module>
+      <module>combined</module>
    </modules>
    
    <dependencyManagement>
