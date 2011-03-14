@@ -16,17 +16,18 @@
  */
 package org.jboss.seam.jms.test.bridge.intf;
 
-import javax.enterprise.inject.Default;
 import org.jboss.seam.jms.bridge.RouteBuilder;
+import org.jboss.seam.jms.bridge.RouteType;
+
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 import javax.jms.Topic;
 import org.jboss.logging.Logger;
 import javax.jms.Connection;
-import javax.jms.ObjectMessage;
 import javax.jms.JMSException;
 import org.jboss.seam.jms.impl.inject.MessagePubSubProducer;
 import org.jboss.seam.jms.annotations.JmsDestination;
+import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -51,7 +52,7 @@ public class ObserverTest {
     }
     private static final String EVENT_MSG = "hello, world!";
 
-    @Inject @Default
+    @Inject @Routing(RouteType.EGRESS)
     Event<String> stringEvent;
     @Inject Connection c;
     @Inject @JmsDestination(jndiName="jms/T2") Topic t;

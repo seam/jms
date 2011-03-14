@@ -73,7 +73,7 @@ public class Seam3JmsExtension implements Extension {
     private boolean readyToRoute = false;
 
     public void buildRoutes(@Observes final AfterBeanDiscovery abd, final BeanManager bm) {
-        log.info("Building JMS Routes.");
+        log.debug("Building JMS Routes.");
         for (AnnotatedMethod<?> m : eventRoutingRegistry) {
             Type beanType = m.getDeclaringType().getBaseType();
             Set<Bean<?>> configBeans = bm.getBeans(beanType);
@@ -172,16 +172,16 @@ public class Seam3JmsExtension implements Extension {
     }
 
     public void setBeanManager(BeanManager beanManager) {
-        log.info("Handling AfterDeploymentValidation, loading active bean manager into all beans.");
+        log.debug("Handling AfterDeploymentValidation, loading active bean manager into all beans.");
         if(!this.readyToRoute) {
             for(EgressRoutingObserver ero : this.observerMethods) {
-                log.info("Setting observer method beanmanager. "+beanManager);
+                log.debug("Setting observer method beanmanager. "+beanManager);
                 ero.setBeanManager(beanManager);
             }
             this.readyToRoute = true;
         }
-        log.info("EgressRoutingObservers: "+this.observerMethods);
-        log.info("Ingress routes: "+this.ingressRoutes);
+        log.debug("EgressRoutingObservers: "+this.observerMethods);
+        log.debug("Ingress routes: "+this.ingressRoutes);
     }
 
     public boolean isReadyToRoute() {
@@ -239,7 +239,7 @@ public class Seam3JmsExtension implements Extension {
 
     private static Set<Annotation> getQualifiersFrom(Set<Annotation> annotations) {
         Set<Annotation> q = new HashSet<Annotation>();
-        log.info("Annotations in getQualifiersFrom: "+annotations);
+        log.debug("Annotations in getQualifiersFrom: "+annotations);
         for (Annotation a : annotations) {
             if (a.annotationType().isAnnotationPresent(Qualifier.class)) {
                 q.add(a);

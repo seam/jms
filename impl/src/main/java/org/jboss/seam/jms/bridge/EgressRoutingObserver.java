@@ -46,6 +46,7 @@ import org.jboss.logging.Logger;
 import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 import org.jboss.seam.solder.literal.DefaultLiteral;
+import static org.jboss.seam.jms.annotations.RoutingLiteral.EGRESS;
 
 /**
  * Forwards CDI events that match the provided {@link Route} configuration to
@@ -84,14 +85,10 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     }
 
     public Set<Annotation> getObservedQualifiers() {
-        log.debugf("Inidicating that i observe these qualifiers: [%s]",routing.getQualifiers());
-        Set<Annotation> as = routing.getQualifiers();
-        if(as.isEmpty()) {
-            Set<Annotation> a = new HashSet<Annotation>();
-            //a.add(new DefaultLiteral());
-            log.debug("Return empty set, no qualifiers found.");
-            return a;
-        }
+        Set<Annotation> as = new HashSet<Annotation>();
+        as.addAll(routing.getQualifiers());
+        as.add(EGRESS);
+        log.debugf("Inidicating that I observe these qualifiers: [%s]",as);
         return routing.getQualifiers();
     }
 

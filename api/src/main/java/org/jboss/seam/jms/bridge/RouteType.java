@@ -38,5 +38,10 @@ public enum RouteType
     */
    EGRESS,
 
+   /**
+    * This shouldn't be used with Routes developed, but instead with interfaces.
+    * Represents a route that will be generated that has both Egress and Ingress
+    * capabilities.	
+    */
    BOTH;
 }

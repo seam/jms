@@ -47,7 +47,6 @@ public class Util
       ejbModule.addPackage(JmsAnnotatedTypeWrapper.class.getPackage());
       ejbModule.addPackage(Route.class.getPackage());
       ejbModule.addClasses(IngressInterfaceProducer.class);
-      ejbModule.addClasses(DefaultLiteral.class,DefaultBean.class);
       ejbModule.addManifestResource(EmptyAsset.INSTANCE, "beans.xml");
       ejbModule.addServiceProvider(Extension.class, Seam3JmsExtension.class);
       for (Class<?> c : classes)

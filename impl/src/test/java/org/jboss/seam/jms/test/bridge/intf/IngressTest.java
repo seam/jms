@@ -31,13 +31,16 @@ import javax.jms.Topic;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.annotations.JmsDestination;
+import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.jms.bridge.RouteBuilder;
+import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.impl.inject.ConnectionProducer;
 import org.jboss.seam.jms.impl.inject.DestinationProducer;
 import org.jboss.seam.jms.impl.inject.MessagePubSubProducer;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -58,6 +61,9 @@ public class IngressTest {
     @Inject Connection conn;
     @Inject Session session;
     @Inject @JmsDestination(jndiName="jms/T2") Topic t;
+    
+    private static boolean received = false;
+    
     @Test
     public void testObserveMessage() throws JMSException, InterruptedException {
         //conn.start();
@@ -68,9 +74,11 @@ public class IngressTest {
         Thread.sleep(5 * 1000);
         mp.close();
         //conn.stop();
+        Assert.assertTrue(received);
     }
 
-    public void observeString(@Observes Long l) {
+    public void observeString(@Observes @Routing(RouteType.INGRESS) Long l) {
         System.out.println("Received message "+l);
+        received= true;
     }
 }

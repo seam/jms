@@ -31,4 +31,6 @@ public interface ObserverInterface {
     public void obsStringToTopic(@Observes String s, @JmsDestination(jndiName="jms/T2") Topic t);
     @Routing(RouteType.INGRESS)
     public void obsLongToTopic(@Observes Long l, @JmsDestination(jndiName="jms/T2") Topic t);
+    @Routing(RouteType.BOTH)
+    public void obsDoubleToTopic(@Observes Double d, @JmsDestination(jndiName="jms/T2") Topic t);
 }

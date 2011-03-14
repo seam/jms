@@ -21,13 +21,12 @@ import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import org.jboss.logging.Logger;
-import org.jboss.seam.jms.annotations.AsyncLiteral;
+import static org.jboss.seam.jms.annotations.RoutingLiteral.INGRESS;
 
 /**
  *
@@ -53,7 +52,7 @@ public class IngressMessageListener implements MessageListener {
         if (!route.getQualifiers().isEmpty()) {
             annotations.addAll(route.getQualifiers());
         }
-        annotations.add(new AsyncLiteral());
+        annotations.add(INGRESS);
         logger.info("Qualifiers: "+annotations);
         this.qualifiers = annotations.toArray(new Annotation[]{});
     }
@@ -75,17 +74,12 @@ public class IngressMessageListener implements MessageListener {
                 ObjectMessage om = (ObjectMessage) msg;
                 try {
                     Serializable data = (Serializable)om.getObject();
-                    logger.info(" data was: " + om.getObject()+" of type "+data.getClass().getCanonicalName());
-                    //if(qualifiers == null) {
-                    //BeanManager beanManager = Utils.lookupBM();
+                    logger.info("data was: " + om.getObject()+" of type "+data.getClass().getCanonicalName());
                     try {
-                        beanManager.fireEvent(data);
+                        beanManager.fireEvent(data,getAnnotations());
                     } catch (Exception e) {
                         logger.error("Unable to fire event", e);
                     }
-                    /*} else {
-                    beanManager.fireEvent(data, qualifiers);
-                    }*/
                 } catch (JMSException ex) {
                     logger.warn("Unable to read data in message " + msg);
                 }
