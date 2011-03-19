@@ -19,6 +19,7 @@ package org.jboss.seam.jms.test.bridge.intf;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
+import javax.jms.TextMessage;
 
 /**
  *
@@ -29,8 +30,14 @@ public class SimpleListener implements javax.jms.MessageListener {
     private String data=null;
     @Override
     public void onMessage(Message msg) {
-        if(msg instanceof ObjectMessage) {
-            observed =true;
+    	observed =true;
+    	if(msg instanceof TextMessage) { 
+    		try {
+				data = ((TextMessage)msg).getText();
+			} catch (JMSException e) {
+			}
+    	}
+    	else if(msg instanceof ObjectMessage) {
             ObjectMessage om = (ObjectMessage) msg;
             try {
                 data = om.getObject().toString();

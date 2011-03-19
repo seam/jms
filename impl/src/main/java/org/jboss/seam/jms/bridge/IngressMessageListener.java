@@ -25,6 +25,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
+import javax.jms.TextMessage;
+
 import org.jboss.logging.Logger;
 import static org.jboss.seam.jms.annotations.RoutingLiteral.INGRESS;
 
@@ -38,6 +40,7 @@ public class IngressMessageListener implements MessageListener {
     private Annotation[] qualifiers = null;
     private Logger logger;
     private ClassLoader classLoader;
+    private Class<?> payload;
 
     public IngressMessageListener(BeanManager beanManager, ClassLoader classLoader) {
         this.logger = Logger.getLogger(IngressMessageListener.class);
@@ -52,6 +55,7 @@ public class IngressMessageListener implements MessageListener {
         if (!route.getQualifiers().isEmpty()) {
             annotations.addAll(route.getQualifiers());
         }
+        this.payload = (Class<?>)route.getPayloadType();
         annotations.add(INGRESS);
         logger.info("Qualifiers: "+annotations);
         this.qualifiers = annotations.toArray(new Annotation[]{});
@@ -64,28 +68,44 @@ public class IngressMessageListener implements MessageListener {
     public Annotation[] getAnnotations() {
         return qualifiers;
     }
+    
+    private boolean isMessagePayload() {
+    	return this.payload.isAssignableFrom(Message.class);
+    }
 
     public void onMessage(Message msg) {
         logger.info("Received a message");
         ClassLoader prevCl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(classLoader);
         try{
-            if (msg instanceof ObjectMessage) {
-                ObjectMessage om = (ObjectMessage) msg;
-                try {
-                    Serializable data = (Serializable)om.getObject();
-                    logger.info("data was: " + om.getObject()+" of type "+data.getClass().getCanonicalName());
-                    try {
-                        beanManager.fireEvent(data,getAnnotations());
-                    } catch (Exception e) {
-                        logger.error("Unable to fire event", e);
-                    }
-                } catch (JMSException ex) {
-                    logger.warn("Unable to read data in message " + msg);
-                }
-            } else {
-                logger.warn("Received the wrong type of message " + msg);
-            }
+	        if(isMessagePayload()) {
+	        	beanManager.fireEvent(msg,getAnnotations());
+	        } else {
+	        	// then the result is an object message, and we're going to 
+	        	// send the object.
+	            if (msg instanceof ObjectMessage) {
+	                ObjectMessage om = (ObjectMessage) msg;
+	                try {
+	                    Serializable data = (Serializable)om.getObject();
+	                    logger.debug("data was: " + om.getObject()+" of type "+data.getClass().getCanonicalName());
+                    	beanManager.fireEvent(data,getAnnotations());
+	                } catch (JMSException ex) {
+	                    logger.warn("Unable to read data in message " + msg);
+	                }
+	            } else if(msg instanceof TextMessage && 
+	            		this.payload.isAssignableFrom(String.class)){
+	            	TextMessage tm = (TextMessage)msg;
+	            	try {
+						String data = tm.getText();
+						logger.debug("data was: " + data+" of type "+data.getClass().getCanonicalName());
+                    	beanManager.fireEvent(data,getAnnotations());
+					} catch (JMSException e) {
+						logger.warn("Unable to read data in message " + msg);
+					}
+	            } else {
+	            	logger.warn("Received the wrong type of message " + msg);
+	            }
+	        }
         } finally {
             Thread.currentThread().setContextClassLoader(prevCl);
         }

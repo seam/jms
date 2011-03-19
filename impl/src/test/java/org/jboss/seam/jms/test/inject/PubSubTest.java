@@ -61,7 +61,7 @@ public class PubSubTest {
         boolean observed = false;
         mp.send(m);
         Message out;
-        while((out = mc.receive(10000)) != null) {
+        while((out = mc.receive(1000)) != null) {
             if(out instanceof TextMessage) {
                 TextMessage tm = (TextMessage)out;
                 logger.info("The data received is: "+tm.getText());

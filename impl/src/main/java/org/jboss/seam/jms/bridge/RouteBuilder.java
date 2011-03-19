@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -31,6 +32,8 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
+import javax.servlet.ServletContext;
+
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.jms.annotations.Closeable;
@@ -52,6 +55,11 @@ public class RouteBuilder implements java.io.Serializable {
         Logger log = Logger.getLogger(RouteBuilder.class);
         log.info("Creating a new RouteBuilder()");
     }
+   
+   public void handleStartup(@Observes ServletContext servletContext) {
+	   log.info("Starting up Seam JMS via ServletContext callback.");
+   }
+   
    @PostConstruct
    public void init() throws JMSException {
        log.info("Calling RouteBuilder.init");
@@ -71,8 +79,6 @@ public class RouteBuilder implements java.io.Serializable {
     Connection connection;
     @Inject
     Session session;
-    @Inject
-    Instance<IngressMessageListener> listeners;
     @Inject BeanManager beanManager;
 
     private void createListener(Route ingressRoute,ConnectionFactory cf) {

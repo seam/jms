@@ -58,7 +58,7 @@ public class ConnectionProducer
    {
        log.debug("Creating a new connection.");
       Connection conn = cf.createConnection();
-      //conn.start();
+      conn.start();
       return conn;
    }
 

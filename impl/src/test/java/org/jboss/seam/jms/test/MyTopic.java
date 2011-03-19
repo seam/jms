@@ -20,13 +20,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 
+import javax.enterprise.inject.Stereotype;
 import javax.inject.Qualifier;
 
 import org.jboss.seam.jms.annotations.JmsDestination;
 
-@Qualifier
 @Retention(RUNTIME)
 @JmsDestination(jndiName = "/jms/T")
+@Stereotype
 public @interface MyTopic
 {
 }

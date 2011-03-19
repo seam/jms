@@ -43,6 +43,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.jboss.logging.Logger;
+import org.jboss.seam.jms.MessageBuilder;
 import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 import org.jboss.seam.solder.literal.DefaultLiteral;
@@ -117,26 +118,14 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     }
 
     private List<Object> evtCache = new ArrayList<Object>();
-
-    private Session getSession() {
-        Set<Bean<?>> beans = bm.getBeans(Session.class);
+    
+    private MessageBuilder getMessageBuilder() {
+    	Set<Bean<?>> beans = bm.getBeans(MessageBuilder.class);
         Bean<?> bean = bm.resolve(beans);
-        Session s = (Session) bm.getReference(bean, Session.class, bm.createCreationalContext(bean));
-        return s;
+        MessageBuilder mb = (MessageBuilder) bm.getReference(bean, MessageBuilder.class, bm.createCreationalContext(bean));
+        return mb;
     }
-
-    private Connection getConnection() {
-        Set<Bean<?>> beans = bm.getBeans(Connection.class);
-        Bean<?> bean = bm.resolve(beans);
-        Connection conn = (Connection) bm.getReference(bean, Session.class, bm.createCreationalContext(bean));
-        try {
-            conn.start();
-        } catch (JMSException ex) {
-            log.warn("Unable to start connection",ex);
-        }
-        return conn;
-    }
-
+    
     private void loadDestinations() {
         Set<Destination> destinations = new HashSet<Destination>();
         destinations.addAll(routing.getDestinations());
@@ -172,28 +161,12 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     }
 
     private void forwardEvent(Object event) {
-        // TODO Allow session to be configured
-        Connection conn = getConnection();
-        Session s = getSession();
-        try {
-            for (Destination d : routing.getDestinations()) {
-                log.debugf("Routing event %s over destination %s", event, d);
-                try {
-                    Message m = s.createObjectMessage((Serializable) event);
-                    // Safe to create producers here always? In an app server these
-                    // should be cached via JCA managed connection factory but what
-                    // about other environments?
-                    s.createProducer(d).send(m);
-                } catch (JMSException ex) {
-                    log.error("Unable to forward event", ex);
-                }
-            }
-        } finally {
-            try {
-                s.close();
-            } catch (JMSException ex) {
-                log.error("Unable to close session", ex);
-            }
+        MessageBuilder msgBuilder = this.getMessageBuilder();
+        if(event instanceof String) {
+        	msgBuilder.sendTextToDestinations(event.toString(), routing.getDestinations().toArray(new Destination[]{}));
+        } else {
+        	msgBuilder.sendObjectToDestinations(event, routing.getDestinations().toArray(new Destination[]{}));
         }
+        
     }
 }

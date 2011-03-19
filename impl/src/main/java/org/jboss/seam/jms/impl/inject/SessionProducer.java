@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.util.Iterator;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
@@ -34,10 +35,10 @@ import org.jboss.seam.jms.annotations.JmsSessionSelector;
 public
 class SessionProducer
 {
-   @Produces @ApplicationScoped
-   public Session getSession(Connection c) throws JMSException
+   @Produces @Dependent
+   public Session getSession(Connection c, InjectionPoint ip) throws JMSException
    {
-      /*JmsSession s = null;
+      JmsSession s = null;
       if (ip != null)
       {
          // Check for JmsSession annotation
@@ -60,7 +61,7 @@ class SessionProducer
          {
             return c.createSession(s.transacted(), s.acknowledgementMode());
          }
-      }*/
+      }
 
       // Default case where we cannot find an annotation
       return c.createSession(false, Session.AUTO_ACKNOWLEDGE);

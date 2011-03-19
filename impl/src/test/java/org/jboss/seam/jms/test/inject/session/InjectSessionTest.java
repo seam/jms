@@ -28,6 +28,7 @@ import org.jboss.seam.jms.annotations.JmsSessionSelector;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

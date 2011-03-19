@@ -52,6 +52,7 @@ public class InjectDestinationTest
    @Test
    public void injectField_topic() throws JMSException
    {
+	   System.out.println("In InjectField_Topic");
       Assert.assertNotNull(f.getT());
       Assert.assertEquals("T", f.getT().getTopicName());
    }

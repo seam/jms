@@ -20,11 +20,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Retention;
 
-import javax.inject.Qualifier;
+import javax.enterprise.inject.Stereotype;
 
 import org.jboss.seam.jms.annotations.JmsDestination;
 
-@Qualifier
+@Stereotype
 @Retention(RUNTIME)
 @JmsDestination(jndiName = "/jms/Q")
 public @interface MyQueue

@@ -28,6 +28,7 @@ import javax.jms.TextMessage;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.jms.MessageBuilder;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.seam.jms.test.inject.InjectMessageConsumer;
 import org.jboss.seam.jms.test.inject.InjectMessageProducer;
@@ -38,56 +39,34 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-@Ignore
-public class SimpleTransmitMessageTest
-{
-   @Deployment
-   public static Archive<?> createDeployment()
-   {
-      return Util.createDeployment(SimpleTransmitMessageTest.class, InjectMessageConsumer.class);
-   }
+public class SimpleTransmitMessageTest {
+	@Deployment
+	public static Archive<?> createDeployment() {
+		return Util.createDeployment(SimpleTransmitMessageTest.class,
+				InjectMessageConsumer.class, MessageBuilder.class);
+	}
 
-   @Inject
-   private Connection c;
-   
-   @Inject
-   private Session s;
-  
-   @Inject
-   private Instance<InjectMessageConsumer> imc;
+	@Inject
+	MessageBuilder messageBuilder;
 
-   @Inject
-   private Instance<InjectMessageProducer> imp;
+	@Test
+	public void sendMessage_topic() throws JMSException {
+		sendMessage("/jms/T");
+	}
 
-   @Test
-   public void sendMessage_topic() throws JMSException
-   {
-      sendMessage(imp.get().getTp(), imc.get().getTs());
-   }
-   
-   @Test
-   public void sendMessage_queue() throws JMSException
-   {
-      sendMessage(imp.get().getQs(), imc.get().getQr());
-   }
-   
-   private void sendMessage(MessageProducer mp, MessageConsumer mc) throws JMSException
-   {
-      String expected = "test";
-      Session s = c.createSession(false, Session.AUTO_ACKNOWLEDGE);
-      Message m = s.createTextMessage(expected);
-      c.start();
-      try
-      {
-         mp.send(m);
-         Message received = mc.receive(3000);
-         Assert.assertNotNull(received);
-         Assert.assertTrue(received instanceof TextMessage);
-         TextMessage tm = TextMessage.class.cast(received);
-         Assert.assertEquals(expected, tm.getText());
-      } finally
-      {
-         c.stop();
-      }
-   }
+	@Test
+	public void sendMessage_queue() throws JMSException {
+		sendMessage("/jms/Q");
+	}
+
+	private void sendMessage(String destination) throws JMSException {
+		String expected = "test";
+		MessageConsumer mc = messageBuilder.createMessageConsumer(destination);
+		messageBuilder.sendTextToDestinations(expected, destination);
+		Message received = mc.receive(3000);
+		Assert.assertNotNull(received);
+		Assert.assertTrue(received instanceof TextMessage);
+		TextMessage tm = TextMessage.class.cast(received);
+		Assert.assertEquals(expected, tm.getText());
+	}
 }
