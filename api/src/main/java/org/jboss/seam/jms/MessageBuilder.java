@@ -7,10 +7,15 @@ import javax.jms.Destination;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
+import javax.jms.QueueReceiver;
+import javax.jms.QueueSender;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import javax.jms.TopicPublisher;
+import javax.jms.TopicSubscriber;
 
 /**
  * The MessageBuilder interface defines an abstraction layer over the JMS APIs
@@ -141,18 +146,81 @@ public interface MessageBuilder {
 	public Session getSession();
 	
 	/**
-	 * Creates a new MessageConsumer that will be managed by the used session
-	 * 
-	 * @param destination JNDI Location of Destination in use
-	 * @return a new MessageConsumer that is ready to work.
-	 */
-	public MessageConsumer createMessageConsumer(String destination);
-	
-	/**
 	 * Creates a new MessageProducer that will be managed by the used session
 	 * 
 	 * @param destination JNDI Location of Destination in use
 	 * @return a new MessageProducer that is ready to work.
 	 */
 	public MessageProducer createMessageProducer(String destination);
+	
+	/**
+	 * Creates a TopicPublisher for the given topic.
+	 * 
+	 * @param destination JNDI Location of Destination in use
+	 * @return a new TopicPublisher that is ready to work.
+	 */
+	public TopicPublisher createTopicPublisher(String destination);
+	
+	/**
+	 * Creates a QueueSender for the given queue.
+	 * 
+	 * @param destination JNDI Location of Destination in use
+	 * @return a new QueueSender that is ready to work.
+	 */
+	public QueueSender createQueueSender(String destination);
+	
+	/**
+	 * Creates a new MessageConsumer that will be managed by the used session
+	 * 
+	 * @param destination JNDI Location of Destination in use
+	 * @param listeners optional list of MessageListeners that will be bound to the consumer.
+	 * @return a new MessageConsumer that is ready to work.
+	 */
+	public MessageConsumer createMessageConsumer(String destination, MessageListener... listeners);
+	
+	/**
+	 * Creates a new MessageConsumer that will be managed by the used session
+	 * 
+	 * @param destination JNDI Location of Destination in use
+	 * @param listeners optional list of MessageListeners that will be bound to the consumer.
+	 * @return a new MessageConsumer that is ready to work.
+	 */
+	public MessageConsumer createMessageConsumer(Destination destination, MessageListener... listeners);
+	
+	/**
+	 * Creates a new TopicSubscriber that will be managed by the used session
+	 * 
+	 * @param destination JNDI Location of Topic in use
+	 * @param listeners optional list of MessageListeners that will be bound to the subscriber.
+	 * @return a new TopicSubscriber that is ready to work.
+	 */
+	public TopicSubscriber createTopicSubscriber(String destination, MessageListener... listeners);
+	
+	/**
+	 * Creates a new QueueReceiver that will be managed by the used session
+	 * 
+	 * @param destination JNDI Location of Queue in use
+	 * @param listeners optional list of MessageListeners that will be bound to the receiver.
+	 * @return a new QueueReceiver that is ready to work.
+	 */
+	public QueueReceiver createQueueReceiver(String destination, MessageListener... listeners);
+	
+	/**
+	 * Creates a topic subscriber with the given ID and binds a message listener to it, if valid.
+	 * 
+	 * {@see MessageBuilder.createDurableSubscriber}
+	 * 
+	 * @param destination JNDI Location of the topic to subscribe to.
+	 * @param id the client id for the subscriber.  This ID should be unique, and should be used to shutdown the listener.
+	 * @param listener The Message Listeners to be bound, if any.
+	 * @return the resulting TopicSubscriber or null if an error occurred.
+	 */
+	public TopicSubscriber createDurableSubscriber(String destination, String id, MessageListener... listeners);
+	
+	/**
+	 * Unsubscribes a durable subscriber from the topic, with the given id.
+	 * 
+	 * @param id the id of the subscriber.
+	 */
+	public void unsubscribe(String id);
 }

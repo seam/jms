@@ -39,7 +39,6 @@ public class RoutingLiteral extends AnnotationLiteral<Routing> implements Routin
 	
 	@Override
 	public RouteType value() {
-		// TODO Auto-generated method stub
 		return routeType;
 	}
 

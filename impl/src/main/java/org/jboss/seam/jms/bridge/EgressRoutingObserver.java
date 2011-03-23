@@ -16,15 +16,14 @@
  */
 package org.jboss.seam.jms.bridge;
 
-import java.io.Serializable;
+import static org.jboss.seam.jms.annotations.RoutingLiteral.EGRESS;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Reception;
@@ -34,20 +33,15 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.ObserverMethod;
 import javax.inject.Named;
-import javax.jms.Connection;
 import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.MessageBuilder;
 import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
-import org.jboss.seam.solder.literal.DefaultLiteral;
-import static org.jboss.seam.jms.annotations.RoutingLiteral.EGRESS;
 
 /**
  * Forwards CDI events that match the provided {@link Route} configuration to

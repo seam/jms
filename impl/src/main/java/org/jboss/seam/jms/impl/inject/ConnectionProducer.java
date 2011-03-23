@@ -54,10 +54,10 @@ public class ConnectionProducer
 
    @Produces
    @ApplicationScoped
-   public Connection getConnection() throws Exception
+   public Connection getConnection(@Module ConnectionFactory connectionFactory) throws Exception
    {
        log.debug("Creating a new connection.");
-      Connection conn = cf.createConnection();
+      Connection conn = connectionFactory.createConnection();
       conn.start();
       return conn;
    }

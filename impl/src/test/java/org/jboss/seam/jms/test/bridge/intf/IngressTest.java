@@ -30,9 +30,11 @@ import javax.jms.Session;
 import javax.jms.Topic;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.jms.MessageBuilder;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.jms.bridge.RouteBuilder;
+import org.jboss.seam.jms.bridge.RouteBuilderImpl;
 import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.impl.inject.ConnectionProducer;
 import org.jboss.seam.jms.impl.inject.DestinationProducer;
@@ -54,26 +56,19 @@ public class IngressTest {
     @Deployment
     public static Archive<?> createDeployment() {
         return Util.createDeployment(ObserverInterface.class, ImmutableInjectionPoint.class,
-                DestinationProducer.class, MessagePubSubProducer.class, RouteBuilder.class, ConnectionProducer.class);
+                DestinationProducer.class, MessagePubSubProducer.class, RouteBuilderImpl.class, ConnectionProducer.class);
     }
 
     @Inject RouteBuilder builder;
-    @Inject Connection conn;
-    @Inject Session session;
+    @Inject MessageBuilder messageBuilder;
     @Inject @JmsDestination(jndiName="jms/T2") Topic t;
     
     private static boolean received = false;
     
     @Test
     public void testObserveMessage() throws JMSException, InterruptedException {
-        //conn.start();
-        MessageProducer mp = session.createProducer(t);
-        ObjectMessage om = session.createObjectMessage();
-        om.setObject(7l);
-        mp.send(om);
+        messageBuilder.sendObjectToDestinations(7L, t);
         Thread.sleep(5 * 1000);
-        mp.close();
-        //conn.stop();
         Assert.assertTrue(received);
     }
 

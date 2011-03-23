@@ -16,31 +16,30 @@
  */
 package org.jboss.seam.jms.test.bridge.intf;
 
-import org.jboss.seam.jms.bridge.RouteBuilder;
-import org.jboss.seam.jms.bridge.RouteType;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import javax.jms.ConnectionFactory;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import javax.jms.Connection;
+import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 import javax.jms.Topic;
+
+import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.logging.Logger;
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import org.jboss.seam.jms.impl.inject.MessagePubSubProducer;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Routing;
-import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
-
-import javax.annotation.Resource;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import org.jboss.arquillian.api.Deployment;
-import org.junit.runner.RunWith;
-import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.jms.bridge.RouteBuilder;
+import org.jboss.seam.jms.bridge.RouteType;
+import org.jboss.seam.jms.impl.inject.MessagePubSubProducer;
 import org.jboss.seam.jms.test.Util;
+import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
 
 /**
  *

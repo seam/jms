@@ -23,8 +23,7 @@
 
    <para>
       This chapter is meant to describe the behavior of mapping interfaces, where event mapping to data flowing through
-      JMS Queues and Topics are handled via events.  Currently, the mapping interfaces only support single direction
-      mappings, a route defined can only be one of egress or ingress, never both.
+      JMS Queues and Topics are handled via events.
    </para>
    <tip>
        You should never create a bi-directional route via the API.  The results will not be what you expect.

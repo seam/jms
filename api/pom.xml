@@ -1,34 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-   <parent>
-      <groupId>org.jboss.seam.jms</groupId>
-      <artifactId>seam-jms-parent</artifactId>
-      <version>3.0.0-SNAPSHOT</version>
-      <relativePath>../pom.xml</relativePath>
-   </parent>
+	<parent>
+		<groupId>org.jboss.seam.jms</groupId>
+		<artifactId>seam-jms-parent</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
-   <artifactId>seam-jms-api</artifactId>
-   <packaging>jar</packaging>
+	<artifactId>seam-jms-api</artifactId>
+	<packaging>jar</packaging>
 
-   <name>Seam JMS API</name>
-   <description>Client View of the Seam JMS Module</description>
-   <!-- url required for JAR Manifest -->
-   <url>${project.parent.url}</url>
+	<name>Seam JMS API</name>
+	<description>Client View of the Seam JMS Module</description>
+	<!-- url required for JAR Manifest -->
+	<url>${project.parent.url}</url>
 
-   <dependencies>
-      <dependency>
-         <groupId>javax.enterprise</groupId>
-         <artifactId>cdi-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
+	<dependencies>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
-      <dependency>
-         <groupId>org.jboss.spec.javax.jms</groupId>
-         <artifactId>jboss-jms-api_1.1_spec</artifactId>
-         <scope>provided</scope>
-      </dependency>
-   </dependencies>
-   
+		<dependency>
+			<groupId>org.jboss.spec.javax.jms</groupId>
+			<artifactId>jboss-jms-api_1.1_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<version>3.0.0.Beta4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<!-- Required until the Servlet 3.0 API can be resolved in Central -->
+			<groupId>org.jboss.spec.javax.servlet</groupId>
+			<artifactId>jboss-servlet-api_3.0_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
 </project>

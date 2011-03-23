@@ -6,21 +6,25 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
+import javax.jms.QueueReceiver;
+import javax.jms.QueueSender;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicPublisher;
+import javax.jms.TopicSubscriber;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -30,10 +34,7 @@ import org.jboss.logging.Logger;
 @Dependent
 public class MessageBuilderImpl implements MessageBuilder {
 	
-	@Resource(mappedName = "ConnectionFactory")
-    private ConnectionFactory cf;
-	
-	private Connection connection;
+	@Inject	Connection connection;
 	private Session session;
 	
 	private Logger logger = Logger.getLogger(MessageBuilderImpl.class);
@@ -41,8 +42,6 @@ public class MessageBuilderImpl implements MessageBuilder {
 	@PostConstruct
 	public void init() {
 		try{
-			connection = cf.createConnection();
-			connection.start();
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 		} catch (JMSException e) { }
 	}
@@ -146,7 +145,7 @@ public class MessageBuilderImpl implements MessageBuilder {
     private void sendMessage(Destination destination, Message message) {
     	try {
     		logger.info("Routing destionation "+destination+" with message " +message);
-    		session.createProducer(destination).send(message);
+    		this.createMessageProducer(destination).send(message);
     	} catch (JMSException e) {
     		logger.warn("Problem attempting to send message "+message+" to destination "+destination,e);
     	}
@@ -193,11 +192,72 @@ public class MessageBuilderImpl implements MessageBuilder {
 	}
 
 	@Override
-	public MessageConsumer createMessageConsumer(String destination) {
+	public MessageConsumer createMessageConsumer(String destination, MessageListener... listeners) {
 		try {
-			return this.session.createConsumer(lookupDestination(destination));
+			MessageConsumer mc = this.session.createConsumer(lookupDestination(destination));
+			if(mc != null && listeners != null) {
+				for(MessageListener listener : listeners)
+					try {
+						mc.setMessageListener(listener);
+					} catch (JMSException e) {
+						logger.warn("Unable to map listener "+listener+" to consumer "+mc,e);
+					}
+			}
+			return mc;
 		} catch (JMSException e) {
+			logger.warn("Unable to create message consumer",e);
 			return null;
+		}
+	}
+	
+	protected MessageConsumer createMessageConsumer(Destination destination) {
+		try {
+			return this.session.createConsumer(destination);
+		} catch (JMSException e) {
+			logger.warn("Problem creating message consumer for "+destination,e);
+			return null;
+		}
+	}
+	
+	protected MessageProducer createMessageProducer(Destination destination) {
+		try {
+			return this.session.createProducer(destination);
+		} catch (JMSException e) {
+			logger.warn("Problem creating message producer for "+destination,e);
+			return null;
+		}
+	}
+	
+	private TopicSubscriber createDurableSubscriber(String destination, String id) {
+		try {
+			return 
+				this.session.createDurableSubscriber((Topic)this.lookupDestination(destination), id);
+		} catch (JMSException e) {
+			logger.warn("Unable to create durable subscriber",e);
+			return null;
+		}
+	}
+	
+	@Override
+	public TopicSubscriber createDurableSubscriber(String destination, String id, MessageListener... listeners) {
+		TopicSubscriber ts = createDurableSubscriber(destination,id);
+		if(ts != null && listeners != null && listeners.length > 0) {
+			for(MessageListener listener : listeners)
+				try {
+					ts.setMessageListener(listener);
+				} catch (JMSException e) {
+					logger.warn("Unable to map listener "+listener+" to subscriber "+ts,e);
+				}
+		}
+		return ts;
+	}
+	
+	@Override
+	public void unsubscribe(String id) {
+		try {
+			session.unsubscribe(id);
+		} catch (JMSException e) {
+			logger.warn("Unable to unsubscribe for id: "+id,e);
 		}
 	}
 
@@ -206,8 +266,48 @@ public class MessageBuilderImpl implements MessageBuilder {
 		try {
 			return this.session.createProducer(lookupDestination(destination));
 		} catch (JMSException e) {
+			logger.warn("Unable to create message producer",e);
 			return null;
 		}
+	}
+
+	@Override
+	public TopicPublisher createTopicPublisher(String destination) {
+		return (TopicPublisher)this.createMessageProducer(destination);
+	}
+
+	@Override
+	public QueueSender createQueueSender(String destination) {
+		return (QueueSender)this.createMessageProducer(destination);
+	}
+
+	@Override
+	public TopicSubscriber createTopicSubscriber(String destination,
+			MessageListener... listeners) {
+		MessageConsumer mc = this.createMessageConsumer(destination, listeners);
+		return (TopicSubscriber)mc;
+	}
+
+	@Override
+	public QueueReceiver createQueueReceiver(String destination,
+			MessageListener... listeners) {
+		MessageConsumer mc = this.createMessageConsumer(destination, listeners);
+		return (QueueReceiver)mc;
+	}
+
+	@Override
+	public MessageConsumer createMessageConsumer(Destination destination,
+			MessageListener... listeners) {
+		MessageConsumer mc = this.createMessageConsumer(destination);
+		if(mc != null && listeners != null) {
+			for(MessageListener listener : listeners)
+				try {
+					mc.setMessageListener(listener);
+				} catch (JMSException e) {
+					logger.warn("Unable to set listener "+listener+" on to destination "+destination);
+				}
+		}
+		return mc;
 	}
 	
 }

@@ -23,36 +23,29 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.Resource;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AfterDeploymentValidation;
 import javax.enterprise.inject.spi.AnnotatedMember;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
-import javax.enterprise.inject.spi.ObserverMethod;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.inject.spi.ProcessObserverMethod;
 import javax.enterprise.inject.spi.ProcessProducer;
 import javax.inject.Qualifier;
 import javax.jms.Destination;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import org.jboss.logging.Logger;
-import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.jms.bridge.EgressRoutingObserver;
 import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.bridge.RouteImpl;
 import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
-import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 
 /**
  * Seam 3 JMS Portable Extension
