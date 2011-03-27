@@ -32,12 +32,12 @@ import javax.naming.NamingException;
 import org.jboss.logging.Logger;
 
 @Dependent
-public class MessageBuilderImpl implements MessageBuilder {
+public class MessageManagerImpl implements MessageManager {
 	
 	@Inject	Connection connection;
 	private Session session;
 	
-	private Logger logger = Logger.getLogger(MessageBuilderImpl.class);
+	private Logger logger = Logger.getLogger(MessageManagerImpl.class);
 	
 	@PostConstruct
 	public void init() {

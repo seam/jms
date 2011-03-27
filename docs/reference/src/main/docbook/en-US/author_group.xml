@@ -20,11 +20,11 @@
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <authorgroup>
    <author>
-      <firstname>Jordan</firstname>
-      <surname>Ganoff</surname>
-   </author>
-   <author>
       <firstname>John</firstname>
       <surname>Ament</surname>
+   </author>
+  <author>
+      <firstname>Jordan</firstname>
+      <surname>Ganoff</surname>
    </author>
 </authorgroup>

@@ -28,7 +28,7 @@ import javax.jms.JMSException;
 import javax.servlet.ServletContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.seam.jms.MessageBuilder;
+import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.Seam3JmsExtension;
 
 @Singleton
@@ -40,7 +40,7 @@ public class RouteBuilderImpl implements RouteBuilder, java.io.Serializable {
 	@Inject
 	Seam3JmsExtension extension;
 	@Inject
-	MessageBuilder messageBuilder;
+	MessageManager messageBuilder;
 	@Inject
 	BeanManager beanManager;
 	

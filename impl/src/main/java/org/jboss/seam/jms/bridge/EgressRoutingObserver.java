@@ -39,7 +39,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.jboss.logging.Logger;
-import org.jboss.seam.jms.MessageBuilder;
+import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 
@@ -113,10 +113,10 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
 
     private List<Object> evtCache = new ArrayList<Object>();
     
-    private MessageBuilder getMessageBuilder() {
-    	Set<Bean<?>> beans = bm.getBeans(MessageBuilder.class);
+    private MessageManager getMessageBuilder() {
+    	Set<Bean<?>> beans = bm.getBeans(MessageManager.class);
         Bean<?> bean = bm.resolve(beans);
-        MessageBuilder mb = (MessageBuilder) bm.getReference(bean, MessageBuilder.class, bm.createCreationalContext(bean));
+        MessageManager mb = (MessageManager) bm.getReference(bean, MessageManager.class, bm.createCreationalContext(bean));
         return mb;
     }
     
@@ -155,7 +155,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     }
 
     private void forwardEvent(Object event) {
-        MessageBuilder msgBuilder = this.getMessageBuilder();
+        MessageManager msgBuilder = this.getMessageBuilder();
         if(event instanceof String) {
         	msgBuilder.sendTextToDestinations(event.toString(), routing.getDestinations().toArray(new Destination[]{}));
         } else {

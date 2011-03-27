@@ -204,11 +204,21 @@
 
    <developers>
       <developer>
+         <name>John Ament</name>
+         <email>john.d.ament@gmail.com</email>
+         <timezone>EST</timezone>
+         <roles>
+            <role>Project Lead</role>
+         </roles>
+         <url>http://community.jboss.org/people/meetoblivion</url>
+      </developer>
+    <developer>
          <name>Jordan Ganoff</name>
          <email>jganoff@gmail.com</email>
          <timezone>EST</timezone>
          <roles>
-            <role>Project Lead</role>
+            <role>Founder</role>
+            <role>Contributor</role>
          </roles>
          <url>http://community.jboss.org/people/jganoff</url>
       </developer>

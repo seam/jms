@@ -25,9 +25,11 @@
 	</para>
 
 	<section id="messaging-api-jms-local">
-		<title>MessageBuilder</title>
+		<title>Message Manager</title>
 		<para>
-			The MessageBuilder interface (org.jboss.seam.jms.MessageBuilder) is the main consolidated API for Seam JMS.  It provides almost all of the background functionality for Seam JMS's features (Observer Interfaces, Routing API).  In later releases there will be multiple implementations of this interface.  The default implementation works against javax.naming.Context assuming running within the same local application server.
+			The <code>MessageManager</code> interface (<code>org.jboss.seam.jms.MessageManager</code>) is the main consolidated API for Seam JMS.
+                        It provides almost all of the background functionality for Seam JMS's features (Observer Interfaces, Routing API).
+                        The default implementation works against <code>javax.naming.Context</code> assuming running within the same local application server.
 		</para>
 	</section>
 </chapter>

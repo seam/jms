@@ -16,25 +16,18 @@
  */
 package org.jboss.seam.jms.test.transmit;
 
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.jms.MessageBuilder;
+import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.test.Util;
-import org.jboss.seam.jms.test.inject.InjectMessageConsumer;
-import org.jboss.seam.jms.test.inject.InjectMessageProducer;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -43,11 +36,11 @@ public class SimpleTransmitMessageTest {
 	@Deployment
 	public static Archive<?> createDeployment() {
 		return Util.createDeployment(SimpleTransmitMessageTest.class,
-				InjectMessageConsumer.class, MessageBuilder.class);
+				MessageManager.class);
 	}
 
 	@Inject
-	MessageBuilder messageBuilder;
+	MessageManager messageBuilder;
 
 	@Test
 	public void sendMessage_topic() throws JMSException {

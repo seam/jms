@@ -24,7 +24,7 @@ import javax.jms.TopicSubscriber;
  * @author johnament
  *
  */
-public interface MessageBuilder {
+public interface MessageManager {
 	
 	/* factory methods for creating messages */
 	

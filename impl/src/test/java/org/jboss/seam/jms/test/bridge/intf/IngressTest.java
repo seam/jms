@@ -30,7 +30,7 @@ import javax.jms.Session;
 import javax.jms.Topic;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.jms.MessageBuilder;
+import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.jms.bridge.RouteBuilder;
@@ -60,7 +60,7 @@ public class IngressTest {
     }
 
     @Inject RouteBuilder builder;
-    @Inject MessageBuilder messageBuilder;
+    @Inject MessageManager messageBuilder;
     @Inject @JmsDestination(jndiName="jms/T2") Topic t;
     
     private static boolean received = false;

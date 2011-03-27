@@ -35,19 +35,23 @@
            Observer Method Interfaces are simple Plain Old Java Interfaces (POJIs) that define either an ingress or
            an egress route.  This is a sample interface:
        </para>
-       <programlisting role="Java">
+       <programlisting role="Java"><![CDATA[
            public interface MappingInterface {
                @Routing(RouteType.INGRESS)
                public void routeStringsFromTopic(@Observes String s, @JmsDestination(jndiName="jms/MyTopic") Topic t);
                
                @Routing(RouteType.EGRESS)
                public void routeLongsToQueue(@Observes Long l, @JmsDestination(jndiName="jms/MyQueue") Queue q);
+
+               @Routing(RouteType.BOTH)
+               public void bidirectionRouteDoublesToQueue(@Observes Double d, @JmsDestination(jndiName="jms/DblQueue") Queue q);
            }
-       </programlisting>
+       ]]></programlisting>
        <para>
-           This interface defines two routes.  One being an ingress route - messages coming in to the topic jms/MyTopic
+           This interface defines three routes.  The first one being an ingress route - messages coming in to the topic jms/MyTopic
            will be fired as events with the type String.  The second being an egress route - events fired of type Long will
-           be turned into ObjectMessages and using a MessageProducer sent to the queue jms/MyQueue.
+           be turned into ObjectMessages and using a MessageProducer sent to the queue jms/MyQueue.  The last is a bidirectional route,
+           it defines messages that get fired
        </para>
        <para>
            The object being observed can have qualifiers.  These qualifiers will be carried over in the fired event and follow
@@ -62,6 +66,29 @@
            In JBoss AS 6, if the return type is void, the mapping will generally fail (when using @Resource).  You can change the return type to another
            object to make it pass.
        </tip>
+       <para>
+           In order to work with these routes, you raise events in CDI.  In order to fire an event, first inject the <code>Event</code>
+           object into your code with necessary annotations, for any egress route.  For ingress routes, you need to define an observer
+           method.  Taking the third route as an example, here is how you would raise and handle events in to it.
+       </para>
+       <programlisting role="Java"><![CDATA[
+           public class MyEventFiringBean {
+            @Inject @Routing(RouteType.EGRESS) Event<Double> doubleEvent
+            public void sendMessage(Double d) {
+                doubleEvent.fire(d);
+            }
+           }
+       ]]></programlisting>
+       <para>
+           This is firing the event, now we can handle the event in the observer method, at the dependent scope.
+       </para>
+       <programlisting role="Java"><![CDATA[
+           public class MyEventObserverBean {
+            public void sendMessage(@Routing(RouteType.INGRESS) Double d) {
+                System.out.println(d);
+            }
+           }
+       ]]></programlisting>
    </section>
 
    <section id="message-handlers">
@@ -69,12 +96,12 @@
        <para>
            In addition to the listed types, you can also observe JMS messages that are coming in.  You simply define the route the same way you would in an observer method interface.
        </para>
-       <programlisting role="Java">
+       <programlisting role="Java"><![CDATA[
            public interface MappingInterface {
                @Routing(RouteType.INGRESS)
                public void routeStringsFromTopic(@Observes @JmsDestination(jndiName="jms/MyTopic") TextMessage textMessage, @JmsDestination(jndiName="jms/MyTopic") Topic t);
            }
-       </programlisting>
+       ]]></programlisting>
        <tip>
            In this special case, only ingress routes will work correctly.
        </tip>
