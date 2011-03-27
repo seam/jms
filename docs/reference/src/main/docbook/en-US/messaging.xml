@@ -27,9 +27,99 @@
 	<section id="messaging-api-jms-local">
 		<title>Message Manager</title>
 		<para>
-			The <code>MessageManager</code> interface (<code>org.jboss.seam.jms.MessageManager</code>) is the main consolidated API for Seam JMS.
-                        It provides almost all of the background functionality for Seam JMS's features (Observer Interfaces, Routing API).
-                        The default implementation works against <code>javax.naming.Context</code> assuming running within the same local application server.
+                    The <code>MessageManager</code> interface (<code>org.jboss.seam.jms.MessageManager</code>) is the main consolidated API for Seam JMS.
+                    It provides almost all of the background functionality for Seam JMS's features (Observer Interfaces, Routing API).
+                    The default implementation works against <code>javax.naming.Context</code> assuming running within the same local application server.
 		</para>
+                <programlisting role="Java"><![CDATA[public interface MessageManager {
+	public ObjectMessage createObjectMessage(Object object);
+	public TextMessage createTextMessage(String string);
+	public MapMessage createMapMessage(Map<Object,Object> map);
+	public BytesMessage createBytesMessage(byte[] bytes);
+	public void sendMessage(Message message, String... destinations);
+	public void sendObjectToDestinations(Object object, String... destinations);
+	public void sendTextToDestinations(String string, String... destinations);
+	public void sendMapToDestinations(Map map, String... destinations);
+	public void sendBytesToDestinations(byte[] bytes, String... destinations);
+	public void sendMessage(Message message, Destination... destinations);
+	public void sendObjectToDestinations(Object object, Destination... destinations);
+	public void sendTextToDestinations(String string, Destination... destinations);
+	public void sendMapToDestinations(Map map, Destination... destinations);
+	public void sendBytesToDestinations(byte[] bytes, Destination... destinations);
+	public Session getSession();
+	public MessageProducer createMessageProducer(String destination);
+	public TopicPublisher createTopicPublisher(String destination);
+	public QueueSender createQueueSender(String destination);
+	public MessageConsumer createMessageConsumer(String destination, MessageListener... listeners);
+	public MessageConsumer createMessageConsumer(Destination destination, MessageListener... listeners);
+	public TopicSubscriber createTopicSubscriber(String destination, MessageListener... listeners);
+	public QueueReceiver createQueueReceiver(String destination, MessageListener... listeners);
+	public TopicSubscriber createDurableSubscriber(String destination, String id, MessageListener... listeners);
+	public void unsubscribe(String id);
+}]]></programlisting>
+                <para>
+                    The interface above defines a full set of capabilities for creating
+                    and sending messages.  In addition, we expose methods for creating
+                    producers (and destination specific publisher sender) as well as
+                    consumers (and destination speciifc subscriber and receiver).
+                    In addition, if injected within a session scoped object, or similar,
+                    you can define a durable subscriber and unsubscriber that subscriber.
+                    Below is an example.
+                </para>
+                <tip>
+                    The durable subscriber pattern works very well for session based
+                    message management.  If you want to define a durable subscriber per
+                    user session, this is the easiest way to do it.
+                </tip>
+                <programlisting role="Java"><![CDATA[@SessionScoped
+                public class UserSession {
+                    @Inject MessageManager messageManager;
+                    @Inject MySessionJMSListener listener;
+                    private String clientId;
+                    @PostConstruct
+                    public void registerListener() {
+                        clientId = UUID.randomUUID().toString();
+                        messageManager.createDurableSubscriber("jms/UserTopic",clientId,listener);
+                    }
+                    @PreDestroy
+                    public void shutdownListener() {
+                        messageManager.unsubscribe(clientId);
+                    }
+                }
+                ]]></programlisting>
 	</section>
+        <section id="messaging-api-listener">
+            <title>MessageListeners versus Message Driven Beans</title>
+            <para>
+                One of the difficult choices we had to make was support for Message-Driven Beans.
+                MDBs are a little complicated in CDI as they are not managed within the CDI life cycle.
+                This makes integration with them a bit cumbersome.  We wouldn't be able to work with a
+                JMS Session in these cases, as an example.  As a result, Seam JMS only supports
+                defining instances of <code>javax.jms.MessageListener</code>.  To support this, we have
+                created a partial implementation - <code>org.jboss.seam.jms.AbstractMessageListener</code>.
+                This special MessageListener is designed for bridging the external context of a JMS
+                Message into the application you are working with.  We do this by tweaking classloaders.
+            </para>
+            <para>
+                The best way to work with the MessageListeners is define a factory style producer method for your
+                own implementation, or defining your own that make specific invocations to the parent.  Here is an
+                example implementation.
+            </para>
+            <programlisting role="Java"><![CDATA[@SessionScoped
+                public class MySessionListener extends AbstractMessageListener {
+                    @Inject BeanManager beanManager;
+
+                    @PostConstruct
+                    public void init() {
+                        super.setBeanManager(beanManager);
+                        super.setClassLoader(Thread.currentThread().getContextClassLoader());
+                    }
+
+                    @Override
+                    protected void handlMessage(Message msg) throws JMSException {
+                        //your business logic goes here
+                    }
+                }
+                ]]></programlisting>
+        </section>
 </chapter>
