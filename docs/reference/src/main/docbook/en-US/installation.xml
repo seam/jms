@@ -60,6 +60,24 @@
    <version>${seam.jms.version}</version>
 </dependency>]]></programlisting>
 
+   <para>
+      Alternatively, you can use the API at compile time and only include the implementation at runtime. This protects you from inadvertantly depending on an implementation class.
+   </para>
+
+   <programlisting role="XML"><![CDATA[<dependency>
+   <groupId>org.jboss.seam.jms</groupId>
+   <artifactId>seam-jms-api</artifactId>
+   <version>${seam.jms.version}</version>
+   <scope>compile</scope>
+</dependency>
+<dependency>
+   <groupId>org.jboss.seam.jms</groupId>
+   <artifactId>seam-jms-impl</artifactId>
+   <version>${seam.jms.version}</version>
+   <scope>runtime</scope>
+</dependency>
+]]></programlisting>
+
    <tip>
       <para>
          Define or replace the property ${seam.jms.version} with a valid version of Seam JMS.

@@ -21,7 +21,7 @@
 <chapter id="messaging-api">
 	<title>Messaging API</title>
 	<para>
-		The Seam JMS Messaging API is a higher level abstraction of the JMS API to provide a number of convenience methods for creating consumers, producers, etc.
+		The Seam JMS Messaging API is a higher level abstraction of the JMS API to provide a number of convenient methods for creating consumers, producers, etc.
 	</para>
 
 	<section id="messaging-api-jms-local">
@@ -60,17 +60,17 @@
                 <para>
                     The interface above defines a full set of capabilities for creating
                     and sending messages.  In addition, we expose methods for creating
-                    producers (and destination specific publisher sender) as well as
-                    consumers (and destination speciifc subscriber and receiver).
+                    producers (and A destination specific publisher and sender) as well as
+                    consumers (and A destination specific subscriber and receiver).
                     In addition, if injected within a session scoped object, or similar,
-                    you can define a durable subscriber and unsubscriber that subscriber.
+                    you can define a durable subscriber and unsubscriber for that subscriber.
                     Below is an example.
                 </para>
-                <tip>
+                <para>
                     The durable subscriber pattern works very well for session based
                     message management.  If you want to define a durable subscriber per
                     user session, this is the easiest way to do it.
-                </tip>
+                </para>
                 <programlisting role="Java"><![CDATA[@SessionScoped
                 public class UserSession {
                     @Inject MessageManager messageManager;
@@ -101,9 +101,20 @@
                 Message into the application you are working with.  We do this by tweaking classloaders.
             </para>
             <para>
-                The best way to work with the MessageListeners is define a factory style producer method for your
-                own implementation, or defining your own that make specific invocations to the parent.  Here is an
-                example implementation.
+                The best way to work with MessageListeners is to define a factory style producer method for your
+                own implementation
+            </para>
+            <programlisting role="Java"><![CDATA[@SessionScoped
+                @Inject BeanManager beanManager;
+                @Produces
+                @MyListener
+                public MessageListener createMessageListener() {
+                    return new MyCustomerMessageListener(beanManager,Thread.currentThread().getContextClassLoader());
+                }
+                ]]></programlisting>
+            <para>
+                Or you may define your own subclass that makes specific invocations to the parent.  Here is an
+                example of that:
             </para>
             <programlisting role="Java"><![CDATA[@SessionScoped
                 public class MySessionListener extends AbstractMessageListener {

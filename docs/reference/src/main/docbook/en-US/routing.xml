@@ -59,6 +59,7 @@
             from an <literal>EventBridge</literal>. Here's a simple route that forwards CDI events on to a queue:
             
             <programlisting role="Java">@Inject EventBridge bridge;
+            @Resource(mappedName="/jms/MyQueue") Queue myQueue;
 @EventRouting public Route registerMyRoute()
 {
    return bridge.createRoute(RouteType.EGRESS, MyEvent.class).connectTo(Queue.class, myQueue);
@@ -73,9 +74,10 @@
             Routes are registered by returning them from a bean method annotated with <literal>@EventRouting</literal>:
             
             <programlisting role="Java">@Inject EventBridge bridge;
+            @Resource(mappedName="/jms/MyTopic") Topic myTopic;
 @EventRouting public Route myConfig()
 {
-   return bridge.createRoute(RouteType.INGRESS, MyEvent.class).connectTo(Queue.class, myTopic);
+   return bridge.createRoute(RouteType.INGRESS, MyEvent.class).connectTo(Topic.class, myTopic);
 }</programlisting>
          </para>
       </section>
@@ -103,9 +105,11 @@ AnnotationLiteral&lt;Bridged&gt; BRIDGED = new AnnotationLiteral&lt;Bridged&gt;(
          <title>Usage</title>
          <para>
             With your routing defined you can simply fire events that match the route's payload type and
-            qualifiers and these events will be forwarded over JMS as object messages.
+            qualifiers and these events will be forwarded over JMS as object messages.  A special note,
+            we have added the qualifier <code>@Routing(RouteType.EGRESS)</code>.  This is necessary
+            to avoid circular routings.
             
-            <programlisting role="Java">@Inject @Bridged Event&lt;MyEvent&gt; event;
+            <programlisting role="Java">@Inject @Bridged @Routing(RouteType.EGRESS) Event&lt;MyEvent&gt; event;
 ...
 event.fire(myEvent);</programlisting>
          </para>
@@ -116,9 +120,8 @@ event.fire(myEvent);</programlisting>
       <title>CDI Events from JMS Messages</title>
 
       <para>
-         Similar to egress routes, ingress routes are defined the same way.  In this case, they listen for messages on
-         the specified destination(s) and fire events.  In order to receive them, you need to define a CDI Observer Method
-         to watch for the events that get fired.  All of the data will be type safe, assuming you have defined your routes correctly.
+         Similar to egress routes, ingress routes are defined the same way. In this case, they listen for messages on the specified destination(s) and fire events.
+         All of the data will be type safe, assuming you have defined your routes correctly.
       </para>
 
       <para>
@@ -133,6 +136,18 @@ AnnotationLiteral&lt;Bridged&gt; BRIDGED = new AnnotationLiteral&lt;Bridged&gt;(
 {
    return bridge.createRoute(RouteType.INGRESS, MyEvent.class).addQualifiers(BRIDGED).connectTo(Queue.class, eventQueue);
 }</programlisting>
+        <section id="routing.ingress.usage">
+         <para>
+             Once you define an ingress route, you handle it using an observer method.  We use the same payload type
+             and qualifiers, however we need to add the same qualifier, but for ingress <code>@Routing(RouteType.INGRESS)</code>
+         </para>
+          <programlisting role="Java">
+          public void handleInboundMyEvent(@Observes @Routing(RouteType.INGRESS) MyEvent e) {
+            ....
+          }
+          </programlisting>
+
+        </section>
    </section>
 </chapter>
    

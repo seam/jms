@@ -101,10 +101,6 @@ public @interface MyTopic {}</programlisting>
 @Inject @JmsSession(transacted=false, acknowledgementMode=Session.CLIENT_ACKNOWLEDGE) Session s;
 </programlisting>
          </para>
-         
-         <para>
-            TODO Add other configuration options as they are implemented.
-         </para>
       </section>
    </section>
 </chapter>

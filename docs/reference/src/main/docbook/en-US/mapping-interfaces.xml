@@ -23,17 +23,15 @@
 
    <para>
       This chapter is meant to describe the behavior of mapping interfaces, where event mapping to data flowing through
-      JMS Queues and Topics are handled via events.
+      JMS Queues and Topics are handled via events.  These APIs are an alternate way to define routes as mentioned earlier
+      in the document.
    </para>
-   <tip>
-       You should never create a bi-directional route via the API.  The results will not be what you expect.
-   </tip>
 
    <section id="obs-methods">
        <title>Observer Method Interfaces</title>
        <para>
-           Observer Method Interfaces are simple Plain Old Java Interfaces (POJIs) that define either an ingress or
-           an egress route.  This is a sample interface:
+           Observer Method Interfaces are simple Plain Old Java Interfaces (POJIs) that define either a route.  These interfaces
+           exist within your code and are read at deployment time.  This is a sample interface:
        </para>
        <programlisting role="Java"><![CDATA[
            public interface MappingInterface {
@@ -62,48 +60,25 @@
            define the destination.  This in general not 100% portable from the application developer perspective, we recommend
            heavy testing of the behavior on your application server.
        </para>
-       <tip>
-           In JBoss AS 6, if the return type is void, the mapping will generally fail (when using @Resource).  You can change the return type to another
-           object to make it pass.
-       </tip>
        <para>
            In order to work with these routes, you raise events in CDI.  In order to fire an event, first inject the <code>Event</code>
            object into your code with necessary annotations, for any egress route.  For ingress routes, you need to define an observer
-           method.  Taking the third route as an example, here is how you would raise and handle events in to it.
+           method.  Taking the third route as an example, here is how you would raise events to it
        </para>
        <programlisting role="Java"><![CDATA[
-           public class MyEventFiringBean {
             @Inject @Routing(RouteType.EGRESS) Event<Double> doubleEvent
-            public void sendMessage(Double d) {
-                doubleEvent.fire(d);
-            }
-           }
+            ...
+            doubleEvent.fire(d);
        ]]></programlisting>
        <para>
-           This is firing the event, now we can handle the event in the observer method, at the dependent scope.
+           and this is the appropriate observer method to handle the incoming mesages.
        </para>
        <programlisting role="Java"><![CDATA[
            public class MyEventObserverBean {
-            public void sendMessage(@Routing(RouteType.INGRESS) Double d) {
+            public void sendMessage(@Observes @Routing(RouteType.INGRESS) Double d) {
                 System.out.println(d);
             }
            }
        ]]></programlisting>
-   </section>
-
-   <section id="message-handlers">
-       <title>Mapping Messages to Events</title>
-       <para>
-           In addition to the listed types, you can also observe JMS messages that are coming in.  You simply define the route the same way you would in an observer method interface.
-       </para>
-       <programlisting role="Java"><![CDATA[
-           public interface MappingInterface {
-               @Routing(RouteType.INGRESS)
-               public void routeStringsFromTopic(@Observes @JmsDestination(jndiName="jms/MyTopic") TextMessage textMessage, @JmsDestination(jndiName="jms/MyTopic") Topic t);
-           }
-       ]]></programlisting>
-       <tip>
-           In this special case, only ingress routes will work correctly.
-       </tip>
    </section>
 </chapter>

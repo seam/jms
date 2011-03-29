@@ -61,7 +61,7 @@
 				Message Producer (TopicPublisher/QueueSender)
 			</listitem>
 			<listitem>
-				Message Received (TopicSubscriber/QueueReceiver
+				Message Received (TopicSubscriber/QueueReceiver)
 			</listitem>
 		</itemizedlist>
 
