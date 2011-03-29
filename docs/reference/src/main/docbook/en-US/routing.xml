@@ -137,6 +137,7 @@ AnnotationLiteral&lt;Bridged&gt; BRIDGED = new AnnotationLiteral&lt;Bridged&gt;(
    return bridge.createRoute(RouteType.INGRESS, MyEvent.class).addQualifiers(BRIDGED).connectTo(Queue.class, eventQueue);
 }</programlisting>
         <section id="routing.ingress.usage">
+            <title>Usage</title>
          <para>
              Once you define an ingress route, you handle it using an observer method.  We use the same payload type
              and qualifiers, however we need to add the same qualifier, but for ingress <code>@Routing(RouteType.INGRESS)</code>
