@@ -217,6 +217,17 @@ public interface MessageManager {
 	 */
 	public TopicSubscriber createDurableSubscriber(String destination, String id, MessageListener... listeners);
 	
+        /**
+	 * Creates a topic subscriber with the given ID and binds a message listener to it, if valid.
+	 * 
+	 * {@see MessageBuilder.createDurableSubscriber}
+	 * 
+	 * @param destination the existing destination to reference.
+	 * @param id the client id for the subscriber.  This ID should be unique, and should be used to shutdown the listener.
+	 * @param listener The Message Listeners to be bound, if any.
+	 * @return the resulting TopicSubscriber or null if an error occurred.
+	 */
+        public TopicSubscriber createDurableSubscriber(Destination destination, String id, MessageListener... listeners);
 	/**
 	 * Unsubscribes a durable subscriber from the topic, with the given id.
 	 * 

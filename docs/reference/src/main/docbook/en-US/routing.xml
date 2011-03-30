@@ -19,136 +19,147 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <chapter id="routing">
-   <title>Bridging the Gap</title>
+    <title>Bridging the Gap</title>
 
-   <para>
+    <para>
       This chapter is designed to detail how to configure the CDI to JMS event bridge.  Routing has two sides, sending
       of events to JMS destinations and translating received messages from JMS destinations back into CDI events.  The
       sections of this chapter will describe how to achieve both.
-   </para>
+    </para>
    
-   <section id="routing.bridge">
-      <title>Event Routing</title>
+    <section id="routing.bridge">
+        <title>Event Routing</title>
       
-      <para>
+        <para>
          Simply sending or receiving a message over JMS involves a few players:  Connection, Session, Destination, and
          the message itself.  Surely you can inject all required resources and perform the routing yourself but that 
          takes away from the whole reason you're using a tool in the first place!  Let's let a little configuration do 
          the work for us.
-      </para>
+        </para>
       
-      <section id="routing.bridge.route">
-         <title>Routes</title>
+        <section id="routing.bridge.route">
+            <title>Routes</title>
          
-         <para>
-            Routing CDI events to and from JMS can be configured by defining a <literal>Route</literal>. As you would
+            <para>
+            Routing CDI events to and from JMS can be configured by defining a
+                <literal>Route</literal>. As you would
             normally create an observer method for an event you can define a route to control which events get 
             forwarded to what destination.  Or conversely, what message types sent to which destinations generate CDI 
             events.
 
-            <programlisting role="Java">public interface Route
+                <programlisting role="Java">public interface Route
    {
       public &lt;D extends Destination&gt; Route connectTo(Class&lt;D&gt; d, D destination);
       public Route addQualifiers(Annotation... qualifiers);
-   }</programlisting>
-         </para>
+   }
+                </programlisting>
+            </para>
 
-         <para>
+            <para>
             Routes allows for simple mapping of event types, complete with qualifiers, to a set of destinations.  They 
             can be configured by adding qualifiers and providing destinations they should interact with and are created
-            from an <literal>EventBridge</literal>. Here's a simple route that forwards CDI events on to a queue:
+            from an
+                <literal>EventBridge</literal>. Here's a simple route that forwards CDI events on to a queue:
             
-            <programlisting role="Java">@Inject EventBridge bridge;
+                <programlisting role="Java">@Inject EventBridge bridge;
             @Resource(mappedName="/jms/MyQueue") Queue myQueue;
 @EventRouting public Route registerMyRoute()
 {
    return bridge.createRoute(RouteType.EGRESS, MyEvent.class).connectTo(Queue.class, myQueue);
-}</programlisting>
-         </para>
-      </section>
+}
+                </programlisting>
+            </para>
+        </section>
       
-      <section id="routing.bridge.eventrouting">
-         <title>@EventRouting</title>
+        <section id="routing.bridge.eventrouting">
+            <title>@EventRouting</title>
 
-         <para>
-            Routes are registered by returning them from a bean method annotated with <literal>@EventRouting</literal>:
+            <para>
+            Routes are registered by returning them from a bean method annotated with
+                <literal>@EventRouting</literal>:
             
-            <programlisting role="Java">@Inject EventBridge bridge;
+                <programlisting role="Java">@Inject EventBridge bridge;
             @Resource(mappedName="/jms/MyTopic") Topic myTopic;
 @EventRouting public Route myConfig()
 {
    return bridge.createRoute(RouteType.INGRESS, MyEvent.class).connectTo(Topic.class, myTopic);
-}</programlisting>
-         </para>
-      </section>
-   </section>
+}
+                </programlisting>
+            </para>
+        </section>
+    </section>
 
-   <section id="routing.egress">
-      <title>Routing CDI Events to JMS</title>
+    <section id="routing.egress">
+        <title>Routing CDI Events to JMS</title>
 
-      <para>
+        <para>
          Forwarding CDI events to JMS is configured by creating an egress route.  Let's say you wanted to forward all
-         <literal>MyEvent</literal> events with <literal>@Bridged</literal> qualifier to the queue 
-         <literal>jms/EventQueue</literal>.  Simple,  register a route:
+            <literal>MyEvent</literal> events with
+            <literal>@Bridged</literal> qualifier to the queue
+            <literal>jms/EventQueue</literal>.  Simple,  register a route:
          
-         <programlisting role="Java">@Inject EventBridge bridge;
+            <programlisting role="Java">@Inject EventBridge bridge;
 @Inject @JmsDestination(jndiName="jms/EventQueue") Queue eventQueue;
 AnnotationLiteral&lt;Bridged&gt; BRIDGED = new AnnotationLiteral&lt;Bridged&gt;() {};
 @EventRouting public Route registerMyEventRoute()
 {
    return bridge.createRoute(RouteType.EGRESS, MyEvent.class).addQualifiers(BRIDGED).connectTo(Queue.class, eventQueue);
-}</programlisting>
-      </para>
+}
+            </programlisting>
+        </para>
 
-      <section id="routing.egress.usage">
+        <section id="routing.egress.usage">
       
-         <title>Usage</title>
-         <para>
+            <title>Usage</title>
+            <para>
             With your routing defined you can simply fire events that match the route's payload type and
             qualifiers and these events will be forwarded over JMS as object messages.  A special note,
-            we have added the qualifier <code>@Routing(RouteType.EGRESS)</code>.  This is necessary
+            we have added the qualifier
+                <code>@Routing(RouteType.EGRESS)</code>.  This is necessary
             to avoid circular routings.
             
-            <programlisting role="Java">@Inject @Bridged @Routing(RouteType.EGRESS) Event&lt;MyEvent&gt; event;
+                <programlisting role="Java">@Inject @Bridged @Routing(RouteType.EGRESS) Event&lt;MyEvent&gt; event;
 ...
-event.fire(myEvent);</programlisting>
-         </para>
-      </section>
-   </section>
+event.fire(myEvent);
+                </programlisting>
+            </para>
+        </section>
+    </section>
 
-   <section id="routing.ingress">
-      <title>CDI Events from JMS Messages</title>
+    <section id="routing.ingress">
+        <title>CDI Events from JMS Messages</title>
 
-      <para>
+        <para>
          Similar to egress routes, ingress routes are defined the same way. In this case, they listen for messages on the specified destination(s) and fire events.
          All of the data will be type safe, assuming you have defined your routes correctly.
-      </para>
+        </para>
 
-      <para>
+        <para>
           Similar to the above example, this creates ingress routes from the Queue jms/EventQueue and fires events based on the MyEvent
           objects that are carried over the wire.
-      </para>
+        </para>
 
-      <programlisting role="Java">@Inject EventBridge bridge;
+        <programlisting role="Java">@Inject EventBridge bridge;
 @Inject @JmsDestination(jndiName="jms/EventQueue") Queue eventQueue;
 AnnotationLiteral&lt;Bridged&gt; BRIDGED = new AnnotationLiteral&lt;Bridged&gt;() {};
 @EventRouting public Route registerMyEventRoute()
 {
    return bridge.createRoute(RouteType.INGRESS, MyEvent.class).addQualifiers(BRIDGED).connectTo(Queue.class, eventQueue);
-}</programlisting>
+}
+        </programlisting>
         <section id="routing.ingress.usage">
             <title>Usage</title>
-         <para>
+            <para>
              Once you define an ingress route, you handle it using an observer method.  We use the same payload type
-             and qualifiers, however we need to add the same qualifier, but for ingress <code>@Routing(RouteType.INGRESS)</code>
-         </para>
-          <programlisting role="Java">
+             and qualifiers, however we need to add the same qualifier, but for ingress
+                <code>@Routing(RouteType.INGRESS)</code>
+            </para>
+            <programlisting role="Java">
           public void handleInboundMyEvent(@Observes @Routing(RouteType.INGRESS) MyEvent e) {
             ....
           }
-          </programlisting>
-
+            </programlisting>
         </section>
-   </section>
+    </section>
 </chapter>
    

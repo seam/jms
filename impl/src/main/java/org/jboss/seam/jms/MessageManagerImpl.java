@@ -251,6 +251,20 @@ public class MessageManagerImpl implements MessageManager {
 		}
 		return ts;
 	}
+
+        @Override
+	public TopicSubscriber createDurableSubscriber(Destination destination, String id, MessageListener... listeners) {
+		TopicSubscriber ts = createDurableSubscriber(destination,id);
+		if(ts != null && listeners != null && listeners.length > 0) {
+			for(MessageListener listener : listeners)
+				try {
+					ts.setMessageListener(listener);
+				} catch (JMSException e) {
+					logger.warn("Unable to map listener "+listener+" to subscriber "+ts,e);
+				}
+		}
+		return ts;
+	}
 	
 	@Override
 	public void unsubscribe(String id) {

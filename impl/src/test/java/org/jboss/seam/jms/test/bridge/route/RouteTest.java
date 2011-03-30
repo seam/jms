@@ -23,10 +23,13 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.QueueReceiver;
+import javax.jms.TextMessage;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.annotations.JmsDestination;
+import org.jboss.seam.jms.bridge.RouteBuilder;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
@@ -35,7 +38,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-@Ignore
+//@Ignore
 public class RouteTest
 {
    @Deployment
@@ -43,9 +46,10 @@ public class RouteTest
    {
       return Util.createDeployment(RouteTest.class);
    }
-   
+
+   @Inject RouteBuilder routeBuilder;
    @Inject Connection c;
-   @Inject @JmsDestination(jndiName="queue/DLQ") QueueReceiver qr;
+   @Inject MessageManager messageManager;
    @Inject @BridgedViaCollection Event<String> event_viaCollectionRouteConfig;
    @Inject @BridgedViaRoute Event<String> event_viaSingleRouteConfig;
    @Inject Event<String> plainEvent;
@@ -54,25 +58,26 @@ public class RouteTest
       while (qr.receiveNoWait() != null);
    }
 
+
    @Test
    public void forwardSimpleEvent() throws JMSException
    {
       String expected = "'configured via Collection<Route>'";
-      c.start();
+      QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
       clear(qr);
       event_viaCollectionRouteConfig.fire(expected);
       Message m = qr.receive(3000);
       qr.close();
       Assert.assertTrue(m != null);
-      Assert.assertTrue(m instanceof ObjectMessage);
-      Assert.assertEquals(expected, ((ObjectMessage) m).getObject());
+      Assert.assertTrue(m instanceof TextMessage);
+      Assert.assertEquals(expected, ((TextMessage) m).getText());
    }
 
    @Test
    public void noMatchingRoutes() throws JMSException
    {
       String expected = "'no matching route'";
-      c.start();
+      QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
       clear(qr);
       plainEvent.fire(expected);
       Message m = qr.receive(3000);
@@ -83,13 +88,13 @@ public class RouteTest
    @Test
    public void forwardSimpleEvent_via_single_route_config() throws JMSException {
       String expected = "'configured via Route'";
-      c.start();
+      QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
       clear(qr);
       event_viaSingleRouteConfig.fire(expected);
       Message m = qr.receive(3000);
       qr.close();
       Assert.assertTrue(m != null);
-      Assert.assertTrue(m instanceof ObjectMessage);
-      Assert.assertEquals(expected, ((ObjectMessage) m).getObject());
+      Assert.assertTrue(m instanceof TextMessage);
+      Assert.assertEquals(expected, ((TextMessage) m).getText());
    }
 }

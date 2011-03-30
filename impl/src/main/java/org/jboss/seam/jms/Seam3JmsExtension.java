@@ -17,12 +17,14 @@
 package org.jboss.seam.jms;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.spi.CreationalContext;
@@ -31,6 +33,7 @@ import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedMember;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
+import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
@@ -40,10 +43,13 @@ import javax.inject.Qualifier;
 import javax.jms.Destination;
 
 import org.jboss.logging.Logger;
+import org.jboss.seam.jms.annotations.EventRouting;
 import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.jms.bridge.EgressRoutingObserver;
 import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.bridge.RouteImpl;
+import org.jboss.seam.jms.bridge.RouteManager;
+import org.jboss.seam.jms.bridge.RouteManagerImpl;
 import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 
@@ -61,40 +67,50 @@ public class Seam3JmsExtension implements Extension {
     private List<Route> ingressRoutes = new ArrayList<Route>();
     private List<Route> egressRoutes = new ArrayList<Route>();
     private List<EgressRoutingObserver> observerMethods = new ArrayList<EgressRoutingObserver>();
-    private Set<AnnotatedMethod<?>> eventRoutingRegistry = new HashSet<AnnotatedMethod<?>>();
+    private Set<AnnotatedType<?>> eventRoutingRegistry = new HashSet<AnnotatedType<?>>();
     private Set<AnnotatedMethod<?>> observerMethodRegistry = new HashSet<AnnotatedMethod<?>>();
     private boolean readyToRoute = false;
 
     public void buildRoutes(@Observes final AfterBeanDiscovery abd, final BeanManager bm) {
         log.debug("Building JMS Routes.");
-        for (AnnotatedMethod<?> m : eventRoutingRegistry) {
-            Type beanType = m.getDeclaringType().getBaseType();
-            Set<Bean<?>> configBeans = bm.getBeans(beanType);
-            for (Bean<?> configBean : configBeans) {
-                CreationalContext<?> context = bm.createCreationalContext(configBean);
-                Object config = null;
+        RouteManager routeManager = new RouteManagerImpl();
+        for (AnnotatedType<?> at : eventRoutingRegistry) {
+            Object instance = null;
+            try {
+                instance = at.getJavaClass().newInstance();
+            } catch (InstantiationException ex) {
+                abd.addDefinitionError(ex);
+                break;
+            } catch (IllegalAccessException ex) {
+                abd.addDefinitionError(ex);
+                break;
+            }
+            for(AnnotatedMethod<?> am : at.getMethods()) {
+                Object result = null;
                 try {
-                    Object bean = bm.getReference(configBean, beanType, context);
-                    config = m.getJavaMember().invoke(bean);
-                } catch (Exception ex) {
-                    abd.addDefinitionError(new IllegalArgumentException("Routing could not be configured from bean " + beanType + ": " + ex.getMessage(), ex));
+                    result = am.getJavaMember().invoke(instance, routeManager);
+                } catch (IllegalAccessException ex) {
+                    abd.addDefinitionError(ex);
+                } catch (IllegalArgumentException ex) {
+                    abd.addDefinitionError(ex);
+                } catch (InvocationTargetException ex) {
+                    abd.addDefinitionError(ex);
                 }
-                log.debug("Building " + Route.class.getSimpleName() + "s from " + beanType);
-                if (config != null) {
-                    if (Collection.class.isAssignableFrom(config.getClass())) {
+                if (result != null) {
+                    if (Collection.class.isAssignableFrom(result.getClass())) {
                         @SuppressWarnings("unchecked")
-                        Collection<Route> routes = Collection.class.cast(config);
+                        Collection<Route> routes = Collection.class.cast(result);
                         for (Route route : routes) {
                             if (route == null) {
-                                log.warn("No routes found for " + m);
+                                log.warn("No routes found for " + am);
                             } else {
                                 addRoute(route);
                             }
                         }
-                    } else if (Route.class.isAssignableFrom(config.getClass())) {
-                        addRoute(Route.class.cast(config));
+                    } else if (Route.class.isAssignableFrom(result.getClass())) {
+                        addRoute(Route.class.cast(result));
                     } else {
-                        abd.addDefinitionError(new IllegalArgumentException("Unsupported route configuration type: " + config));
+                        abd.addDefinitionError(new IllegalArgumentException("Unsupported route configuration type: " + result));
                     }
                 }
             }
@@ -109,7 +125,7 @@ public class Seam3JmsExtension implements Extension {
             if (m.isAnnotationPresent(Routing.class)) {
                 routing = m.getAnnotation(Routing.class);
             } else {
-                log.debug("Routing not found on method "+m.getJavaMember().getName());
+                log.debug("Routing not found on method " + m.getJavaMember().getName());
             }
             RouteType routeType = (routing == null) ? RouteType.BOTH : routing.value();
             Route route = new RouteImpl(routeType);
@@ -144,7 +160,7 @@ public class Seam3JmsExtension implements Extension {
             addRoute(route);
         }
         for (Route egress : this.egressRoutes) {
-            EgressRoutingObserver ero = new EgressRoutingObserver(egress,this);
+            EgressRoutingObserver ero = new EgressRoutingObserver(egress, this);
             abd.addObserverMethod(ero);
             this.observerMethods.add(ero);
         }
@@ -157,35 +173,21 @@ public class Seam3JmsExtension implements Extension {
         pat.setAnnotatedType(JmsAnnotatedTypeWrapper.decorate(pat.getAnnotatedType()));
     }
 
-    /**
-     * Register method producers of {@link org.jboss.seam.jms.bridge.Route}s.
-     */
-    public void registerRouteCollectionProducer(@Observes ProcessProducer<?, ? extends Collection<Route>> pp) {
-        registerRouteProducer(pp.getAnnotatedMember());
-    }
-
     public void setBeanManager(BeanManager beanManager) {
         log.debug("Handling AfterDeploymentValidation, loading active bean manager into all beans.");
-        if(!this.readyToRoute) {
-            for(EgressRoutingObserver ero : this.observerMethods) {
-                log.debug("Setting observer method beanmanager. "+beanManager);
+        if (!this.readyToRoute) {
+            for (EgressRoutingObserver ero : this.observerMethods) {
+                log.debug("Setting observer method beanmanager. " + beanManager);
                 ero.setBeanManager(beanManager);
             }
             this.readyToRoute = true;
         }
-        log.debug("EgressRoutingObservers: "+this.observerMethods);
-        log.debug("Ingress routes: "+this.ingressRoutes);
+        log.debug("EgressRoutingObservers: " + this.observerMethods);
+        log.debug("Ingress routes: " + this.ingressRoutes);
     }
 
     public boolean isReadyToRoute() {
         return this.readyToRoute;
-    }
-
-    /**
-     * Register method producers of a single {@link org.jboss.seam.jms.bridge.Route}.
-     */
-    public void registerRouteProducer(@Observes ProcessProducer<?, ? extends Route> pp) {
-        registerRouteProducer(pp.getAnnotatedMember());
     }
 
     /**
@@ -198,14 +200,26 @@ public class Seam3JmsExtension implements Extension {
             for (AnnotatedMethod<?> m : pat.getAnnotatedType().getMethods()) {
                 this.observerMethodRegistry.add(m);
             }
+        } else {
+            Set<AnnotatedMethod<?>> sams = new HashSet<AnnotatedMethod<?>>();
+            for (AnnotatedMethod<?> m : pat.getAnnotatedType().getMethods()) {
+                if (m.isAnnotationPresent(EventRouting.class)) {
+                    sams.add(m);
+                }
+            }
+            if(!sams.isEmpty()){
+                pat.veto();
+                this.eventRoutingRegistry.add(pat.getAnnotatedType());
+            }
         }
     }
+
     private void addRoute(Route route) {
-        log.debug("RouteType is: "+route.getType());
-        if(route.validate()) {
-            if(route.getType() == RouteType.EGRESS) {
+        log.debug("RouteType is: " + route.getType());
+        if (route.validate()) {
+            if (route.getType() == RouteType.EGRESS) {
                 this.egressRoutes.add(route);
-            } else if(route.getType() == RouteType.INGRESS) {
+            } else if (route.getType() == RouteType.INGRESS) {
                 this.ingressRoutes.add(route);
             } else {
                 log.debug("Adding both types of routes.");
@@ -213,31 +227,22 @@ public class Seam3JmsExtension implements Extension {
                 this.ingressRoutes.add(route);
             }
         } else {
-            log.debugf("Not adding route %s to routes, it was not valid.",route);
+            log.debugf("Not adding route %s to routes, it was not valid.", route);
         }
     }
+
     public List<Route> getIngressRoutes() {
         return this.ingressRoutes;
     }
-
-    private boolean registerRouteProducer(AnnotatedMember<?> m) {
-        if (AnnotatedMethod.class.isAssignableFrom(m.getClass())) {
-            eventRoutingRegistry.add((AnnotatedMethod<?>) m);
-            return true;
-        } else {
-            log.debugf("Producer of routes not registered. Must declare a method producer. (%s)", m);
-            return false;
-        }
-    }
-
+    
     private static Set<Annotation> getQualifiersFrom(Set<Annotation> annotations) {
         Set<Annotation> q = new HashSet<Annotation>();
-        log.debug("Annotations in getQualifiersFrom: "+annotations);
+        log.debug("Annotations in getQualifiersFrom: " + annotations);
         for (Annotation a : annotations) {
             if (a.annotationType().isAnnotationPresent(Qualifier.class)) {
                 q.add(a);
             } else {
-                log.infof("Skipping annotation %s",a);
+                log.infof("Skipping annotation %s", a);
             }
         }
         return q;

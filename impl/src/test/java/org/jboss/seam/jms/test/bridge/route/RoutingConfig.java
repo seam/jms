@@ -20,21 +20,18 @@ import static org.jboss.seam.jms.bridge.RouteType.EGRESS;
 
 import java.util.Arrays;
 import java.util.Collection;
+import javax.annotation.Resource;
 
-import javax.enterprise.inject.Produces;
 import javax.enterprise.util.AnnotationLiteral;
-import javax.inject.Inject;
 import javax.jms.Queue;
+import org.jboss.seam.jms.annotations.EventRouting;
 
-import org.jboss.seam.jms.annotations.JmsDestination;
-import org.jboss.seam.jms.bridge.EventBridge;
 import org.jboss.seam.jms.bridge.Route;
+import org.jboss.seam.jms.bridge.RouteManager;
 
 public class RoutingConfig
 {
-   @Inject EventBridge bridge;
-
-   @Inject @JmsDestination(jndiName = "queue/DLQ") Queue q;
+   @Resource(mappedName="queue/DLQ") Queue q;
    
    private static final AnnotationLiteral<BridgedViaCollection> BRIDGED_VIA_COLLECTION = new AnnotationLiteral<BridgedViaCollection>()
    {
@@ -46,15 +43,15 @@ public class RoutingConfig
       private static final long serialVersionUID = 1L;
    };
 
-   @Produces
-   public Collection<Route> getRoutes()
+   @EventRouting
+   public Collection<Route> getRoutes(RouteManager routeManager)
    {
-      return Arrays.asList(bridge.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_COLLECTION).connectTo(Queue.class, q));
+      return Arrays.asList(routeManager.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_COLLECTION).addDestinationJndiName("queue/DLQ"));
    }
    
-   @Produces
-   public Route getRoute()
+   @EventRouting
+   public Route getRoute(RouteManager routeManager)
    {
-      return bridge.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_ROUTE).connectTo(Queue.class, q);
+      return routeManager.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_ROUTE).addDestinationJndiName("queue/DLQ");
    }
 }

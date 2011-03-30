@@ -22,4 +22,6 @@ public interface RouteBuilder {
 	public void handleStartup(@Observes ServletContext servletContext);
 	@PostConstruct
 	public void init() throws JMSException;
+        public void registerDurableIngressRoute(Route route, String clientId);
+        public void unregisterRoute(String clientId);
 }
