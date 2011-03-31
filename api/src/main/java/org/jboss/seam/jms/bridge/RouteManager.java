@@ -16,6 +16,7 @@
  */
 package org.jboss.seam.jms.bridge;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 
 /**
@@ -23,7 +24,7 @@ import java.lang.reflect.Type;
  *
  * @author johnament
  */
-public interface RouteManager {
+public interface RouteManager extends Serializable {
     /**
      * Creates a new instance of a Route based on given {@link RouteType} and
      * payload type

@@ -1,5 +1,6 @@
 package org.jboss.seam.jms;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.jms.BytesMessage;
@@ -24,7 +25,7 @@ import javax.jms.TopicSubscriber;
  * @author johnament
  *
  */
-public interface MessageManager {
+public interface MessageManager extends Serializable {
 	
 	/* factory methods for creating messages */
 	

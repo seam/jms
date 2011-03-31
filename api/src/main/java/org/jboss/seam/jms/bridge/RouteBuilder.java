@@ -1,5 +1,6 @@
 package org.jboss.seam.jms.bridge;
 
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Observes;
 import javax.jms.JMSException;
@@ -18,7 +19,7 @@ import javax.servlet.ServletContext;
  * 
  * @author johnament
  */
-public interface RouteBuilder {
+public interface RouteBuilder extends Serializable {
 	public void handleStartup(@Observes ServletContext servletContext);
 	@PostConstruct
 	public void init() throws JMSException;
