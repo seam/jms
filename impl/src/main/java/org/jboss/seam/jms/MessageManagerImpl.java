@@ -86,7 +86,7 @@ public class MessageManagerImpl implements MessageManager {
 			Set<Object> keys = map.keySet();
 			for(Object key : keys) {
 				Object value = map.get(key);
-				msg.setObjectProperty(key.toString(), value);
+				msg.setObject(key.toString(), value);
 			}
 			return msg;
 		} catch (JMSException e) {
