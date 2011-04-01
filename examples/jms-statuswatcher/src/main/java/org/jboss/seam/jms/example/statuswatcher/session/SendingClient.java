@@ -16,7 +16,7 @@ public class SendingClient
 {
    @Inject /*@StatusBridge*/ Event<Status> statusEvent;
    
-   @Inject RouteBuilder routeBuilder;
+//   @Inject RouteBuilder routeBuilder;
    
    private Status status;
    

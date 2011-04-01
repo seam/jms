@@ -12,22 +12,35 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
+
+import org.jboss.logging.Logger;
+import org.jboss.seam.jms.DurableMessageManager;
+import org.jboss.seam.jms.MessageManager;
+import org.jboss.seam.jms.annotations.Durable;
 import org.jboss.seam.jms.example.statuswatcher.model.Status;
 import org.jboss.seam.jms.example.statuswatcher.qualifiers.StatusTopic;
 
 
 @SessionScoped
 @Named
-public class ReceivingClient implements Serializable
+public class ReceivingClient implements Serializable, MessageListener
 {
    private static final long serialVersionUID = 1L;
-   private static final int TIMEOUT = 20;
+//   private static final int TIMEOUT = 20;
    private static int uniqueId = 1;
+   
+   @Inject
+   private Logger log;
+   
+   @Inject
+   private DurableMessageManager dmm;
    
    @Inject 
    private StatusManager manager;
@@ -37,15 +50,16 @@ public class ReceivingClient implements Serializable
    private String clientSubscription;
    private String clientId;
    
-   @Resource(mappedName = "/ConnectionFactory")
-   private ConnectionFactory connectionFactory;
-
-   private transient Connection connection;
-   private transient Session session;
-   private transient TopicSubscriber subscriber;
+//   @Resource(mappedName = "/ConnectionFactory")
+//   private ConnectionFactory connectionFactory;
+//
+//   private transient Connection connection;
+//   private transient Session session;
+//   private transient TopicSubscriber subscriber;
    
    @Inject @StatusTopic
    private Topic statusTopic;
+   
    
    @PostConstruct
    public void initialize()
@@ -59,47 +73,51 @@ public class ReceivingClient implements Serializable
    @PreDestroy
    public void cleanup() throws Exception
    {
-      if (connection != null)
-      {
-         connection.close();
-         connection = null;
-      }
+      dmm.unsubscribe(clientId);
+//      if (connection != null)
+//      {
+//         connection.close();
+//         connection = null;
+//      }
    }
    
-   public void receive() throws Exception
-   {
-      ObjectMessage msg;
-      Message response;
-      if (followAll)
-      {
-         while ((response = subscriber.receive(TIMEOUT)) != null)
-         {
-            msg = (ObjectMessage) response;
-            receivedStatuses.offerFirst((Status) msg.getObject());
-         }
-      }
-   }
+//   public void receive() throws Exception
+//   {
+//      ObjectMessage msg;
+//      Message response;
+//      if (followAll)
+//      {
+//         while ((response = subscriber.receive(TIMEOUT)) != null)
+//         {
+//            msg = (ObjectMessage) response;
+//            receivedStatuses.offerFirst((Status) msg.getObject());
+//         }
+//      }
+//   }
 
    public void changeFollowing(ValueChangeEvent e) throws Exception
    {
       followAll = (Boolean) e.getNewValue();
       if (followAll)
       {
-         connection = connectionFactory.createConnection();
-         connection.setClientID(clientId);
-         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-         subscriber = session.createDurableSubscriber(statusTopic, clientSubscription);
-         connection.start();
-         receive();
+//         connection = connectionFactory.createConnection();
+//         connection.setClientID(clientId);
+//         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+//         subscriber = session.createDurableSubscriber(statusTopic, clientSubscription);
+//         connection.start();
+//         receive();
+         dmm.login(clientId);
+         dmm.createDurableSubscriber(statusTopic, clientSubscription , this);
       }
       else
       {
-         subscriber.close();
-         session.unsubscribe(clientSubscription);
-         if (connection != null)
-         {
-            connection.close();
-         }
+         dmm.unsubscribe(clientId);
+//         subscriber.close();
+//         session.unsubscribe(clientSubscription);
+//         if (connection != null)
+//         {
+//            connection.close();
+//         }
       }
    }
 
@@ -110,10 +128,10 @@ public class ReceivingClient implements Serializable
    
    public List<Status> getReceivedStatuses() throws Exception
    {
-      if (followAll)
-      {
-         receive();
-      }
+//      if (followAll)
+//      {
+//         receive();
+//      }
       return receivedStatuses;
    }
 
@@ -130,6 +148,24 @@ public class ReceivingClient implements Serializable
    public void setFollowAll(boolean followAll)
    {
       this.followAll = followAll;
+   }
+   
+   @Override
+   public void onMessage(Message msg)
+   {
+      if (msg instanceof ObjectMessage)
+      {
+         ObjectMessage om = (ObjectMessage) msg;
+         try
+         {
+            log.info("Received status update");
+            receivedStatuses.offerFirst((Status) om.getObject());
+         }
+         catch (JMSException e)
+         {
+            log.error(e.getMessage());
+         }
+      }
    }
    
 }
