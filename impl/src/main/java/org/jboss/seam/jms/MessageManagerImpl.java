@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
 public class MessageManagerImpl implements MessageManager {
 	
 	@Inject	Connection connection;
-	private Session session;
+	protected Session session;
 	
 	private Logger logger = Logger.getLogger(MessageManagerImpl.class);
 	
@@ -235,43 +235,6 @@ public class MessageManagerImpl implements MessageManager {
 		} catch (JMSException e) {
 			logger.warn("Unable to create durable subscriber",e);
 			return null;
-		}
-	}
-	
-	@Override
-	public TopicSubscriber createDurableSubscriber(String destination, String id, MessageListener... listeners) {
-		TopicSubscriber ts = createDurableSubscriber(destination,id);
-		if(ts != null && listeners != null && listeners.length > 0) {
-			for(MessageListener listener : listeners)
-				try {
-					ts.setMessageListener(listener);
-				} catch (JMSException e) {
-					logger.warn("Unable to map listener "+listener+" to subscriber "+ts,e);
-				}
-		}
-		return ts;
-	}
-
-        @Override
-	public TopicSubscriber createDurableSubscriber(Destination destination, String id, MessageListener... listeners) {
-		TopicSubscriber ts = createDurableSubscriber(destination,id);
-		if(ts != null && listeners != null && listeners.length > 0) {
-			for(MessageListener listener : listeners)
-				try {
-					ts.setMessageListener(listener);
-				} catch (JMSException e) {
-					logger.warn("Unable to map listener "+listener+" to subscriber "+ts,e);
-				}
-		}
-		return ts;
-	}
-	
-	@Override
-	public void unsubscribe(String id) {
-		try {
-			session.unsubscribe(id);
-		} catch (JMSException e) {
-			logger.warn("Unable to unsubscribe for id: "+id,e);
 		}
 	}
 

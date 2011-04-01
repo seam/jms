@@ -78,7 +78,7 @@ public class RouteBuilderImpl implements RouteBuilder, java.io.Serializable {
 			this.messageBuilder.createMessageConsumer(d, listener);
 		}
 	}
-
+	/*
     @Override
     public void registerDurableIngressRoute(Route ingressRoute, String clientId) {
         if(ingressRoute.getType() == RouteType.INGRESS) {
@@ -100,5 +100,5 @@ public class RouteBuilderImpl implements RouteBuilder, java.io.Serializable {
     public void unregisterRoute(String clientId) {
         this.messageBuilder.unsubscribe(clientId);
     }
-
+	*/
 }
