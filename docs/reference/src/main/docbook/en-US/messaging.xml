@@ -54,8 +54,6 @@
 	public MessageConsumer createMessageConsumer(Destination destination, MessageListener... listeners);
 	public TopicSubscriber createTopicSubscriber(String destination, MessageListener... listeners);
 	public QueueReceiver createQueueReceiver(String destination, MessageListener... listeners);
-	public TopicSubscriber createDurableSubscriber(String destination, String id, MessageListener... listeners);
-	public void unsubscribe(String id);
 }]]></programlisting>
                 <para>
                     The interface above defines a full set of capabilities for creating
@@ -88,6 +86,32 @@
                 }
                 ]]></programlisting>
 	</section>
+        <section id="durable-messaging-api">
+            <title>Durable Messaging Capabilities</title>
+            <para>
+                Seam JMS provides a Messaging API around the JMS Durable Topic Subscriber concept.
+                In order to use it within your code, you need to inject a DurableMessageManager.
+            </para>
+            <programlisting role="Java"><![CDATA[
+            @Inject @Durable DurableMessageManager durableMsgManager;
+            ]]></programlisting>
+            <para>
+                This implementation of <code>MessageManager</code> provides additional methods to
+                first login to the connection with a <code>ClientID</code>, additional methods to create
+                subscribers and an unsubscribe that can be called to unsubscribe a listener.
+            </para>
+            <programlisting role="Java"><![CDATA[
+            public void login(String clientId);
+            public TopicSubscriber createDurableSubscriber(String topic, String id, MessageListener... listeners);
+            public TopicSubscriber createDurableSubscriber(Topic topic, String id, MessageListener... listeners);
+            public void unsubscribe(String id);
+            ]]></programlisting>
+            <tip>
+                From a design pattern standpoint, it makes sense to create an <code>ApplicationScoped</code> object that
+                all subscribers are created from, injecting a <code>DurableMessageManager</code> for use across the application,
+                producing <code>SessionScoped</code> sessions for use by clients.
+            </tip>
+        </section>
         <section id="messaging-api-listener">
             <title>MessageListeners versus Message Driven Beans</title>
             <para>

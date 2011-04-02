@@ -58,16 +58,37 @@
             <para>
             Routes allows for simple mapping of event types, complete with qualifiers, to a set of destinations.  They 
             can be configured by adding qualifiers and providing destinations they should interact with and are created
-            from an
-                <literal>EventBridge</literal>. Here's a simple route that forwards CDI events on to a queue:
+            from a
+                <literal>RouteManager</literal>. Here's a simple route that forwards CDI events on to a queue:
             
-                <programlisting role="Java">@Inject EventBridge bridge;
-            @Resource(mappedName="/jms/MyQueue") Queue myQueue;
-@EventRouting public Route registerMyRoute()
+                <programlisting role="Java">
+@EventRouting public Route registerMyRoute(RouteManager routeManager)
 {
-   return bridge.createRoute(RouteType.EGRESS, MyEvent.class).connectTo(Queue.class, myQueue);
+   Queue myQueue = lookupQueue("/jms/MyQueue");
+   return routeManager.createRoute(RouteType.EGRESS, MyEvent.class).connectTo(Queue.class, myQueue);
 }
                 </programlisting>
+            </para>
+            <para>
+                A <code>RouteManager</code> is a factory object for creating new Routes.  An instance of it is injected
+                into every <literal>@EventRouting</literal> method.  Classes with methods that are decorated with <code>EventRouting</code>
+                must meet a few criteria items:
+
+                <itemizedlist>
+                    <listitem>
+                        A default, no arg constructor.
+                    </listitem>
+                    <listitem>
+                        Be a non bean (no dependencies on injection)
+                    </listitem>
+                    <listitem>
+                        Return either <literal>Route</literal> instances or <literal>Collection&lt;Route&gt;</literal> instances.
+                    </listitem>
+                </itemizedlist>
+
+                These requirements exist because of when the generation of <literal>Route</literal>s must happen.
+                There are no CDI beans active within the context.  A class identified for routing will automatically
+                be veto'd from the context.
             </para>
         </section>
       
@@ -75,14 +96,13 @@
             <title>@EventRouting</title>
 
             <para>
-            Routes are registered by returning them from a bean method annotated with
+            Routes are registered by returning them from a non-bean method annotated with
                 <literal>@EventRouting</literal>:
             
-                <programlisting role="Java">@Inject EventBridge bridge;
-            @Resource(mappedName="/jms/MyTopic") Topic myTopic;
+                <programlisting role="Java">
 @EventRouting public Route myConfig()
 {
-   return bridge.createRoute(RouteType.INGRESS, MyEvent.class).connectTo(Topic.class, myTopic);
+   return bridge.createRoute(RouteType.INGRESS, MyEvent.class).addDestinationJndiName("/jms/MyTopic");
 }
                 </programlisting>
             </para>
@@ -98,12 +118,11 @@
             <literal>@Bridged</literal> qualifier to the queue
             <literal>jms/EventQueue</literal>.  Simple,  register a route:
          
-            <programlisting role="Java">@Inject EventBridge bridge;
-@Inject @JmsDestination(jndiName="jms/EventQueue") Queue eventQueue;
+            <programlisting role="Java">
 AnnotationLiteral&lt;Bridged&gt; BRIDGED = new AnnotationLiteral&lt;Bridged&gt;() {};
-@EventRouting public Route registerMyEventRoute()
+@EventRouting public Route registerMyEventRoute(RouteManager routeManager)
 {
-   return bridge.createRoute(RouteType.EGRESS, MyEvent.class).addQualifiers(BRIDGED).connectTo(Queue.class, eventQueue);
+   return routeManager.createRoute(RouteType.EGRESS, MyEvent.class).addQualifiers(BRIDGED).addDestinationJndiName("/jms/EventQueue");
 }
             </programlisting>
         </para>
@@ -139,12 +158,11 @@ event.fire(myEvent);
           objects that are carried over the wire.
         </para>
 
-        <programlisting role="Java">@Inject EventBridge bridge;
-@Inject @JmsDestination(jndiName="jms/EventQueue") Queue eventQueue;
+        <programlisting role="Java">
 AnnotationLiteral&lt;Bridged&gt; BRIDGED = new AnnotationLiteral&lt;Bridged&gt;() {};
-@EventRouting public Route registerMyEventRoute()
+@EventRouting public Route registerMyEventRoute(RouteManager routeManager)
 {
-   return bridge.createRoute(RouteType.INGRESS, MyEvent.class).addQualifiers(BRIDGED).connectTo(Queue.class, eventQueue);
+   return routeManager.createRoute(RouteType.INGRESS, MyEvent.class).addQualifiers(BRIDGED).addDestinationJndiName("/jms/EventQueue");
 }
         </programlisting>
         <section id="routing.ingress.usage">
