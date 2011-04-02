@@ -127,7 +127,7 @@ public class MessageManagerImpl implements MessageManager {
 		this.sendMessage(this.createBytesMessage(bytes), destinations);
 	}
 
-    private Destination lookupDestination(String jndiName) {
+    protected Destination lookupDestination(String jndiName) {
         try{
             Context c = new InitialContext();
             return (Destination)c.lookup(jndiName);
@@ -137,7 +137,7 @@ public class MessageManagerImpl implements MessageManager {
         return null;
     }
     
-    private void sendMessage(String jndiName, Message message) {
+    protected void sendMessage(String jndiName, Message message) {
     	Destination d = this.lookupDestination(jndiName);
     	this.sendMessage(d,message);
     }
