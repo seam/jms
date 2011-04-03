@@ -42,9 +42,11 @@ public abstract class AbstractMessageListener implements javax.jms.MessageListen
      * AbstractMessageListener implements the basic on message functionality to
      * handle classloader behavior for working in CDI environments.
      *
+     * This method should not be overridden, even though it is not final.
+     *
      * @param message The JMS Message that is being received.
      */
-    public final void onMessage(Message message) {
+    public void onMessage(Message message) {
         logger.info("Received a message");
         ClassLoader prevCl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(classLoader);
