@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,7 +31,7 @@ import org.jboss.seam.jms.example.statuswatcher.qualifiers.StatusTopic;
 
 @SessionScoped
 @Named
-public class ReceivingClient implements Serializable, MessageListener
+public class ReceivingClient implements Serializable
 {
    private static final long serialVersionUID = 1L;
 //   private static final int TIMEOUT = 20;
@@ -44,6 +45,8 @@ public class ReceivingClient implements Serializable, MessageListener
    
    @Inject 
    private StatusManager manager;
+   @Inject
+   private BeanManager beanManager;
    private LinkedList<Status> receivedStatuses;
    
    private boolean followAll = false;
@@ -107,7 +110,8 @@ public class ReceivingClient implements Serializable, MessageListener
 //         connection.start();
 //         receive();
          dmm.login(clientId);
-         dmm.createDurableSubscriber(statusTopic, clientSubscription , this);
+         ReceivingClientListener rcl = new ReceivingClientListener(beanManager,Thread.currentThread().getContextClassLoader(),this);
+         dmm.createDurableSubscriber(statusTopic, clientSubscription , rcl);
       }
       else
       {
@@ -149,23 +153,11 @@ public class ReceivingClient implements Serializable, MessageListener
    {
       this.followAll = followAll;
    }
-   
-   @Override
-   public void onMessage(Message msg)
+
+   public void notify(Status status)
    {
-      if (msg instanceof ObjectMessage)
-      {
-         ObjectMessage om = (ObjectMessage) msg;
-         try
-         {
-            log.info("Received status update");
-            receivedStatuses.offerFirst((Status) om.getObject());
-         }
-         catch (JMSException e)
-         {
-            log.error(e.getMessage());
-         }
-      }
+       log.info("Received status update");
+        receivedStatuses.offerFirst(status);
    }
    
 }
