@@ -85,6 +85,12 @@
          <type>zip</type>
          <optional>true</optional>
       </dependency>
+
+      <dependency>
+          <groupId>org.jboss.seam.servlet</groupId>
+          <artifactId>seam-servlet</artifactId>
+          <optional>true</optional>
+      </dependency>
    </dependencies>
 
    <build>

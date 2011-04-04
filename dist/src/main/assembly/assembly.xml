@@ -42,9 +42,12 @@
          <outputDirectory>lib</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <useTransitiveDependencies>true</useTransitiveDependencies>
+         <includes>
+             <include>org.jboss.seam.solder:*</include>
+             <include>org.jboss.seam.servlet:*</include>
+         </includes>
          <excludes>
             <exclude>org.jboss.seam.jms:*</exclude>
-            <exclude>org.jboss.seam.solder:*</exclude>
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
