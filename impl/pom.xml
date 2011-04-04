@@ -113,6 +113,9 @@
 		</profile>
 		<profile>
 			<id>jbossas-managed-6</id>
+                        <activation>
+                            <activeByDefault>true</activeByDefault>
+                        </activation>
 			<properties>
 				<bindAddress>localhost</bindAddress>
 				<httpPort>8080</httpPort>
