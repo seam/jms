@@ -1,6 +1,6 @@
 
  Seam JMS Module
- 3.0.0.Alpha2
+ ${project.version}
 
  What is it?
  ===========
@@ -57,9 +57,9 @@
  Seam 3 project:      http://sfwk.org/Seam3
  Downloads:           http://sfwk.org/Seam3/DistributionDownloads
  Forums:              http://sfwk.org/Community/Seam3Users
- Source Code:         http://github.com/seam/jms
- Issue Tracking:      http://issues.jboss.org/browse/SEAMJMS
+ Source Code:         https://github.com/seam/jms
+ Issue Tracking:      https://issues.jboss.org/browse/SEAMJMS
 
  Release Notes
  =============
-
+ For release notes visit https://issues.jboss.org/secure/ConfigureReport.jspa?atl_token=3a4f2ddb0a82d411fc73c0d25b896263d3c02df3&versions=12314867&sections=all&style=html&selectedProjectId=12311010&reportKey=org.jboss.labs.jira.plugin.release-notes-report-plugin%3Areleasenotes&Next=Next

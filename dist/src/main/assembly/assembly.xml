@@ -2,7 +2,6 @@
    xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
-   <!--<id>distribution</id>-->
 
    <formats>
       <format>zip</format>
@@ -28,11 +27,15 @@
          <outputDirectory>artifacts</outputDirectory>
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
-            <include>org.jboss.seam.jms:seam-jms-api</include>
-            <include>org.jboss.seam.jms:seam-jms-impl</include>
+            <include>org.jboss.seam.jms:seam-jms</include>
          </includes>
+          <excludes>
+            <exclude>org.jboss.seam.jms:*:*:javadoc</exclude>
+            <exclude>org.jboss.seam.jms:*:*:sources</exclude>
+         </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
+      
       <!-- Add necessary dependencies -->
       <dependencySet>
          <outputDirectory>lib</outputDirectory>
@@ -40,9 +43,21 @@
          <useTransitiveDependencies>true</useTransitiveDependencies>
          <excludes>
             <exclude>org.jboss.seam.jms:*</exclude>
+            <exclude>org.jboss.seam.solder:*</exclude>
          </excludes>
          <outputFileNameMapping>${artifact.artifactId}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
       </dependencySet>
+
+      <!-- Pull in the example projects -->
+      <dependencySet>
+         <outputDirectory>examples</outputDirectory>
+         <unpack>true</unpack>
+         <useProjectArtifact>false</useProjectArtifact>
+         <includes>
+            <include>org.jboss.seam.jms:seam-jms-example-statuswatcher</include>
+         </includes>
+      </dependencySet>
+
       <!-- Pull in javadoc for api -->
       <dependencySet>
          <outputDirectory>doc/apidocs</outputDirectory>
@@ -52,6 +67,7 @@
             <include>org.jboss.seam.jms:seam-jms-api:jar:javadoc</include>
          </includes>
       </dependencySet>
+      
       <!-- Pull in docbook artifacts -->
       <dependencySet>
          <outputDirectory>doc/reference</outputDirectory>
@@ -59,6 +75,22 @@
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
             <include>org.jboss.seam.jms:seam-jms-reference-guide</include>
+         </includes>
+         <unpackOptions>
+            <excludes>
+               <exclude>META-INF/</exclude>
+            </excludes>
+         </unpackOptions>
+      </dependencySet>
+
+      <!-- Source code -->
+      <dependencySet>
+         <outputDirectory>source</outputDirectory>
+         <unpack>true</unpack>
+         <useProjectArtifact>false</useProjectArtifact>
+         <includes>
+            <include>org.jboss.seam.jms:seam-jms-api:*:sources</include>
+            <include>org.jboss.seam.jms:seam-jms-impl:*:sources</include>
          </includes>
          <unpackOptions>
             <excludes>

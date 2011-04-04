@@ -66,12 +66,25 @@
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
+         <artifactId>seam-jms</artifactId>
+         <optional>true</optional>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms-reference-guide</artifactId>
          <version>${project.version}</version>
          <type>war</type>
          <optional>true</optional>
       </dependency>
 
+      <dependency>
+         <groupId>org.jboss.seam.jms</groupId>
+         <artifactId>seam-jms-example-statuswatcher</artifactId>
+         <version>${project.version}</version>
+         <type>zip</type>
+         <optional>true</optional>
+      </dependency>
    </dependencies>
 
    <build>
