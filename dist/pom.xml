@@ -20,11 +20,11 @@
    </properties>
 
    <dependencies>
-      <dependency>
+      <!--dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms-api</artifactId>
          <optional>true</optional>
-      </dependency>
+      </dependency-->
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
@@ -42,11 +42,11 @@
          <optional>true</optional>
       </dependency>
 
-      <dependency>
+      <!--dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms-impl</artifactId>
          <optional>true</optional>
-      </dependency>
+      </dependency-->
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
@@ -67,7 +67,6 @@
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms</artifactId>
-         <optional>true</optional>
          <version>${project.version}</version>
       </dependency>
 

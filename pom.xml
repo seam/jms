@@ -51,6 +51,12 @@
             <artifactId>seam-jms-impl</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
+         <dependency>
+            <groupId>org.jboss.seam.jms</groupId>
+            <artifactId>seam-jms</artifactId>
+            <version>${project.version}</version>
+         </dependency>            
       </dependencies>
    </dependencyManagement>
 
