@@ -14,6 +14,7 @@
       <fileSet>
          <directory>src/main/assembly</directory>
          <outputDirectory>.</outputDirectory>
+         <filtered>true</filtered>         
          <includes>
             <include>readme.txt</include>
             <include>license.txt</include>
