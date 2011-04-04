@@ -85,7 +85,7 @@
       <dependency>
          <groupId>org.glassfish.web</groupId>
          <artifactId>el-impl</artifactId>
-         <scope>runtime</scope>
+         <scope>provided</scope>
          <exclusions>
             <exclusion>
                <groupId>javax.el</groupId>
