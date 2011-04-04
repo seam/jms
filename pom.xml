@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
@@ -12,7 +11,7 @@
    <groupId>org.jboss.seam.jms</groupId>
    <artifactId>seam-jms-parent</artifactId>
    <packaging>pom</packaging>
-   <version>3.0.0-SNAPSHOT</version>
+   <version>3.0.0.Beta1</version>
 
    <name>Seam JMS Module</name>
    <url>http://sfwk.org/Seam3/JMS</url>
@@ -118,8 +117,7 @@
                            </goals>
                            <configuration>
                               <tasks>
-                                 <move file="${env.JBOSS_HOME}/bin/coverage.ec"
-                                    todir="${basedir}" failonerror="false" />
+                                 <move file="${env.JBOSS_HOME}/bin/coverage.ec" todir="${basedir}" failonerror="false" />
                               </tasks>
                            </configuration>
                         </execution>
