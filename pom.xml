@@ -11,7 +11,7 @@
    <groupId>org.jboss.seam.jms</groupId>
    <artifactId>seam-jms-parent</artifactId>
    <packaging>pom</packaging>
-   <version>3.0.0.Beta1</version>
+   <version>3.0.0-SNAPSHOT</version>
 
    <name>Seam JMS Module</name>
    <url>http://sfwk.org/Seam3/JMS</url>
