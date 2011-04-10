@@ -18,27 +18,21 @@ package org.jboss.seam.jms;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.annotation.Resource;
-import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.AnnotatedMember;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.AnnotatedType;
-import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
-import javax.enterprise.inject.spi.ProcessProducer;
 import javax.inject.Qualifier;
 import javax.jms.Destination;
 
@@ -176,7 +170,7 @@ public class Seam3JmsExtension implements Extension {
 
     public void setBeanManager(BeanManager beanManager) {
         log.debug("Handling AfterDeploymentValidation, loading active bean manager into all beans.");
-        VersionLoggerUtil.createVersionMessage(this.getClass());
+        VersionLoggerUtil.logVersionInformation(this.getClass());
         if (!this.readyToRoute) {
             for (EgressRoutingObserver ero : this.observerMethods) {
                 log.debug("Setting observer method beanmanager. " + beanManager);
