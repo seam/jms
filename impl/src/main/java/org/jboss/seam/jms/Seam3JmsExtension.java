@@ -52,6 +52,7 @@ import org.jboss.seam.jms.bridge.RouteManager;
 import org.jboss.seam.jms.bridge.RouteManagerImpl;
 import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
+import org.jboss.seam.solder.core.VersionLoggerUtil;
 
 /**
  * Seam 3 JMS Portable Extension
@@ -175,6 +176,7 @@ public class Seam3JmsExtension implements Extension {
 
     public void setBeanManager(BeanManager beanManager) {
         log.debug("Handling AfterDeploymentValidation, loading active bean manager into all beans.");
+        VersionLoggerUtil.createVersionMessage(this.getClass());
         if (!this.readyToRoute) {
             for (EgressRoutingObserver ero : this.observerMethods) {
                 log.debug("Setting observer method beanmanager. " + beanManager);
