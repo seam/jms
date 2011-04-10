@@ -36,7 +36,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 public class Util
 {
-   private static final String HORNETQ_JMS_DEPLOYMENT_CONFIG = "hornetq-jms.xml";
+   public static final String HORNETQ_JMS_DEPLOYMENT_CONFIG = "hornetq-jms.xml";
 
    public static Archive<?> createDeployment(Class<?>... classes)
    {
@@ -57,7 +57,7 @@ public class Util
       WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
       war.addAsLibraries(ejbModule);
       war.addAsWebInfResource(HORNETQ_JMS_DEPLOYMENT_CONFIG, HORNETQ_JMS_DEPLOYMENT_CONFIG);
-      //war.addAsManifestResource(HORNETQ_JMS_DEPLOYMENT_CONFIG,"/META-INF/"+HORNETQ_JMS_DEPLOYMENT_CONFIG); // TODO Add this conditionally based on test profile to support other containers
+      // TODO Add this conditionally based on test profile to support other containers
       return war;
    }
 }
