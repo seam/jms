@@ -20,13 +20,13 @@
    <topic name="T">
       <entry name="/jms/T" />
    </topic>
-
-   <topic name="Topic2">
-      <entry name="/jms/T2" />
-   </topic>
    
    <topic name="Topic5">
       <entry name="/jms/T5" />
+   </topic>
+
+   <topic name="Topic2">
+      <entry name="/jms/T2" />
    </topic>
 
    <queue name="Q">

@@ -31,7 +31,11 @@ import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.bridge.RouteBuilder;
 import org.jboss.seam.jms.test.Util;
+import org.jboss.seam.jms.test.descriptor.HornetQJMSDescriptor;
+import org.jboss.seam.jms.test.descriptor.HornetQJMSDescriptorImpl;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.descriptor.api.Descriptor;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -41,6 +45,7 @@ import org.junit.runner.RunWith;
 //@Ignore
 public class RouteTest
 {
+   
    @Deployment
    public static Archive<?> createDeployment()
    {
