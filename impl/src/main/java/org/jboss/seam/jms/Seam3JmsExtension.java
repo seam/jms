@@ -231,6 +231,10 @@ public class Seam3JmsExtension implements Extension {
         return this.ingressRoutes;
     }
     
+    public List<Route> getEgressRoutes() {
+    	return this.egressRoutes;
+    }
+    
     private static Set<Annotation> getQualifiersFrom(Set<Annotation> annotations) {
         Set<Annotation> q = new HashSet<Annotation>();
         log.debug("Annotations in getQualifiersFrom: " + annotations);

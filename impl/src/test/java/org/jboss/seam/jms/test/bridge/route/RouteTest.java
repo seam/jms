@@ -16,6 +16,8 @@
  */
 package org.jboss.seam.jms.test.bridge.route;
 
+import java.lang.reflect.Type;
+
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Connection;
@@ -30,6 +32,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.bridge.RouteBuilder;
+import org.jboss.seam.jms.bridge.RouteImpl;
+import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.seam.jms.test.descriptor.HornetQJMSDescriptor;
 import org.jboss.seam.jms.test.descriptor.HornetQJMSDescriptorImpl;
@@ -101,5 +105,25 @@ public class RouteTest
       Assert.assertTrue(m != null);
       Assert.assertTrue(m instanceof TextMessage);
       Assert.assertEquals(expected, ((TextMessage) m).getText());
+   }
+   
+   @Test
+   public void testRouteBehavior() {
+	   RouteImpl ri = new RouteImpl(RouteType.INGRESS, this.getClass());
+	   Assert.assertTrue(ri.isIngressEnabled());
+	   Assert.assertFalse(ri.isEgressEnabled());
+	   ri.disableIngress();
+	   Assert.assertFalse(ri.isIngressEnabled());
+	   ri.enableIngress();
+	   ri.enableEgress();
+	   Assert.assertTrue(ri.isIngressEnabled());
+	   Assert.assertFalse(ri.isEgressEnabled());
+	   
+	   RouteImpl ri2 = new RouteImpl(RouteType.BOTH,this.getClass());
+	   Assert.assertTrue(ri2.isIngressEnabled());
+	   Assert.assertTrue(ri2.isEgressEnabled());
+	   ri2.disableEgress();
+	   Assert.assertTrue(ri2.isIngressEnabled());
+	   Assert.assertFalse(ri2.isEgressEnabled());
    }
 }

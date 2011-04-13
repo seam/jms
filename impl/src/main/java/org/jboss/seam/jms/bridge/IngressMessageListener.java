@@ -41,6 +41,7 @@ public class IngressMessageListener extends AbstractMessageListener {
 	private Annotation[] qualifiers = null;
 	private Logger logger;
 	private Class<?> payload;
+	private Route route;
 
 	public IngressMessageListener(BeanManager beanManager,
 			ClassLoader classLoader, Route route) {
@@ -60,6 +61,7 @@ public class IngressMessageListener extends AbstractMessageListener {
 		annotations.add(INGRESS);
 		logger.info("Qualifiers: " + annotations);
 		this.qualifiers = annotations.toArray(new Annotation[] {});
+		this.route = route;
 	}
 
 	private boolean isMessagePayload() {
@@ -68,6 +70,8 @@ public class IngressMessageListener extends AbstractMessageListener {
 
 	@Override
 	protected void handleMessage(Message msg) throws JMSException {
+		if(!this.route.isIngressEnabled())
+			return;
 		if (isMessagePayload()) {
 			beanManager.fireEvent(msg, qualifiers);
 		} else {

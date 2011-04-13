@@ -56,7 +56,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
 
     private Logger log;
     private BeanManager bm;
-    private Route routing;
+    private Route route;
     private Seam3JmsExtension extension;
 
     public EgressRoutingObserver(BeanManager bm, Route routing, Seam3JmsExtension extension) {
@@ -65,7 +65,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     }
 
     public EgressRoutingObserver(Route route, Seam3JmsExtension extension) {
-        this.routing = route;
+        this.route = route;
         this.extension = extension;
         this.log = Logger.getLogger(EgressRoutingObserver.class);
     }
@@ -81,14 +81,14 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
 
     public Set<Annotation> getObservedQualifiers() {
         Set<Annotation> as = new HashSet<Annotation>();
-        as.addAll(routing.getQualifiers());
+        as.addAll(route.getQualifiers());
         as.add(EGRESS);
         log.debugf("Inidicating that I observe these qualifiers: [%s]",as);
-        return routing.getQualifiers();
+        return route.getQualifiers();
     }
 
     public Type getObservedType() {
-        return routing.getPayloadType();
+        return route.getPayloadType();
     }
 
     public Reception getReception() {
@@ -122,17 +122,17 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     
     private void loadDestinations() {
         Set<Destination> destinations = new HashSet<Destination>();
-        destinations.addAll(routing.getDestinations());
-        for(String dest : routing.getDestinationJndiNames()) {
+        destinations.addAll(route.getDestinations());
+        for(String dest : route.getDestinationJndiNames()) {
             Destination destination = lookupDestination(dest);
             destinations.add(destination);
         }
-        for(AnnotatedParameter<?> ap : routing.getAnnotatedParameters()) {
+        for(AnnotatedParameter<?> ap : route.getAnnotatedParameters()) {
             Destination destination = lookupDestination(ap);
             destinations.add(destination);
         }
         log.infof("Routing destinations: [%s]",destinations);
-        this.routing.setDestinations(destinations);
+        this.route.setDestinations(destinations);
     }
 
     private Destination lookupDestination(String jndiName) {
@@ -155,11 +155,13 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     }
 
     private void forwardEvent(Object event) {
+    	if(!this.route.isEgressEnabled())
+    		return;
         MessageManager msgBuilder = this.getMessageBuilder();
         if(event instanceof String) {
-        	msgBuilder.sendTextToDestinations(event.toString(), routing.getDestinations().toArray(new Destination[]{}));
+        	msgBuilder.sendTextToDestinations(event.toString(), route.getDestinations().toArray(new Destination[]{}));
         } else {
-        	msgBuilder.sendObjectToDestinations(event, routing.getDestinations().toArray(new Destination[]{}));
+        	msgBuilder.sendObjectToDestinations(event, route.getDestinations().toArray(new Destination[]{}));
         }
         
     }

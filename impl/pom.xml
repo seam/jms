@@ -16,7 +16,13 @@
     <description>Implementation of the Seam JMS Module</description>
 	<!-- url required for JAR Manifest -->
     <url>${project.parent.url}</url>
-
+    <repositories>
+        <repository>
+            <id>glassfish</id>
+            <name>glassfish</name>
+            <url>http://download.java.net/maven/glassfish</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.jboss.spec</groupId>
@@ -84,6 +90,33 @@
                     <groupId>org.jboss.jbossas</groupId>
                     <artifactId>jboss-as-client</artifactId>
                     <type>pom</type>
+                </dependency>
+            </dependencies>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-jbossas</directory>
+                    </testResource>
+                </testResources>
+            </build>
+        </profile>
+        <profile>
+            <id>arq-glassfish-embedded</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.arquillian.container</groupId>
+                    <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
+                    <version>1.0.0.Alpha5</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.extras</groupId>
+                    <artifactId>glassfish-embedded-all</artifactId>
+                    <version>3.1</version>
+                    <scope>test</scope>
                 </dependency>
             </dependencies>
             <build>

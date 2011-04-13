@@ -113,4 +113,48 @@ public interface Route {
     public boolean validate();
 
     public void build(BeanManager beanManager);
+    
+    public Route id(String id);
+    
+    public String getId();
+    
+    /**
+     * Determines if this route is enabled for Egress routes.
+     * If the route is ingress, this returns false always.
+     * 
+     * @return true if enabled for egress routes, else false. 
+     */
+    public boolean isEgressEnabled();
+    
+    /**
+     * Determines if this route is enabled for ingress routes.
+     * If the route is egress, this returns false always.
+     * 
+     * @return true if enabled for ingress routes, else false. 
+     */
+    public boolean isIngressEnabled();
+    
+    /**
+     * Disables egress routing for this route.
+     * 
+     */
+    public void disableEgress();
+    
+    /**
+     * Enables egress routing for this route.
+     * Ineffective if the route is ingress.
+     * 
+     */
+    public void enableEgress();
+    
+    /**
+     * Disables ingress routing for this route.
+     */
+    public void disableIngress();
+    
+    /**
+     * Enables ingress routing for this route.
+     * Ineffective if the route is egress.
+     */
+    public void enableIngress();
 }

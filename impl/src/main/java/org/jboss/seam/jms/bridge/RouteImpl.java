@@ -45,6 +45,7 @@ import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 public class RouteImpl implements Route
 {
    private RouteType type;
+   private String id;
    private Type payloadType;
    private Set<Annotation> qualifiers;
    private Set<Destination> destinations;
@@ -63,6 +64,8 @@ public class RouteImpl implements Route
    {
       logger = Logger.getLogger(RouteImpl.class);
       this.type = type;
+      this.enableEgress();
+      this.enableIngress();
       qualifiers = new HashSet<Annotation>();
       destinations = new HashSet<Destination>();
       destinationQualifiers = new ArrayList<Set<Annotation>>();
@@ -219,4 +222,56 @@ public class RouteImpl implements Route
     public void setDestinations(Collection<Destination> destinations) {
         this.destinations = new HashSet<Destination>(destinations);
     }
+
+	@Override
+	public Route id(String id) {
+		this.id = id;
+		return this;
+	}
+
+	@Override
+	public String getId() {
+		return this.id;
+	}
+	
+	private boolean egressEnabled = false;
+	private boolean ingressEnabled = false;
+
+	@Override
+	public boolean isEgressEnabled() {
+		return egressEnabled;
+	}
+
+	@Override
+	public boolean isIngressEnabled() {
+		return ingressEnabled;
+	}
+
+	@Override
+	public void disableEgress() {
+		this.egressEnabled = false;
+	}
+
+	@Override
+	public void enableEgress() {
+		if(this.type == RouteType.BOTH || this.type == RouteType.EGRESS) {
+			this.egressEnabled = true;
+		} else {
+			this.egressEnabled = false;
+		}
+	}
+
+	@Override
+	public void disableIngress() {
+		this.ingressEnabled = false;
+	}
+
+	@Override
+	public void enableIngress() {
+		if(this.type == RouteType.BOTH || this.type == RouteType.INGRESS) {
+			this.ingressEnabled = true;
+		} else {
+			this.ingressEnabled = false;
+		}
+	}
 }
