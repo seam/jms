@@ -116,6 +116,9 @@ public class Seam3JmsExtension implements Extension {
             for (AnnotatedParameter<?> ap : m.getParameters()) {
                 log.debug("In method " + m.getJavaMember().getName() + " with param type " + ap.getBaseType());
             }
+            Class<?> intfClazz = m.getJavaMember().getDeclaringClass();
+            String methodName = m.getJavaMember().getName();
+            String routeId = intfClazz.getCanonicalName()+"."+methodName;
             Routing routing = null;
             if (m.isAnnotationPresent(Routing.class)) {
                 routing = m.getAnnotation(Routing.class);
@@ -123,7 +126,7 @@ public class Seam3JmsExtension implements Extension {
                 log.debug("Routing not found on method " + m.getJavaMember().getName());
             }
             RouteType routeType = (routing == null) ? RouteType.BOTH : routing.value();
-            Route route = new RouteImpl(routeType);
+            Route route = new RouteImpl(routeType).id(routeId);
             boolean isResourced = m.isAnnotationPresent(Resource.class);
             if (isResourced) {
                 Resource r = m.getAnnotation(Resource.class);
