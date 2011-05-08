@@ -14,33 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.seam.jms.bridge;
+package org.jboss.seam.jms.annotations;
 
-import java.lang.reflect.Type;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import org.jboss.seam.solder.core.Veto;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-/**
- * Implementation of {@link RouteManager} that creates {@link RouteImpl} instances.
- *
- * @author johnament
- */
-@Veto
-public class RouteManagerImpl implements RouteManager {
+import javax.inject.Qualifier;
 
-    @Override
-    public Route createRoute(RouteType type, Type payloadType) {
-        return new RouteImpl(type,payloadType);
-    }
-
-	@Override
-	public Route createInboundRoute(Type payloadType) {
-		return this.createRoute(RouteType.INGRESS, payloadType);
-	}
-
-	@Override
-	public Route createOutboundRoute(Type payloadType) {
-		return this.createRoute(RouteType.EGRESS, payloadType);
-	}
+@Qualifier
+@Documented
+@Target( { FIELD, METHOD, TYPE, PARAMETER })
+@Retention(RUNTIME)
+public @interface Inbound {
 
 }

@@ -25,14 +25,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Reception;
 import javax.enterprise.event.TransactionPhase;
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.ObserverMethod;
-import javax.inject.Named;
 import javax.jms.Destination;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -41,7 +39,9 @@ import javax.naming.NamingException;
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.Seam3JmsExtension;
+import org.jboss.seam.jms.annotations.OutboundLiteral;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
+import org.jboss.seam.solder.core.Veto;
 
 /**
  * Forwards CDI events that match the provided {@link Route} configuration to
@@ -50,8 +50,7 @@ import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
  * @author Jordan Ganoff
  * 
  */
-@Named
-@ApplicationScoped
+@Veto
 public class EgressRoutingObserver implements ObserverMethod<Object> {
 
     private Logger log;
@@ -83,6 +82,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
         Set<Annotation> as = new HashSet<Annotation>();
         as.addAll(route.getQualifiers());
         as.add(EGRESS);
+        as.add(OutboundLiteral.INSTANCE);
         log.debugf("Inidicating that I observe these qualifiers: [%s]",as);
         return route.getQualifiers();
     }

@@ -31,6 +31,7 @@ import javax.jms.TextMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.AbstractMessageListener;
+import org.jboss.seam.jms.annotations.InboundLiteral;
 
 /**
  * 
@@ -59,6 +60,7 @@ public class IngressMessageListener extends AbstractMessageListener {
 		}
 		this.payload = (Class<?>) route.getPayloadType();
 		annotations.add(INGRESS);
+		annotations.add(InboundLiteral.INSTANCE);
 		logger.info("Qualifiers: " + annotations);
 		this.qualifiers = annotations.toArray(new Annotation[] {});
 		this.route = route;

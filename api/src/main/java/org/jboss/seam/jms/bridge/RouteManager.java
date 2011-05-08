@@ -34,4 +34,19 @@ public interface RouteManager extends Serializable {
      * @return a new Route instance.
      */
     public Route createRoute(RouteType type, Type payloadType);
+    
+    /**
+     * Creates a new Inbound route - listens for incoming JMS messages
+     * and fires a CDI event of the incoming type using the configured qualifiers.
+     * @param payloadType The type of the payload to work with.
+     * @return A new inbound route.
+     */
+    public Route createInboundRoute(Type payloadType);
+    
+    /**
+     * Creates a new Outbound route - observes fired events
+     * @param payloadType
+     * @return
+     */
+    public Route createOutboundRoute(Type payloadType);
 }
