@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.AnnotatedMethod;
@@ -33,6 +34,7 @@ import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
+import javax.inject.Inject;
 import javax.inject.Qualifier;
 import javax.jms.Destination;
 
@@ -47,17 +49,16 @@ import org.jboss.seam.jms.bridge.RouteManagerImpl;
 import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 import org.jboss.seam.solder.core.VersionLoggerUtil;
+import org.jboss.seam.solder.literal.NamedLiteral;
 
 /**
  * Seam 3 JMS Portable Extension
  * 
  * @author Jordan Ganoff
+ * @author <a href="john.d.ament@gmail.com">John Ament</a>
  */
 public class Seam3JmsExtension implements Extension {
 
-    public Seam3JmsExtension() {
-        log.info("Creating a new instance of Seam3JmsExtension");
-    }
     private static final Logger log = Logger.getLogger(Seam3JmsExtension.class);
     private List<Route> ingressRoutes = new ArrayList<Route>();
     private List<Route> egressRoutes = new ArrayList<Route>();
@@ -164,12 +165,11 @@ public class Seam3JmsExtension implements Extension {
         }
     }
 
+    /** Test to remove.
     public <X> void decorateAnnotatedType(@Observes ProcessAnnotatedType<X> pat) {
-        /**
-         * Flatten all @Annotated that define @JmsDestinations so that they may be injected
-         */
+    	log.info("Calling decorate annotated type");
         pat.setAnnotatedType(JmsAnnotatedTypeWrapper.decorate(pat.getAnnotatedType()));
-    }
+    }**/
 
     public void setBeanManager(BeanManager beanManager) {
         log.debug("Handling AfterDeploymentValidation, loading active bean manager into all beans.");
@@ -194,7 +194,7 @@ public class Seam3JmsExtension implements Extension {
      * @param pat
      */
     public void registerObserverMethods(@Observes ProcessAnnotatedType<?> pat) {
-        if (pat.getAnnotatedType().getJavaClass().isInterface()) {
+    	if (pat.getAnnotatedType().getJavaClass().isInterface()) {
             log.debug("Found a possible interface... " + pat.getAnnotatedType().getJavaClass());
             for (AnnotatedMethod<?> m : pat.getAnnotatedType().getMethods()) {
                 this.observerMethodRegistry.add(m);

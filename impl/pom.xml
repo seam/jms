@@ -142,7 +142,7 @@
                 </dependency>
                 <dependency>
                     <groupId>org.jboss.jbossas</groupId>
-                    <artifactId>jboss-as-profileservice-client</artifactId>
+                    <artifactId>jboss-as-client</artifactId>
                     <version>6.0.0.Final</version>
                     <scope>test</scope>
                     <type>pom</type>

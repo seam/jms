@@ -14,23 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.seam.jms.bridge;
+package org.jboss.seam.jms.test.stereotype;
 
-import java.lang.reflect.Type;
+import javax.jms.Queue;
+import javax.inject.Inject;
 
-import org.jboss.seam.solder.core.Veto;
+import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.seam.jms.test.Util;
+import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-/**
- * Implementation of {@link RouteManager} that creates {@link RouteImpl} instances.
- *
- * @author johnament
- */
-@Veto
-public class RouteManagerImpl implements RouteManager {
+import junit.framework.Assert;
 
-    @Override
-    public Route createRoute(RouteType type, Type payloadType) {
-        return new RouteImpl(type,payloadType);
-    }
-
+@RunWith(Arquillian.class)
+@Ignore
+public class StereotypeTest {
+	
+   @Deployment
+   public static Archive<?> createDeployment()
+   {
+      return Util.createDeployment(StereotypeTest.class);
+   }
+	
+	@Inject @MyDestination Queue q;
+	
+	@Test
+	public void testQueueWasInjected() {
+		Assert.assertNotNull(q);
+	}
 }

@@ -28,6 +28,7 @@ import org.jboss.seam.jms.test.bridge.IngressInterfaceProducer;
 import org.jboss.seam.solder.bean.defaultbean.DefaultBean;
 import org.jboss.seam.solder.core.VersionLoggerUtil;
 import org.jboss.seam.solder.literal.DefaultLiteral;
+import org.jboss.seam.solder.reflection.AnnotationInspector;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -47,7 +48,7 @@ public class Util
       ejbModule.addPackage(ConnectionProducer.class.getPackage());
       ejbModule.addPackage(JmsAnnotatedTypeWrapper.class.getPackage());
       ejbModule.addPackage(Route.class.getPackage());
-      ejbModule.addClasses(IngressInterfaceProducer.class,VersionLoggerUtil.class);
+      ejbModule.addClasses(IngressInterfaceProducer.class,VersionLoggerUtil.class, AnnotationInspector.class);
       ejbModule.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
       ejbModule.addAsServiceProvider(Extension.class, Seam3JmsExtension.class);
       for (Class<?> c : classes)

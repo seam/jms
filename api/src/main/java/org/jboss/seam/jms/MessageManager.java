@@ -102,8 +102,13 @@ public interface MessageManager extends Serializable {
 	 */
 	public void sendBytesToDestinations(byte[] bytes, String... destinations);
 	
-	/* Utility methods for sending messages */
 	
+	/**
+	 * Sends the given message to the list of destinations.
+	 * 
+	 * @param message The message to be sent.
+	 * @param destinations an array of destinations to be sent to.
+	 */
 	public void sendMessage(Message message, Destination... destinations);
 	
 	
