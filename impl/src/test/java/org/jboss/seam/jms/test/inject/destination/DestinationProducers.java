@@ -26,12 +26,15 @@ import org.jboss.seam.jms.test.inject.destination.InjectDestinationViaResource.Q
 import org.jboss.seam.jms.test.inject.destination.InjectDestinationViaResource.T;
 
 @Named
-public class DestinationProducers
-{
+public class DestinationProducers {
 
-   @Resource(mappedName="/jms/T")
-   @Produces @T Topic t;
-   
-   @Resource(mappedName="/jms/Q")
-   @Produces @Q Queue q;
+    @Resource(mappedName = "/jms/T")
+    @Produces
+    @T
+    Topic t;
+
+    @Resource(mappedName = "/jms/Q")
+    @Produces
+    @Q
+    Queue q;
 }

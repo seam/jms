@@ -16,8 +16,6 @@
  */
 package org.jboss.seam.jms.test.inject.destination;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Retention;
 
 import javax.enterprise.inject.Instance;
@@ -35,39 +33,43 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(Arquillian.class)
-public class InjectDestinationViaResource 
-{
-   @Qualifier
-   @Retention(RUNTIME)
-   public @interface Q {}
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-   @Qualifier
-   @Retention(RUNTIME)
-   public @interface T {}
-   
-   @Deployment
-   public static Archive<?> createDeployment()
-   {
-      return Util.createDeployment(InjectDestinationViaResource.class);
-   }
-   
-   @Inject @T Instance<Topic> t;
-   @Inject @Q Instance<Queue> q;
-   
-   @Test
-   public void injectTopic() throws JMSException
-   {
-      Topic topic = t.get();
-      Assert.assertNotNull(topic);
-      Assert.assertEquals("T", topic.getTopicName());
-   }
-   
-   @Test
-   public void injectQueue() throws JMSException
-   {
-      Queue queue = q.get();
-      Assert.assertNotNull(queue);
-      Assert.assertNotNull("Q", queue.getQueueName());
-   }
+@RunWith(Arquillian.class)
+public class InjectDestinationViaResource {
+    @Qualifier
+    @Retention(RUNTIME)
+    public @interface Q {
+    }
+
+    @Qualifier
+    @Retention(RUNTIME)
+    public @interface T {
+    }
+
+    @Deployment
+    public static Archive<?> createDeployment() {
+        return Util.createDeployment(InjectDestinationViaResource.class);
+    }
+
+    @Inject
+    @T
+    Instance<Topic> t;
+    @Inject
+    @Q
+    Instance<Queue> q;
+
+    @Test
+    public void injectTopic() throws JMSException {
+        Topic topic = t.get();
+        Assert.assertNotNull(topic);
+        Assert.assertEquals("T", topic.getTopicName());
+    }
+
+    @Test
+    public void injectQueue() throws JMSException {
+        Queue queue = q.get();
+        Assert.assertNotNull(queue);
+        Assert.assertNotNull("Q", queue.getQueueName());
+    }
 }

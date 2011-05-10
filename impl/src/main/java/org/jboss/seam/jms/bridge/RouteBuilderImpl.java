@@ -34,71 +34,71 @@ import org.jboss.seam.jms.Seam3JmsExtension;
 @Singleton
 public class RouteBuilderImpl implements RouteBuilder, java.io.Serializable {
 
-	private static final long serialVersionUID = -6782656668733696386L;
-	private Logger log = Logger.getLogger(RouteBuilderImpl.class);
-	private List<Route> ingressRoutes;
-	@Inject
-	Seam3JmsExtension extension;
-	@Inject
-	MessageManager messageBuilder;
-	@Inject
-	BeanManager beanManager;
-	
-	public RouteBuilderImpl() {
-		Logger log = Logger.getLogger(RouteBuilderImpl.class);
-		log.debug("Creating a new RouteBuilder()");
-	}
+    private static final long serialVersionUID = -6782656668733696386L;
+    private Logger log = Logger.getLogger(RouteBuilderImpl.class);
+    private List<Route> ingressRoutes;
+    @Inject
+    Seam3JmsExtension extension;
+    @Inject
+    MessageManager messageBuilder;
+    @Inject
+    BeanManager beanManager;
 
-	@Override
-	public void handleStartup(@Observes ServletContext servletContext) {
-		log.debug("Starting up Seam JMS via ServletContext callback.");
-	}
+    public RouteBuilderImpl() {
+        Logger log = Logger.getLogger(RouteBuilderImpl.class);
+        log.debug("Creating a new RouteBuilder()");
+    }
 
-	@PostConstruct
-	@Override
-	public void init() throws JMSException {
-		log.debug("Calling RouteBuilder.init");
-		extension.setBeanManager(beanManager);
-		ingressRoutes = extension.getIngressRoutes();
-		log.debug("Ingress routes size: (" + ingressRoutes.size() + ") "
-				+ ingressRoutes);
-		for (Route ingressRoute : ingressRoutes) {
-			ingressRoute.build(beanManager);
-			createListener(ingressRoute);
-		}
-	}
-
-	private void createListener(Route ingressRoute) {
-		ClassLoader prevCl = Thread.currentThread().getContextClassLoader();
-		log.debug("About to create listener for route " + ingressRoute);
-		log.debug("Routes: " + ingressRoute.getDestinations());
-		for (Destination d : ingressRoute.getDestinations()) {
-			IngressMessageListener listener = new IngressMessageListener(
-					beanManager, prevCl, ingressRoute);
-			this.messageBuilder.createMessageConsumer(d, listener);
-		}
-	}
-	/*
     @Override
-    public void registerDurableIngressRoute(Route ingressRoute, String clientId) {
-        if(ingressRoute.getType() == RouteType.INGRESS) {
+    public void handleStartup(@Observes ServletContext servletContext) {
+        log.debug("Starting up Seam JMS via ServletContext callback.");
+    }
+
+    @PostConstruct
+    @Override
+    public void init() throws JMSException {
+        log.debug("Calling RouteBuilder.init");
+        extension.setBeanManager(beanManager);
+        ingressRoutes = extension.getIngressRoutes();
+        log.debug("Ingress routes size: (" + ingressRoutes.size() + ") "
+                + ingressRoutes);
+        for (Route ingressRoute : ingressRoutes) {
             ingressRoute.build(beanManager);
-            ClassLoader prevCl = Thread.currentThread().getContextClassLoader();
-            log.debug("About to create listener for route " + ingressRoute);
-            log.debug("Routes: " + ingressRoute.getDestinations());
-            for (Destination d : ingressRoute.getDestinations()) {
-                    IngressMessageListener listener = new IngressMessageListener(
-                                    beanManager, prevCl, ingressRoute);
-                    this.messageBuilder.createDurableSubscriber(d, clientId, listener);
-            }
-        } else {
-            throw new IllegalArgumentException("Route "+ingressRoute+" is not valid, it must be an ingress route.");
+            createListener(ingressRoute);
         }
     }
 
-    @Override
-    public void unregisterRoute(String clientId) {
-        this.messageBuilder.unsubscribe(clientId);
+    private void createListener(Route ingressRoute) {
+        ClassLoader prevCl = Thread.currentThread().getContextClassLoader();
+        log.debug("About to create listener for route " + ingressRoute);
+        log.debug("Routes: " + ingressRoute.getDestinations());
+        for (Destination d : ingressRoute.getDestinations()) {
+            IngressMessageListener listener = new IngressMessageListener(
+                    beanManager, prevCl, ingressRoute);
+            this.messageBuilder.createMessageConsumer(d, listener);
+        }
     }
-	*/
+    /*
+     @Override
+     public void registerDurableIngressRoute(Route ingressRoute, String clientId) {
+         if(ingressRoute.getType() == RouteType.INGRESS) {
+             ingressRoute.build(beanManager);
+             ClassLoader prevCl = Thread.currentThread().getContextClassLoader();
+             log.debug("About to create listener for route " + ingressRoute);
+             log.debug("Routes: " + ingressRoute.getDestinations());
+             for (Destination d : ingressRoute.getDestinations()) {
+                     IngressMessageListener listener = new IngressMessageListener(
+                                     beanManager, prevCl, ingressRoute);
+                     this.messageBuilder.createDurableSubscriber(d, clientId, listener);
+             }
+         } else {
+             throw new IllegalArgumentException("Route "+ingressRoute+" is not valid, it must be an ingress route.");
+         }
+     }
+
+     @Override
+     public void unregisterRoute(String clientId) {
+         this.messageBuilder.unsubscribe(clientId);
+     }
+     */
 }

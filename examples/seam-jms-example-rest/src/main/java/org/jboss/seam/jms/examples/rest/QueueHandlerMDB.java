@@ -28,38 +28,39 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
+
 import org.jboss.logging.Logger;
 
 /**
- *
  * @author johnament
  */
-@MessageDriven(name="T4_MDB", activationConfig =
-{
-@ActivationConfigProperty(propertyName="destinationType", propertyValue="javax.jms.Topic"),
-@ActivationConfigProperty(propertyName="Destination", propertyValue="jms/LongT2")
-})
-public class QueueHandlerMDB implements MessageListener{
+@MessageDriven(name = "T4_MDB", activationConfig =
+        {
+                @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
+                @ActivationConfigProperty(propertyName = "Destination", propertyValue = "jms/LongT2")
+        })
+public class QueueHandlerMDB implements MessageListener {
 
     Logger logger = Logger.getLogger(QueueHandlerMDB.class);
+
     @Override
     public void onMessage(Message message) {
         logger.info("Handling onMessage");
-        if(message instanceof TextMessage) {
-            TextMessage tm = (TextMessage)message;
-            try{
-                logger.info("Received text: "+tm.getText());
+        if (message instanceof TextMessage) {
+            TextMessage tm = (TextMessage) message;
+            try {
+                logger.info("Received text: " + tm.getText());
             } catch (JMSException e) {
-                logger.error("JMSException",e);
+                logger.error("JMSException", e);
             }
-        } else if(message instanceof ObjectMessage) {
-            ObjectMessage om = (ObjectMessage)message;
-            try{
+        } else if (message instanceof ObjectMessage) {
+            ObjectMessage om = (ObjectMessage) message;
+            try {
                 Object o = om.getObject();
                 logger.info(o.getClass().getCanonicalName());
-                logger.info("Object Data: "+o.toString());
+                logger.info("Object Data: " + o.toString());
             } catch (JMSException e) {
-                logger.error("JMSException",e);
+                logger.error("JMSException", e);
             }
         }
     }

@@ -24,32 +24,27 @@ import org.jboss.seam.jms.annotations.JmsDestination;
 /**
  * Wraps {@link AnnotatedParameter}s that declare transitive annotations to
  * {@link JmsDestination} with the actual {@link JmsDestination}.
- * 
+ *
  * @author Jordan Ganoff
  */
-public class JmsDestinationParameterWrapper<X> extends JmsDestinationAnnotatedWrapper implements AnnotatedParameter<X>
-{
+public class JmsDestinationParameterWrapper<X> extends JmsDestinationAnnotatedWrapper implements AnnotatedParameter<X> {
 
-   public JmsDestinationParameterWrapper(AnnotatedParameter<X> decorated)
-   {
-      super(decorated);
-   }
+    public JmsDestinationParameterWrapper(AnnotatedParameter<X> decorated) {
+        super(decorated);
+    }
 
-   @SuppressWarnings("unchecked")
-   @Override
-   protected AnnotatedParameter<X> decorated()
-   {
-      return AnnotatedParameter.class.cast(super.decorated());
-   }
+    @SuppressWarnings("unchecked")
+    @Override
+    protected AnnotatedParameter<X> decorated() {
+        return AnnotatedParameter.class.cast(super.decorated());
+    }
 
-   public AnnotatedCallable<X> getDeclaringCallable()
-   {
-      return decorated().getDeclaringCallable();
-   }
+    public AnnotatedCallable<X> getDeclaringCallable() {
+        return decorated().getDeclaringCallable();
+    }
 
-   public int getPosition()
-   {
-      return decorated().getPosition();
-   }
+    public int getPosition() {
+        return decorated().getPosition();
+    }
 
 }

@@ -20,14 +20,11 @@ import java.lang.reflect.Type;
 
 /**
  * Default JMS Event Bridge
- * 
+ *
  * @author Jordan Ganoff
- * 
  */
-public class JmsEventBridge implements EventBridge
-{
-   public Route createRoute(RouteType type, Type payloadType)
-   {
-      return new RouteImpl(type, payloadType);
-   }
+public class JmsEventBridge implements EventBridge {
+    public Route createRoute(RouteType type, Type payloadType) {
+        return new RouteImpl(type, payloadType);
+    }
 }

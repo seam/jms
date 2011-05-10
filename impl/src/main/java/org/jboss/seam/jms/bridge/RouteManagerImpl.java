@@ -27,7 +27,7 @@ public class RouteManagerImpl implements RouteManager {
 
     @Override
     public Route createRoute(RouteType type, Type payloadType) {
-        return new RouteImpl(type,payloadType);
+        return new RouteImpl(type, payloadType);
     }
 
 }

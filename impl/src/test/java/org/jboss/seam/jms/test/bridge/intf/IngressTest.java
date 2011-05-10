@@ -16,18 +16,11 @@
  */
 package org.jboss.seam.jms.test.bridge.intf;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.jms.Connection;
 import javax.jms.JMSException;
-import javax.jms.MessageProducer;
-import javax.jms.ObjectMessage;
-import javax.jms.Session;
 import javax.jms.Topic;
+
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.MessageManager;
@@ -47,7 +40,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- *
  * @author johnament
  */
 @RunWith(Arquillian.class)
@@ -59,12 +51,16 @@ public class IngressTest {
                 DestinationProducer.class, MessagePubSubProducer.class, RouteBuilderImpl.class, ConnectionProducer.class);
     }
 
-    @Inject RouteBuilder builder;
-    @Inject MessageManager messageBuilder;
-    @Inject @JmsDestination(jndiName="jms/T2") Topic t;
-    
+    @Inject
+    RouteBuilder builder;
+    @Inject
+    MessageManager messageBuilder;
+    @Inject
+    @JmsDestination(jndiName = "jms/T2")
+    Topic t;
+
     private static boolean received = false;
-    
+
     @Test
     public void testObserveMessage() throws JMSException, InterruptedException {
         messageBuilder.sendObjectToDestinations(7L, t);
@@ -73,7 +69,7 @@ public class IngressTest {
     }
 
     public void observeString(@Observes @Routing(RouteType.INGRESS) Long l) {
-        System.out.println("Received message "+l);
-        received= true;
+        System.out.println("Received message " + l);
+        received = true;
     }
 }

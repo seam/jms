@@ -24,17 +24,14 @@ import javax.naming.NamingException;
 
 import org.jboss.seam.jms.annotations.Module;
 
-public class ContextProducer
-{
-   @Produces
-   @Module
-   public Context getContext() throws NamingException
-   {
-      return new InitialContext();
-   }
+public class ContextProducer {
+    @Produces
+    @Module
+    public Context getContext() throws NamingException {
+        return new InitialContext();
+    }
 
-   public void disposeContext(@Disposes @Module Context ctx) throws NamingException
-   {
-      ctx.close();
-   }
+    public void disposeContext(@Disposes @Module Context ctx) throws NamingException {
+        ctx.close();
+    }
 }

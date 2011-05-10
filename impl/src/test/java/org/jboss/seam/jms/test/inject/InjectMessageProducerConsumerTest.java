@@ -32,53 +32,47 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class InjectMessageProducerConsumerTest
-{
-   @Deployment
-   public static Archive<?> createDeployment()
-   {
-      return Util.createDeployment(InjectMessageProducerConsumerTest.class);
-   }
+public class InjectMessageProducerConsumerTest {
+    @Deployment
+    public static Archive<?> createDeployment() {
+        return Util.createDeployment(InjectMessageProducerConsumerTest.class);
+    }
 
-   @Inject
-   private Instance<InjectMessageConsumer> mc;
+    @Inject
+    private Instance<InjectMessageConsumer> mc;
 
-   @Inject
-   private Instance<InjectMessageProducer> mp;
+    @Inject
+    private Instance<InjectMessageProducer> mp;
 
-   @Test
-   public void injectTopicPublisher()
-   {
-      InjectMessageProducer imp = mp.get();
-      Assert.assertNotNull(imp);
-      TopicPublisher tp = imp.getTp();
-      Assert.assertNotNull(tp);
-   }
+    @Test
+    public void injectTopicPublisher() {
+        InjectMessageProducer imp = mp.get();
+        Assert.assertNotNull(imp);
+        TopicPublisher tp = imp.getTp();
+        Assert.assertNotNull(tp);
+    }
 
-   @Test
-   public void injectTopicSubscriber()
-   {
-      InjectMessageConsumer imc = mc.get();
-      Assert.assertNotNull(imc);
-      TopicSubscriber tp = imc.getTs();
-      Assert.assertNotNull(tp);
-   }
+    @Test
+    public void injectTopicSubscriber() {
+        InjectMessageConsumer imc = mc.get();
+        Assert.assertNotNull(imc);
+        TopicSubscriber tp = imc.getTs();
+        Assert.assertNotNull(tp);
+    }
 
-   @Test
-   public void injectQueueSender()
-   {
-      InjectMessageProducer imp = mp.get();
-      Assert.assertNotNull(imp);
-      QueueSender qs = imp.getQs();
-      Assert.assertNotNull(qs);
-   }
+    @Test
+    public void injectQueueSender() {
+        InjectMessageProducer imp = mp.get();
+        Assert.assertNotNull(imp);
+        QueueSender qs = imp.getQs();
+        Assert.assertNotNull(qs);
+    }
 
-   @Test
-   public void injectQueueReceiver()
-   {
-      InjectMessageConsumer imc = mc.get();
-      Assert.assertNotNull(imc);
-      QueueReceiver qr = imc.getQr();
-      Assert.assertNotNull(qr);
-   }
+    @Test
+    public void injectQueueReceiver() {
+        InjectMessageConsumer imc = mc.get();
+        Assert.assertNotNull(imc);
+        QueueReceiver qr = imc.getQr();
+        Assert.assertNotNull(qr);
+    }
 }

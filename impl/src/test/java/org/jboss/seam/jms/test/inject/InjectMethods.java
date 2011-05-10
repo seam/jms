@@ -25,31 +25,26 @@ import org.jboss.seam.jms.test.MyQueue;
 import org.jboss.seam.jms.test.MyTopic;
 
 @Named
-public class InjectMethods
-{
+public class InjectMethods {
 
-   private Topic t;
-   private Queue q;
+    private Topic t;
+    private Queue q;
 
-   @Inject
-   public void initTopic(@MyTopic Topic topic)
-   {
-      t = topic;
-   }
+    @Inject
+    public void initTopic(@MyTopic Topic topic) {
+        t = topic;
+    }
 
-   @Inject
-   public void initQueue(@MyQueue Queue queue)
-   {
-      q = queue;
-   }
+    @Inject
+    public void initQueue(@MyQueue Queue queue) {
+        q = queue;
+    }
 
-   public Topic getT()
-   {
-      return t;
-   }
+    public Topic getT() {
+        return t;
+    }
 
-   public Queue getQ()
-   {
-      return q;
-   }
+    public Queue getQ() {
+        return q;
+    }
 }

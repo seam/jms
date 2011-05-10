@@ -24,10 +24,9 @@ import org.jboss.logging.Logger;
 
 /**
  * Supporting base MessageListener for working in CDI enabled environments.
- * This is useful for having a MessageListener 
- * 
- * @author johnament
+ * This is useful for having a MessageListener
  *
+ * @author johnament
  */
 public abstract class AbstractMessageListener implements javax.jms.MessageListener {
 
@@ -57,7 +56,7 @@ public abstract class AbstractMessageListener implements javax.jms.MessageListen
     /**
      * AbstractMessageListener implements the basic on message functionality to
      * handle classloader behavior for working in CDI environments.
-     *
+     * <p/>
      * This method should not be overridden, even though it is not final.
      *
      * @param message The JMS Message that is being received.
@@ -78,7 +77,7 @@ public abstract class AbstractMessageListener implements javax.jms.MessageListen
     /**
      * Implementations should override this method and
      * perform necessary business logic in here.
-     *
+     * <p/>
      * A BeanManager reference is available, for looking up beans.
      *
      * @param message The message to be handled.

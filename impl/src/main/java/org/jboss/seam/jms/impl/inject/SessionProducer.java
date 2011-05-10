@@ -19,9 +19,7 @@ package org.jboss.seam.jms.impl.inject;
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -32,70 +30,55 @@ import javax.jms.Session;
 import org.jboss.seam.jms.annotations.JmsSession;
 import org.jboss.seam.jms.annotations.JmsSessionSelector;
 
-public
-class SessionProducer
-{
-   @Produces @Dependent
-   public Session getSession(Connection c, InjectionPoint ip) throws JMSException
-   {
-      JmsSession s = null;
-      if (ip != null)
-      {
-         // Check for JmsSession annotation
-         if (ip.getAnnotated().isAnnotationPresent(JmsSession.class))
-         {
-            s = ip.getAnnotated().getAnnotation(JmsSession.class);
-         }
-         else
-         {
-            // Check meta-annotations
-            for (Annotation a : ip.getAnnotated().getAnnotations())
-            {
-               if (a.annotationType().isAnnotationPresent(JmsSession.class))
-               {
-                  s = a.annotationType().getAnnotation(JmsSession.class);
-               }
+public class SessionProducer {
+    @Produces
+    @Dependent
+    public Session getSession(Connection c, InjectionPoint ip) throws JMSException {
+        JmsSession s = null;
+        if (ip != null) {
+            // Check for JmsSession annotation
+            if (ip.getAnnotated().isAnnotationPresent(JmsSession.class)) {
+                s = ip.getAnnotated().getAnnotation(JmsSession.class);
+            } else {
+                // Check meta-annotations
+                for (Annotation a : ip.getAnnotated().getAnnotations()) {
+                    if (a.annotationType().isAnnotationPresent(JmsSession.class)) {
+                        s = a.annotationType().getAnnotation(JmsSession.class);
+                    }
+                }
             }
-         }
-         if (s != null)
-         {
-            return c.createSession(s.transacted(), s.acknowledgementMode());
-         }
-      }
+            if (s != null) {
+                return c.createSession(s.transacted(), s.acknowledgementMode());
+            }
+        }
 
-      // Default case where we cannot find an annotation
-      return c.createSession(false, Session.AUTO_ACKNOWLEDGE);
-   }
+        // Default case where we cannot find an annotation
+        return c.createSession(false, Session.AUTO_ACKNOWLEDGE);
+    }
 
-   public void closeSession(@Disposes Session s) throws JMSException
-   {
-      s.close();
-   }
+    public void closeSession(@Disposes Session s) throws JMSException {
+        s.close();
+    }
 
-   @Produces
-   @JmsSessionSelector
-   public Session getSelectedSession(InjectionPoint ip, Connection c) throws JMSException
-   {
-      JmsSessionSelector s = null;
-      Iterator<Annotation> qualifiers = ip.getQualifiers().iterator();
-      while(qualifiers.hasNext())
-      {
-         Annotation qualifier = qualifiers.next();
-         if(JmsSessionSelector.class.isAssignableFrom(qualifier.getClass()))
-         {
-            s = (JmsSessionSelector) qualifier;
-            break;
-         }
-      }
-      if(s == null)
-      {
-         throw new IllegalArgumentException("Injection point " + ip + " does not have @" + JmsSessionSelector.class.getSimpleName() + " qualifier");
-      }
-      return c.createSession(s.transacted(), s.acknowledgementMode());
-   }
-   
-   public void closeSelectedSession(@Disposes @JmsSessionSelector Session s) throws JMSException
-   {
-      s.close();
-   }
+    @Produces
+    @JmsSessionSelector
+    public Session getSelectedSession(InjectionPoint ip, Connection c) throws JMSException {
+        JmsSessionSelector s = null;
+        Iterator<Annotation> qualifiers = ip.getQualifiers().iterator();
+        while (qualifiers.hasNext()) {
+            Annotation qualifier = qualifiers.next();
+            if (JmsSessionSelector.class.isAssignableFrom(qualifier.getClass())) {
+                s = (JmsSessionSelector) qualifier;
+                break;
+            }
+        }
+        if (s == null) {
+            throw new IllegalArgumentException("Injection point " + ip + " does not have @" + JmsSessionSelector.class.getSimpleName() + " qualifier");
+        }
+        return c.createSession(s.transacted(), s.acknowledgementMode());
+    }
+
+    public void closeSelectedSession(@Disposes @JmsSessionSelector Session s) throws JMSException {
+        s.close();
+    }
 }

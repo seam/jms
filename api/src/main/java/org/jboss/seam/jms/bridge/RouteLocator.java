@@ -18,19 +18,18 @@ package org.jboss.seam.jms.bridge;
 
 /**
  * Provides access to Routes.
- * 
+ * <p/>
  * While not defined in the interface, implementations of this interface
  * should provide CDI Producer methods for the list of both Ingress and Egress routes
- * 
- * @author johnament
  *
+ * @author johnament
  */
 public interface RouteLocator extends java.io.Serializable {
-	/**
-	 * Locates a Route by ID.  The given ID should be a route ID.
-	 * 
-	 * @param id The ID
-	 * @return the route identified, or null if not found.
-	 */
-	public Route findById(String id);
+    /**
+     * Locates a Route by ID.  The given ID should be a route ID.
+     *
+     * @param id The ID
+     * @return the route identified, or null if not found.
+     */
+    public Route findById(String id);
 }

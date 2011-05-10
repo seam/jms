@@ -16,114 +16,109 @@
  */
 package org.jboss.seam.jms.test.bridge.route;
 
-import java.lang.reflect.Type;
-
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.ObjectMessage;
 import javax.jms.QueueReceiver;
 import javax.jms.TextMessage;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.MessageManager;
-import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.bridge.RouteBuilder;
 import org.jboss.seam.jms.bridge.RouteImpl;
 import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.test.Util;
-import org.jboss.seam.jms.test.descriptor.HornetQJMSDescriptor;
-import org.jboss.seam.jms.test.descriptor.HornetQJMSDescriptorImpl;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.descriptor.api.Descriptor;
-import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 //@Ignore
-public class RouteTest
-{
-   
-   @Deployment
-   public static Archive<?> createDeployment()
-   {
-      return Util.createDeployment(RouteTest.class);
-   }
+public class RouteTest {
 
-   @Inject RouteBuilder routeBuilder;
-   @Inject Connection c;
-   @Inject MessageManager messageManager;
-   @Inject @BridgedViaCollection Event<String> event_viaCollectionRouteConfig;
-   @Inject @BridgedViaRoute Event<String> event_viaSingleRouteConfig;
-   @Inject Event<String> plainEvent;
+    @Deployment
+    public static Archive<?> createDeployment() {
+        return Util.createDeployment(RouteTest.class);
+    }
 
-   private void clear(QueueReceiver qr) throws JMSException {
-      while (qr.receiveNoWait() != null);
-   }
+    @Inject
+    RouteBuilder routeBuilder;
+    @Inject
+    Connection c;
+    @Inject
+    MessageManager messageManager;
+    @Inject
+    @BridgedViaCollection
+    Event<String> event_viaCollectionRouteConfig;
+    @Inject
+    @BridgedViaRoute
+    Event<String> event_viaSingleRouteConfig;
+    @Inject
+    Event<String> plainEvent;
+
+    private void clear(QueueReceiver qr) throws JMSException {
+        while (qr.receiveNoWait() != null) ;
+    }
 
 
-   @Test
-   public void forwardSimpleEvent() throws JMSException
-   {
-      String expected = "'configured via Collection<Route>'";
-      QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
-      clear(qr);
-      event_viaCollectionRouteConfig.fire(expected);
-      Message m = qr.receive(3000);
-      qr.close();
-      Assert.assertTrue(m != null);
-      Assert.assertTrue(m instanceof TextMessage);
-      Assert.assertEquals(expected, ((TextMessage) m).getText());
-   }
+    @Test
+    public void forwardSimpleEvent() throws JMSException {
+        String expected = "'configured via Collection<Route>'";
+        QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
+        clear(qr);
+        event_viaCollectionRouteConfig.fire(expected);
+        Message m = qr.receive(3000);
+        qr.close();
+        Assert.assertTrue(m != null);
+        Assert.assertTrue(m instanceof TextMessage);
+        Assert.assertEquals(expected, ((TextMessage) m).getText());
+    }
 
-   @Test
-   public void noMatchingRoutes() throws JMSException
-   {
-      String expected = "'no matching route'";
-      QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
-      clear(qr);
-      plainEvent.fire(expected);
-      Message m = qr.receive(3000);
-      qr.close();
-      Assert.assertNull("Unexpectedly received a message", m);
-   }
+    @Test
+    public void noMatchingRoutes() throws JMSException {
+        String expected = "'no matching route'";
+        QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
+        clear(qr);
+        plainEvent.fire(expected);
+        Message m = qr.receive(3000);
+        qr.close();
+        Assert.assertNull("Unexpectedly received a message", m);
+    }
 
-   @Test
-   public void forwardSimpleEvent_via_single_route_config() throws JMSException {
-      String expected = "'configured via Route'";
-      QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
-      clear(qr);
-      event_viaSingleRouteConfig.fire(expected);
-      Message m = qr.receive(3000);
-      qr.close();
-      Assert.assertTrue(m != null);
-      Assert.assertTrue(m instanceof TextMessage);
-      Assert.assertEquals(expected, ((TextMessage) m).getText());
-   }
-   
-   @Test
-   public void testRouteBehavior() {
-	   RouteImpl ri = new RouteImpl(RouteType.INGRESS, this.getClass());
-	   Assert.assertTrue(ri.isIngressEnabled());
-	   Assert.assertFalse(ri.isEgressEnabled());
-	   ri.disableIngress();
-	   Assert.assertFalse(ri.isIngressEnabled());
-	   ri.enableIngress();
-	   ri.enableEgress();
-	   Assert.assertTrue(ri.isIngressEnabled());
-	   Assert.assertFalse(ri.isEgressEnabled());
-	   
-	   RouteImpl ri2 = new RouteImpl(RouteType.BOTH,this.getClass());
-	   Assert.assertTrue(ri2.isIngressEnabled());
-	   Assert.assertTrue(ri2.isEgressEnabled());
-	   ri2.disableEgress();
-	   Assert.assertTrue(ri2.isIngressEnabled());
-	   Assert.assertFalse(ri2.isEgressEnabled());
-   }
+    @Test
+    public void forwardSimpleEvent_via_single_route_config() throws JMSException {
+        String expected = "'configured via Route'";
+        QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
+        clear(qr);
+        event_viaSingleRouteConfig.fire(expected);
+        Message m = qr.receive(3000);
+        qr.close();
+        Assert.assertTrue(m != null);
+        Assert.assertTrue(m instanceof TextMessage);
+        Assert.assertEquals(expected, ((TextMessage) m).getText());
+    }
+
+    @Test
+    public void testRouteBehavior() {
+        RouteImpl ri = new RouteImpl(RouteType.INGRESS, this.getClass());
+        Assert.assertTrue(ri.isIngressEnabled());
+        Assert.assertFalse(ri.isEgressEnabled());
+        ri.disableIngress();
+        Assert.assertFalse(ri.isIngressEnabled());
+        ri.enableIngress();
+        ri.enableEgress();
+        Assert.assertTrue(ri.isIngressEnabled());
+        Assert.assertFalse(ri.isEgressEnabled());
+
+        RouteImpl ri2 = new RouteImpl(RouteType.BOTH, this.getClass());
+        Assert.assertTrue(ri2.isIngressEnabled());
+        Assert.assertTrue(ri2.isEgressEnabled());
+        ri2.disableEgress();
+        Assert.assertTrue(ri2.isIngressEnabled());
+        Assert.assertFalse(ri2.isEgressEnabled());
+    }
 }

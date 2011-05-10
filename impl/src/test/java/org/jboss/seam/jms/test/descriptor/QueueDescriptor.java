@@ -27,33 +27,33 @@ import org.jboss.shrinkwrap.descriptor.api.Node;
 public class QueueDescriptor {
     private final Node configuration;
     private final HornetQJMSDescriptorImpl parent;
-    QueueDescriptor(Node configuration,HornetQJMSDescriptorImpl parent)
-    {
+
+    QueueDescriptor(Node configuration, HornetQJMSDescriptorImpl parent) {
         this.configuration = configuration;
         this.parent = parent;
     }
-    public QueueDescriptor name(String name)
-    {
-        configuration.attribute("name",name);
+
+    public QueueDescriptor name(String name) {
+        configuration.attribute("name", name);
         return this;
     }
-    public QueueDescriptor entry(String name)
-    {
-        configuration.getOrCreate("entry").attribute("name",name);
+
+    public QueueDescriptor entry(String name) {
+        configuration.getOrCreate("entry").attribute("name", name);
         return this;
     }
-    public QueueDescriptor durable(boolean durable)
-    {
+
+    public QueueDescriptor durable(boolean durable) {
         configuration.getOrCreate("durable").text(durable);
         return this;
     }
-    public QueueDescriptor filter(String filter)
-    {
+
+    public QueueDescriptor filter(String filter) {
         configuration.getOrCreate("filter").text(filter);
         return this;
     }
-    public HornetQJMSDescriptorImpl parent()
-    {
+
+    public HornetQJMSDescriptorImpl parent() {
         return parent;
     }
 }

@@ -5,7 +5,6 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import junit.framework.Assert;
-
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.annotations.Routing;
@@ -24,27 +23,29 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class BidirectionalTest {
 
-	@Deployment
+    @Deployment
     public static Archive<?> createDeployment() {
         return Util.createDeployment(ObserverInterface.class, ImmutableInjectionPoint.class,
-                DestinationProducer.class, MessagePubSubProducer.class, 
+                DestinationProducer.class, MessagePubSubProducer.class,
                 RouteBuilderImpl.class, ConnectionProducer.class);
     }
-	
-	@Inject @Routing(RouteType.EGRESS)
+
+    @Inject
+    @Routing(RouteType.EGRESS)
     Event<Double> doubleEvent;
-	@Inject RouteBuilder builder;
-	
-	private static boolean received = false;
-	
-	@Test
-	public void testSendingAndReceiving() throws Exception {
-		doubleEvent.fire(7.08);
-		Thread.sleep(7000);
-		Assert.assertTrue(received);
-	}
-	
-	public void observeDoubleOverJms(@Observes @Routing(RouteType.INGRESS) Double d) {
-		received = true;
-	}
+    @Inject
+    RouteBuilder builder;
+
+    private static boolean received = false;
+
+    @Test
+    public void testSendingAndReceiving() throws Exception {
+        doubleEvent.fire(7.08);
+        Thread.sleep(7000);
+        Assert.assertTrue(received);
+    }
+
+    public void observeDoubleOverJms(@Observes @Routing(RouteType.INGRESS) Double d) {
+        received = true;
+    }
 }

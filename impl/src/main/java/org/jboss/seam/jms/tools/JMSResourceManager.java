@@ -18,19 +18,21 @@ package org.jboss.seam.jms.tools;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
-import javax.inject.Inject;
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.QueueReceiver;
 import javax.jms.TopicSubscriber;
+
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.annotations.Closeable;
 
-/** Resource manager is able to manage the end lifecycle of various
+/**
+ * Resource manager is able to manage the end lifecycle of various
  * JMS resources
  *
  * @author johnament
@@ -38,12 +40,12 @@ import org.jboss.seam.jms.annotations.Closeable;
 @ApplicationScoped
 public class JMSResourceManager {
     private Logger logger = Logger.getLogger(JMSResourceManager.class);
-    
+
     private List<Connection> closeableConnections = new ArrayList<Connection>();
     private List<TopicSubscriber> topicSubscribes = new ArrayList<TopicSubscriber>();
     private List<MessageConsumer> messageConsumers = new ArrayList<MessageConsumer>();
     private List<QueueReceiver> receives = new ArrayList<QueueReceiver>();
-    
+
     public void addCloseableConnection(@Observes @Closeable Connection connection) {
         closeableConnections.add(connection);
     }
@@ -62,33 +64,33 @@ public class JMSResourceManager {
 
     @PreDestroy
     public void shutdown() {
-        for(MessageConsumer mc : messageConsumers) {
-            try{
+        for (MessageConsumer mc : messageConsumers) {
+            try {
                 mc.close();
             } catch (JMSException e) {
-                logger.debug("Unable to close message consumer",e);
+                logger.debug("Unable to close message consumer", e);
             }
         }
-        for(TopicSubscriber ts : topicSubscribes) {
-            try{
+        for (TopicSubscriber ts : topicSubscribes) {
+            try {
                 ts.close();
             } catch (JMSException e) {
-                logger.debug("Unable to close topic subscriber",e);
+                logger.debug("Unable to close topic subscriber", e);
             }
         }
-        for(QueueReceiver qr : receives) {
-            try{
+        for (QueueReceiver qr : receives) {
+            try {
                 qr.close();
             } catch (JMSException e) {
-                logger.debug("Unable to close queue receiver",e);
+                logger.debug("Unable to close queue receiver", e);
             }
         }
-        for(Connection conn : closeableConnections) {
-            try{
+        for (Connection conn : closeableConnections) {
+            try {
                 conn.close();
                 conn.stop();
             } catch (JMSException e) {
-                logger.debug("Unable to close connection",e);
+                logger.debug("Unable to close connection", e);
             }
         }
     }

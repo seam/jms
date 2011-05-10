@@ -23,27 +23,23 @@ import javax.jms.Topic;
 import org.jboss.seam.jms.test.MyQueue;
 import org.jboss.seam.jms.test.MyTopic;
 
-public class InjectConstructors
-{
+public class InjectConstructors {
 
-   private Topic t;
-   private Queue q;
+    private Topic t;
+    private Queue q;
 
-   @Inject
-   public InjectConstructors(@MyTopic Topic topic, @MyQueue Queue queue)
-   {
-      t = topic;
-      q = queue;
-   }
+    @Inject
+    public InjectConstructors(@MyTopic Topic topic, @MyQueue Queue queue) {
+        t = topic;
+        q = queue;
+    }
 
-   public Topic getT()
-   {
-      return t;
-   }
+    public Topic getT() {
+        return t;
+    }
 
-   public Queue getQ()
-   {
-      return q;
-   }
+    public Queue getQ() {
+        return q;
+    }
 
 }

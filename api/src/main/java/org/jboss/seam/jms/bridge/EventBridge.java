@@ -20,19 +20,17 @@ import java.lang.reflect.Type;
 
 /**
  * Facilitates bridging of events between CDI and a messaging system.
- * 
+ *
  * @author Jordan Ganoff
- * 
  */
-public interface EventBridge
-{
-   /**
-    * Creates a routing for the provided payload (event) type.
-    * 
-    * @param type Type or direction of routing.
-    * @param payloadType Payload type to route. This is the event type we wish
-    *           to observe events for.
-    * @return 
-    */
-   public Route createRoute(RouteType type, Type payloadType);
+public interface EventBridge {
+    /**
+     * Creates a routing for the provided payload (event) type.
+     *
+     * @param type        Type or direction of routing.
+     * @param payloadType Payload type to route. This is the event type we wish
+     *                    to observe events for.
+     * @return
+     */
+    public Route createRoute(RouteType type, Type payloadType);
 }

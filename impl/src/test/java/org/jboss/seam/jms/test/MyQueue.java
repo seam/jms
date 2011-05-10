@@ -16,18 +16,17 @@
  */
 package org.jboss.seam.jms.test;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Retention;
 
 import javax.enterprise.inject.Stereotype;
 
 import org.jboss.seam.jms.annotations.JmsDestination;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 @Stereotype
 @Retention(RUNTIME)
 @JmsDestination(jndiName = "/jms/Q")
-public @interface MyQueue
-{
+public @interface MyQueue {
 
 }

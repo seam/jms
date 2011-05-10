@@ -31,30 +31,27 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class JmsEventBridgeTest
-{
+public class JmsEventBridgeTest {
 
-   @Deployment
-   public static Archive<?> createDeployment()
-   {
-      return Util.createDeployment(JmsEventBridgeTest.class);
-   }
-   
-   @Inject Instance<EventBridge> bridge;
-   
-   @Test
-   public void injectBridge()
-   {
-      Assert.assertNotNull(bridge.get());
-   }
-   
-   @Test
-   public void createRoute()
-   {
-      EventBridge b = bridge.get();
-      Route r = b.createRoute(RouteType.EGRESS, Object.class);
-      Assert.assertNotNull(r);
-      Assert.assertEquals(RouteType.EGRESS, r.getType());
-      Assert.assertEquals(Object.class, r.getPayloadType());
-   }
+    @Deployment
+    public static Archive<?> createDeployment() {
+        return Util.createDeployment(JmsEventBridgeTest.class);
+    }
+
+    @Inject
+    Instance<EventBridge> bridge;
+
+    @Test
+    public void injectBridge() {
+        Assert.assertNotNull(bridge.get());
+    }
+
+    @Test
+    public void createRoute() {
+        EventBridge b = bridge.get();
+        Route r = b.createRoute(RouteType.EGRESS, Object.class);
+        Assert.assertNotNull(r);
+        Assert.assertEquals(RouteType.EGRESS, r.getType());
+        Assert.assertEquals(Object.class, r.getPayloadType());
+    }
 }

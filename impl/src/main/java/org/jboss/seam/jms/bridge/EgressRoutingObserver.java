@@ -16,8 +16,6 @@
  */
 package org.jboss.seam.jms.bridge;
 
-import static org.jboss.seam.jms.annotations.RoutingLiteral.EGRESS;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -43,12 +41,13 @@ import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
 
+import static org.jboss.seam.jms.annotations.RoutingLiteral.EGRESS;
+
 /**
  * Forwards CDI events that match the provided {@link Route} configuration to
  * the configured destinations.
- * 
+ *
  * @author Jordan Ganoff
- * 
  */
 @Named
 @ApplicationScoped
@@ -83,7 +82,7 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
         Set<Annotation> as = new HashSet<Annotation>();
         as.addAll(route.getQualifiers());
         as.add(EGRESS);
-        log.debugf("Inidicating that I observe these qualifiers: [%s]",as);
+        log.debugf("Inidicating that I observe these qualifiers: [%s]", as);
         return route.getQualifiers();
     }
 
@@ -102,67 +101,67 @@ public class EgressRoutingObserver implements ObserverMethod<Object> {
     public void notify(Object evt) {
         // FIXME Include qualifiers once CDI 1.0 MR is complete and
         // notify(Event, Set<Annotation>) is added
-        log.debugf("Notified of an event: %s",evt);
-        if(this.extension.isReadyToRoute())
+        log.debugf("Notified of an event: %s", evt);
+        if (this.extension.isReadyToRoute())
             forwardEvent(evt);
         else {
-            this.log.warn("Adding event to evt cache "+evt);
+            this.log.warn("Adding event to evt cache " + evt);
             evtCache.add(evt);
         }
     }
 
     private List<Object> evtCache = new ArrayList<Object>();
-    
+
     private MessageManager getMessageBuilder() {
-    	Set<Bean<?>> beans = bm.getBeans(MessageManager.class);
+        Set<Bean<?>> beans = bm.getBeans(MessageManager.class);
         Bean<?> bean = bm.resolve(beans);
         MessageManager mb = (MessageManager) bm.getReference(bean, MessageManager.class, bm.createCreationalContext(bean));
         return mb;
     }
-    
+
     private void loadDestinations() {
         Set<Destination> destinations = new HashSet<Destination>();
         destinations.addAll(route.getDestinations());
-        for(String dest : route.getDestinationJndiNames()) {
+        for (String dest : route.getDestinationJndiNames()) {
             Destination destination = lookupDestination(dest);
             destinations.add(destination);
         }
-        for(AnnotatedParameter<?> ap : route.getAnnotatedParameters()) {
+        for (AnnotatedParameter<?> ap : route.getAnnotatedParameters()) {
             Destination destination = lookupDestination(ap);
             destinations.add(destination);
         }
-        log.infof("Routing destinations: [%s]",destinations);
+        log.infof("Routing destinations: [%s]", destinations);
         this.route.setDestinations(destinations);
     }
 
     private Destination lookupDestination(String jndiName) {
-        try{
+        try {
             Context c = new InitialContext();
-            return (Destination)c.lookup(jndiName);
+            return (Destination) c.lookup(jndiName);
         } catch (NamingException e) {
-            log.warn("Unable to lookup "+jndiName,e);
+            log.warn("Unable to lookup " + jndiName, e);
         }
         return null;
     }
 
     private Destination lookupDestination(AnnotatedParameter<?> ap) {
-        log.debug("Looking up destination: "+ap);
+        log.debug("Looking up destination: " + ap);
         Set<Bean<?>> beans = bm.getBeans(Destination.class);
         Bean<?> bean = bm.resolve(beans);
-        ImmutableInjectionPoint iip = new ImmutableInjectionPoint(ap,bm,bean,false,false);
+        ImmutableInjectionPoint iip = new ImmutableInjectionPoint(ap, bm, bean, false, false);
         Object o = bm.getInjectableReference(iip, bm.createCreationalContext(bean));
-        return (Destination)o;
+        return (Destination) o;
     }
 
     private void forwardEvent(Object event) {
-    	if(!this.route.isEgressEnabled())
-    		return;
+        if (!this.route.isEgressEnabled())
+            return;
         MessageManager msgBuilder = this.getMessageBuilder();
-        if(event instanceof String) {
-        	msgBuilder.sendTextToDestinations(event.toString(), route.getDestinations().toArray(new Destination[]{}));
+        if (event instanceof String) {
+            msgBuilder.sendTextToDestinations(event.toString(), route.getDestinations().toArray(new Destination[]{}));
         } else {
-        	msgBuilder.sendObjectToDestinations(event, route.getDestinations().toArray(new Destination[]{}));
+            msgBuilder.sendObjectToDestinations(event, route.getDestinations().toArray(new Destination[]{}));
         }
-        
+
     }
 }

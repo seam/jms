@@ -19,19 +19,17 @@ package org.jboss.seam.jms.test.bridge.durablemsg;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
-import javax.enterprise.inject.Instance;
 
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
-import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 import javax.jms.TopicSubscriber;
 
 import junit.framework.Assert;
-
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.DurableMessageManager;
@@ -51,7 +49,9 @@ public class DurableMessageManagerTest {
     public static Archive<?> createDeployment() {
         return Util.createDeployment(DurableMessageManagerImpl.class);
     }
-    @Inject @Durable
+
+    @Inject
+    @Durable
     Instance<DurableMessageManager> messageManagerInst;
 
     private Random random = new Random();
@@ -59,7 +59,7 @@ public class DurableMessageManagerTest {
     @Test
     public void testCreateObjectMessage() throws JMSException {
         DurableMessageManager messageManager = this.messageManagerInst.get();
-        messageManager.login("client1"+random.nextInt());
+        messageManager.login("client1" + random.nextInt());
         Long l = 9L;
         ObjectMessage om = messageManager.createObjectMessage(l);
         Assert.assertEquals(l, om.getObject());
@@ -68,7 +68,7 @@ public class DurableMessageManagerTest {
     @Test
     public void testCreateTextMessage() throws JMSException {
         DurableMessageManager messageManager = this.messageManagerInst.get();
-        messageManager.login("client1"+random.nextInt());
+        messageManager.login("client1" + random.nextInt());
         String s = "target";
         TextMessage om = messageManager.createTextMessage(s);
         Assert.assertEquals(s, om.getText());
@@ -77,7 +77,7 @@ public class DurableMessageManagerTest {
     @Test
     public void testCreateMapMessage() throws JMSException {
         DurableMessageManager messageManager = this.messageManagerInst.get();
-        messageManager.login("client1"+random.nextInt());
+        messageManager.login("client1" + random.nextInt());
         Object prop = "myprop";
         Object valu = "myvalu";
         Map<Object, Object> m = Collections.singletonMap(prop, valu);
@@ -89,7 +89,7 @@ public class DurableMessageManagerTest {
     @Test
     public void testSendObjectToDestinations() throws JMSException {
         DurableMessageManager messageManager = this.messageManagerInst.get();
-        messageManager.login("client1"+random.nextInt());
+        messageManager.login("client1" + random.nextInt());
         Long l = 9L;
         MessageConsumer mc = messageManager.createMessageConsumer(QUEUE_NAME);
         messageManager.sendObjectToDestinations(l, QUEUE_NAME);
@@ -101,7 +101,7 @@ public class DurableMessageManagerTest {
     @Test
     public void testSendTextToDestinations() throws JMSException {
         DurableMessageManager messageManager = this.messageManagerInst.get();
-        messageManager.login("client1"+random.nextInt());
+        messageManager.login("client1" + random.nextInt());
         String s = "target";
         MessageConsumer mc = messageManager.createMessageConsumer(QUEUE_NAME);
         messageManager.sendTextToDestinations(s, QUEUE_NAME);
@@ -113,7 +113,7 @@ public class DurableMessageManagerTest {
     @Test
     public void testSendMapMessageToDestinations() throws JMSException {
         DurableMessageManager messageManager = this.messageManagerInst.get();
-        messageManager.login("client1"+random.nextInt());
+        messageManager.login("client1" + random.nextInt());
         Object prop = "myprop";
         Object valu = "myvalu";
         Map<Object, Object> m = Collections.singletonMap(prop, valu);
@@ -128,27 +128,27 @@ public class DurableMessageManagerTest {
     @Test
     public void testCreateMessageConsumer() throws JMSException {
         DurableMessageManager messageManager = this.messageManagerInst.get();
-        messageManager.login("client1"+random.nextInt());
+        messageManager.login("client1" + random.nextInt());
         Assert.assertNotNull(messageManager.createMessageConsumer(QUEUE_NAME));
     }
 
     @Test
     public void testCreateMessageProducer() throws JMSException {
         DurableMessageManager messageManager = this.messageManagerInst.get();
-        messageManager.login("client1"+random.nextInt());
+        messageManager.login("client1" + random.nextInt());
         Assert.assertNotNull(messageManager.createMessageProducer(QUEUE_NAME));
     }
 
     @Test
     public void testDurableCapabilities() throws JMSException {
         DurableMessageManager messageManager = this.messageManagerInst.get();
-        messageManager.login("client1"+random.nextInt());
+        messageManager.login("client1" + random.nextInt());
         TopicSubscriber subscriber = messageManager.createDurableSubscriber(QUEUE_NAME, "listener-1");
         String msgData = "this is my text message";
         messageManager.sendTextToDestinations(msgData, QUEUE_NAME);
-        TextMessage tm = (TextMessage)subscriber.receive(3000);
+        TextMessage tm = (TextMessage) subscriber.receive(3000);
         Assert.assertEquals(msgData, tm.getText());
-	messageManager.unsubscribe("listener-1");
+        messageManager.unsubscribe("listener-1");
         subscriber.close();
     }
 }

@@ -20,17 +20,16 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
-import org.jboss.logging.Logger;
 
+import org.jboss.logging.Logger;
 import org.jboss.seam.jms.annotations.Module;
 
 /**
  * <p>Provides a producer of an unqualified (i.e., @Default) application-scoped JMS {@link Connection} object.</p>
- *
+ * <p/>
  * <p>According to the documentation, a {@link Connection} is a relatively heavyweight object because its creation
  * involves setting up authentication and communication. Most clients will do all their messaging with a single
  * connection. Only more advanced applications may use several connections, though it's considered atypical.
@@ -39,31 +38,28 @@ import org.jboss.seam.jms.annotations.Module;
  * @author Jordan Ganoff
  */
 @ApplicationScoped
-public class ConnectionProducer
-{
-   @Resource(mappedName = "ConnectionFactory")
-   private ConnectionFactory cf;
-   private Logger log = Logger.getLogger(ConnectionProducer.class);
-   @Produces
-   @ApplicationScoped
-   @Module
-   public ConnectionFactory getConnectionFactory()
-   {
-       return cf;
-   }
+public class ConnectionProducer {
+    @Resource(mappedName = "ConnectionFactory")
+    private ConnectionFactory cf;
+    private Logger log = Logger.getLogger(ConnectionProducer.class);
 
-   @Produces
-   @ApplicationScoped
-   public Connection getConnection(@Module ConnectionFactory connectionFactory) throws Exception
-   {
-       log.debug("Creating a new connection.");
-      Connection conn = connectionFactory.createConnection();
-      conn.start();
-      return conn;
-   }
+    @Produces
+    @ApplicationScoped
+    @Module
+    public ConnectionFactory getConnectionFactory() {
+        return cf;
+    }
 
-   public void closeConnection(@Disposes Connection c) throws JMSException
-   {
-      c.close();
-   }
+    @Produces
+    @ApplicationScoped
+    public Connection getConnection(@Module ConnectionFactory connectionFactory) throws Exception {
+        log.debug("Creating a new connection.");
+        Connection conn = connectionFactory.createConnection();
+        conn.start();
+        return conn;
+    }
+
+    public void closeConnection(@Disposes Connection c) throws JMSException {
+        c.close();
+    }
 }

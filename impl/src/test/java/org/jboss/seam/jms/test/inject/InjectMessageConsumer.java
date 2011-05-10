@@ -26,24 +26,21 @@ import org.jboss.seam.jms.test.MyQueue;
 import org.jboss.seam.jms.test.MyTopic;
 
 @Named
-public class InjectMessageConsumer
-{
+public class InjectMessageConsumer {
 
-   @Inject
-   @MyTopic
-   private Instance<TopicSubscriber> ts;
+    @Inject
+    @MyTopic
+    private Instance<TopicSubscriber> ts;
 
-   @Inject
-   @MyQueue
-   private Instance<QueueReceiver> qr;
+    @Inject
+    @MyQueue
+    private Instance<QueueReceiver> qr;
 
-   public TopicSubscriber getTs()
-   {
-      return ts.get();
-   }
+    public TopicSubscriber getTs() {
+        return ts.get();
+    }
 
-   public QueueReceiver getQr()
-   {
-      return qr.get();
-   }
+    public QueueReceiver getQr() {
+        return qr.get();
+    }
 }

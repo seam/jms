@@ -20,30 +20,30 @@ package org.jboss.seam.jms.test.descriptor;
 import org.jboss.shrinkwrap.descriptor.api.Node;
 
 /**
-* TopicDescriptor - describes a topic in the HornetQJMS xml file.
-*
-* @author <a href="mailto:john.d.ament@gmail.com">John Ament</a>
-*/
+ * TopicDescriptor - describes a topic in the HornetQJMS xml file.
+ *
+ * @author <a href="mailto:john.d.ament@gmail.com">John Ament</a>
+ */
 public class TopicDescriptor {
     private final Node configuration;
     private final HornetQJMSDescriptorImpl parent;
-    TopicDescriptor(Node configuration,HornetQJMSDescriptorImpl parent)
-    {
+
+    TopicDescriptor(Node configuration, HornetQJMSDescriptorImpl parent) {
         this.configuration = configuration;
         this.parent = parent;
     }
-    public TopicDescriptor name(String name)
-    {
-        configuration.attribute("name",name);
+
+    public TopicDescriptor name(String name) {
+        configuration.attribute("name", name);
         return this;
     }
-    public TopicDescriptor entry(String name)
-    {
-        configuration.getOrCreate("entry").attribute("name",name);
+
+    public TopicDescriptor entry(String name) {
+        configuration.getOrCreate("entry").attribute("name", name);
         return this;
     }
-    public HornetQJMSDescriptorImpl parent()
-    {
+
+    public HornetQJMSDescriptorImpl parent() {
         return parent;
     }
 }

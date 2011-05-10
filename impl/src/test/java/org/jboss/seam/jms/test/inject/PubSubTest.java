@@ -33,38 +33,40 @@ import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- *
  * @author johnament
  */
 @RunWith(Arquillian.class)
 public class PubSubTest {
     @Deployment
-   public static Archive<?> createDeployment()
-   {
-      return Util.createDeployment(PubSubTest.class);
-   }
-    @Inject @JmsDestination(jndiName="jms/T2") Topic t2;
-    @Inject Connection conn;
+    public static Archive<?> createDeployment() {
+        return Util.createDeployment(PubSubTest.class);
+    }
+
+    @Inject
+    @JmsDestination(jndiName = "jms/T2")
+    Topic t2;
+    @Inject
+    Connection conn;
     private Logger logger = Logger.getLogger(PubSubTest.class);
+
     @Test
     public void testPubAndSub() throws JMSException {
         conn.start();
         Session session = conn.createSession(false, Session.DUPS_OK_ACKNOWLEDGE);
         MessageProducer mp = session.createProducer(t2);
         MessageConsumer mc = session.createConsumer(t2);
-        TextMessage m = (TextMessage)session.createTextMessage("hello");
+        TextMessage m = (TextMessage) session.createTextMessage("hello");
         boolean observed = false;
         mp.send(m);
         Message out;
-        while((out = mc.receive(1000)) != null) {
-            if(out instanceof TextMessage) {
-                TextMessage tm = (TextMessage)out;
-                logger.info("The data received is: "+tm.getText());
+        while ((out = mc.receive(1000)) != null) {
+            if (out instanceof TextMessage) {
+                TextMessage tm = (TextMessage) out;
+                logger.info("The data received is: " + tm.getText());
                 Assert.assertEquals(m.getText(), tm.getText());
                 observed = true;
             } else {

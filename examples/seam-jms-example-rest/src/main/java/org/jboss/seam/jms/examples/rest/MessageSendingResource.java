@@ -30,6 +30,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Routing;
@@ -37,7 +38,6 @@ import org.jboss.seam.jms.bridge.RouteBuilder;
 import org.jboss.seam.jms.bridge.RouteType;
 
 /**
- *
  * @author johnament
  */
 @RequestScoped
@@ -46,19 +46,31 @@ public class MessageSendingResource {
     //@Resource(mappedName="jms/LongT3") Topic t;
     //@Inject IngressMessageListener iml;
     //@Inject Session session;
-    @Resource(mappedName="/ConnectionFactory") ConnectionFactory connectionFactory;
-    @Inject @JmsDestination(jndiName="jms/LongT2") TopicPublisher tp;
-    @Inject @JmsDestination(jndiName="jms/LongT4") Topic t4;
-    @Inject RouteBuilder rb;
-    @Inject @Routing(RouteType.EGRESS) Event<String> dataEvent;
-    @Inject MessageObserver mo;
-    @Inject Logger logger;
-    @Inject Connection connection;
+    @Resource(mappedName = "/ConnectionFactory")
+    ConnectionFactory connectionFactory;
+    @Inject
+    @JmsDestination(jndiName = "jms/LongT2")
+    TopicPublisher tp;
+    @Inject
+    @JmsDestination(jndiName = "jms/LongT4")
+    Topic t4;
+    @Inject
+    RouteBuilder rb;
+    @Inject
+    @Routing(RouteType.EGRESS)
+    Event<String> dataEvent;
+    @Inject
+    MessageObserver mo;
+    @Inject
+    Logger logger;
+    @Inject
+    Connection connection;
 
     @PostConstruct
-    public void init() throws Exception{
+    public void init() throws Exception {
         //connection.start();
     }
+
     @GET
     @Path("/msg/{data}")
     @Produces("text/plain")
@@ -67,10 +79,10 @@ public class MessageSendingResource {
     }
 
     private String sendObjData(String s) {
-        try{
+        try {
             dataEvent.fire(s);
         } catch (Exception e) {
-            logger.error("Exception",e);
+            logger.error("Exception", e);
         }
         return s;
     }
@@ -80,7 +92,7 @@ public class MessageSendingResource {
     @Produces("text/plain")
     public String sendL4(@PathParam("data") Long data) throws Exception {
         Connection conn = connectionFactory.createConnection();
-        logger.infof("Received a long %s",data);
+        logger.infof("Received a long %s", data);
         Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
         conn.start();
         session.createProducer(t4).send(session.createObjectMessage(data));
@@ -89,12 +101,12 @@ public class MessageSendingResource {
         return data.toString();
     }
 
-    
+
     @GET
     @Path("/long/{data}")
     @Produces("text/plain")
     public String sendData(@PathParam("data") Long data) {
-        String s = data+"";
+        String s = data + "";
         return sendObjData(s);
     }
 }

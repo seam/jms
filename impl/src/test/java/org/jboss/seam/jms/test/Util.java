@@ -22,42 +22,36 @@ import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.jms.annotations.JmsSession;
 import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.impl.inject.ConnectionProducer;
-import org.jboss.seam.jms.impl.inject.ContextProducer;
 import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 import org.jboss.seam.jms.test.bridge.IngressInterfaceProducer;
-import org.jboss.seam.solder.bean.defaultbean.DefaultBean;
 import org.jboss.seam.solder.core.VersionLoggerUtil;
-import org.jboss.seam.solder.literal.DefaultLiteral;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
-public class Util
-{
-   public static final String HORNETQ_JMS_DEPLOYMENT_CONFIG = "hornetq-jms.xml";
+public class Util {
+    public static final String HORNETQ_JMS_DEPLOYMENT_CONFIG = "hornetq-jms.xml";
 
-   public static Archive<?> createDeployment(Class<?>... classes)
-   {
-      JavaArchive ejbModule = ShrinkWrap.create(JavaArchive.class, "test.jar");
-      ejbModule.addPackage(Util.class.getPackage());
-      ejbModule.addPackage(Seam3JmsExtension.class.getPackage());
-      ejbModule.addPackage(JmsSession.class.getPackage());
-      ejbModule.addPackage(ConnectionProducer.class.getPackage());
-      ejbModule.addPackage(JmsAnnotatedTypeWrapper.class.getPackage());
-      ejbModule.addPackage(Route.class.getPackage());
-      ejbModule.addClasses(IngressInterfaceProducer.class,VersionLoggerUtil.class);
-      ejbModule.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-      ejbModule.addAsServiceProvider(Extension.class, Seam3JmsExtension.class);
-      for (Class<?> c : classes)
-      {
-         ejbModule.addPackage(c.getPackage());
-      }
-      WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
-      war.addAsLibraries(ejbModule);
-      war.addAsWebInfResource(HORNETQ_JMS_DEPLOYMENT_CONFIG, HORNETQ_JMS_DEPLOYMENT_CONFIG);
-      // TODO Add this conditionally based on test profile to support other containers
-      return war;
-   }
+    public static Archive<?> createDeployment(Class<?>... classes) {
+        JavaArchive ejbModule = ShrinkWrap.create(JavaArchive.class, "test.jar");
+        ejbModule.addPackage(Util.class.getPackage());
+        ejbModule.addPackage(Seam3JmsExtension.class.getPackage());
+        ejbModule.addPackage(JmsSession.class.getPackage());
+        ejbModule.addPackage(ConnectionProducer.class.getPackage());
+        ejbModule.addPackage(JmsAnnotatedTypeWrapper.class.getPackage());
+        ejbModule.addPackage(Route.class.getPackage());
+        ejbModule.addClasses(IngressInterfaceProducer.class, VersionLoggerUtil.class);
+        ejbModule.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+        ejbModule.addAsServiceProvider(Extension.class, Seam3JmsExtension.class);
+        for (Class<?> c : classes) {
+            ejbModule.addPackage(c.getPackage());
+        }
+        WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
+        war.addAsLibraries(ejbModule);
+        war.addAsWebInfResource(HORNETQ_JMS_DEPLOYMENT_CONFIG, HORNETQ_JMS_DEPLOYMENT_CONFIG);
+        // TODO Add this conditionally based on test profile to support other containers
+        return war;
+    }
 }
