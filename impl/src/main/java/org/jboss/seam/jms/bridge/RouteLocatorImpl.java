@@ -28,30 +28,32 @@ import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.jms.annotations.Routing;
 
 public class RouteLocatorImpl implements RouteLocator {
-	@Inject Seam3JmsExtension extension;
-	private Map<String,Route> routeMap = new HashMap<String,Route>();
-	@PostConstruct
-	public void loadRoutes() {
-		for(Route ingress: this.extension.getIngressRoutes())
-			routeMap.put(ingress.getId(),ingress);
-		for(Route egress: this.extension.getEgressRoutes())
-			routeMap.put(egress.getId(),egress);
-	}
-	
-	@Override
-	public Route findById(String id) {
-		return routeMap.get(id);
-	}
-	
-	@Produces
-	@Routing(RouteType.INGRESS)
-	public List<Route> produceIngressRoutes() {
-		return extension.getIngressRoutes();
-	}
-	
-	@Produces
-	@Routing(RouteType.EGRESS)
-	public List<Route> produceEgressRoutes() {
-		return extension.getEgressRoutes();
-	}
+    @Inject
+    Seam3JmsExtension extension;
+    private Map<String, Route> routeMap = new HashMap<String, Route>();
+
+    @PostConstruct
+    public void loadRoutes() {
+        for (Route ingress : this.extension.getIngressRoutes())
+            routeMap.put(ingress.getId(), ingress);
+        for (Route egress : this.extension.getEgressRoutes())
+            routeMap.put(egress.getId(), egress);
+    }
+
+    @Override
+    public Route findById(String id) {
+        return routeMap.get(id);
+    }
+
+    @Produces
+    @Routing(RouteType.INGRESS)
+    public List<Route> produceIngressRoutes() {
+        return extension.getIngressRoutes();
+    }
+
+    @Produces
+    @Routing(RouteType.EGRESS)
+    public List<Route> produceEgressRoutes() {
+        return extension.getEgressRoutes();
+    }
 }

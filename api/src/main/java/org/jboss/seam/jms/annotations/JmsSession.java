@@ -16,32 +16,32 @@
  */
 package org.jboss.seam.jms.annotations;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
 /**
  * Specifies configuration for injected {@link javax.jms.Session}
- * 
+ *
  * @author Jordan Ganoff
  */
 @Documented
-@Target( { FIELD, METHOD, ANNOTATION_TYPE, PARAMETER })
+@Target({FIELD, METHOD, ANNOTATION_TYPE, PARAMETER})
 @Retention(RUNTIME)
-public @interface JmsSession
-{
-   /**
-    * @see javax.jms.Session#getTransacted()
-    */
-   boolean transacted() default false;
-   /**
-    * @see javax.jms.Session#getAcknowledgeMode()
-    */
-   int acknowledgementMode() default javax.jms.Session.AUTO_ACKNOWLEDGE;
+public @interface JmsSession {
+    /**
+     * @see javax.jms.Session#getTransacted()
+     */
+    boolean transacted() default false;
+
+    /**
+     * @see javax.jms.Session#getAcknowledgeMode()
+     */
+    int acknowledgementMode() default javax.jms.Session.AUTO_ACKNOWLEDGE;
 }

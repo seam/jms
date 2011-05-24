@@ -23,75 +23,68 @@ import org.jboss.shrinkwrap.descriptor.impl.base.XMLExporter;
 import org.jboss.shrinkwrap.descriptor.spi.DescriptorExporter;
 
 /**
-* HornetQJMSDescriptorImpl
-*
-* @author <a href="mailto:aslak@redhat.com">Aslak Knutsen</a>
-* @author <a href="mailto:john.d.ament@gmail.com">John Ament</a>
-* @version $Revision: $
-*/
+ * HornetQJMSDescriptorImpl
+ *
+ * @author <a href="mailto:aslak@redhat.com">Aslak Knutsen</a>
+ * @author <a href="mailto:john.d.ament@gmail.com">John Ament</a>
+ * @version $Revision: $
+ */
 public class HornetQJMSDescriptorImpl extends NodeProviderImplBase
-	implements HornetQJMSDescriptor
-{
-   // -------------------------------------------------------------------------------------||
-   // Instance Members -------------------------------------------------------------------||
-   // -------------------------------------------------------------------------------------||
+        implements HornetQJMSDescriptor {
+    // -------------------------------------------------------------------------------------||
+    // Instance Members -------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   private final Node configuration;
+    private final Node configuration;
 
-   // -------------------------------------------------------------------------------------||
-   // Constructor ------------------------------------------------------------------------||
-   // -------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Constructor ------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   public HornetQJMSDescriptorImpl(String descriptorName)
-   {
-      this(descriptorName, new Node("configuration")
-               .attribute("xmlns", "urn:hornetq")
-               .attribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
-               .attribute("xsi:schemaLocation", "urn:hornetq ../schemas/hornetq-jms.xsd"));
-   }
+    public HornetQJMSDescriptorImpl(String descriptorName) {
+        this(descriptorName, new Node("configuration")
+                .attribute("xmlns", "urn:hornetq")
+                .attribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
+                .attribute("xsi:schemaLocation", "urn:hornetq ../schemas/hornetq-jms.xsd"));
+    }
 
-   public HornetQJMSDescriptorImpl(String descriptorName, Node configuration)
-   {
-      super(descriptorName);
-      this.configuration = configuration;
-   }
+    public HornetQJMSDescriptorImpl(String descriptorName, Node configuration) {
+        super(descriptorName);
+        this.configuration = configuration;
+    }
 
-   public QueueDescriptor queue(String name, String jndi)
-   {
-      return new QueueDescriptor(configuration.getOrCreate("queue@name=" + name),this)
-              .name(name).entry(jndi);
-   }
+    public QueueDescriptor queue(String name, String jndi) {
+        return new QueueDescriptor(configuration.getOrCreate("queue@name=" + name), this)
+                .name(name).entry(jndi);
+    }
 
-   public TopicDescriptor topic(String name, String jndi)
-   {
-      return new TopicDescriptor(configuration.getOrCreate("topic@name=" + name),this)
-            .name(name).entry(jndi);
-   }
+    public TopicDescriptor topic(String name, String jndi) {
+        return new TopicDescriptor(configuration.getOrCreate("topic@name=" + name), this)
+                .name(name).entry(jndi);
+    }
 
-   // -------------------------------------------------------------------------------------||
-   // Required Impl - NodeProvider --------------------------------------------------------||
-   // -------------------------------------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
+    // Required Impl - NodeProvider --------------------------------------------------------||
+    // -------------------------------------------------------------------------------------||
 
-   /*
-* (non-Javadoc)
-*
-* @see org.jboss.shrinkwrap.descriptor.spi.NodeProvider#getRootNode()
-*/
-   @Override
-   public Node getRootNode()
-   {
-      return configuration;
-   }
+    /*
+    * (non-Javadoc)
+    *
+    * @see org.jboss.shrinkwrap.descriptor.spi.NodeProvider#getRootNode()
+    */
+    @Override
+    public Node getRootNode() {
+        return configuration;
+    }
 
-   /*
-* (non-Javadoc)
-*
-* @see org.jboss.shrinkwrap.descriptor.impl.base.NodeProviderImplBase#getExporter()
-*/
-   @Override
-   protected DescriptorExporter getExporter()
-   {
-      return new XMLExporter();
-   }
+    /*
+    * (non-Javadoc)
+    *
+    * @see org.jboss.shrinkwrap.descriptor.impl.base.NodeProviderImplBase#getExporter()
+    */
+    @Override
+    protected DescriptorExporter getExporter() {
+        return new XMLExporter();
+    }
 
 }

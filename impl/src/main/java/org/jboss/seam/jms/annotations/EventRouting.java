@@ -16,23 +16,23 @@
  */
 package org.jboss.seam.jms.annotations;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * <p>
  * Identifies an Event Routing configuration method. May be applied to a method
  * of a bean class.
  * </p>
- *
+ * <p/>
  * <p>
  * The method may return {@link EventBridge} or {@code List<}{@link EventBridge}{@code>}.
  * </p>
- *
+ * <p/>
  * <pre>
  * &#064;Inject
  * EventBridge bridge;
@@ -46,9 +46,8 @@ import java.lang.annotation.Target;
  *
  * @author Jordan Ganoff
  */
-@Target( { METHOD })
+@Target({METHOD})
 @Retention(RUNTIME)
 @Documented
-public @interface EventRouting
-{
+public @interface EventRouting {
 }

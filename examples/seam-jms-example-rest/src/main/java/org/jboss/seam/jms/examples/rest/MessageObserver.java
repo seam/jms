@@ -23,21 +23,22 @@ package org.jboss.seam.jms.examples.rest;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+
 import org.jboss.logging.Logger;
 
 /**
- *
  * @author johnament
  */
 @ApplicationScoped
 public class MessageObserver {
 
     Logger logger = Logger.getLogger(MessageObserver.class);
+
     public void observeString(@Observes String s) {
-        logger.info("Just observing a string here. "+s);
+        logger.info("Just observing a string here. " + s);
     }
 
     public void observeLong(@Observes Long l) {
-        logger.info("Just observing a Long here. "+l);
+        logger.info("Just observing a Long here. " + l);
     }
 }

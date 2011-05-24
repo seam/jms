@@ -1,41 +1,42 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-   xmlns:ui="http://java.sun.com/jsf/facelets"
-   xmlns:h="http://java.sun.com/jsf/html"
-   xmlns:f="http://java.sun.com/jsf/core"
-   xmlns:s="http://jboss.com/products/seam/taglib">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:s="http://jboss.com/products/seam/taglib">
 
 <h:head>
-   <title>Messaging example</title>
-   <link rel="stylesheet" href="style/style.css" type="text/css" media="screen" />
+    <title>Messaging example</title>
+    <link rel="stylesheet" href="style/style.css" type="text/css" media="screen"/>
 </h:head>
 <h:body>
 
-   <div class="header">
-     <span id="title">StatusSender</span>
-   </div>
+    <div class="header">
+        <span id="title">StatusSender</span>
+    </div>
 
-   <div class="content">
-      <h:form>
-         <h:panelGrid columns="1">
-            <h:outputText value="Name:" />
-            <h:panelGroup>
-               <h:inputText id="username" value="#{sendingClient.status.username}" size="20"
-                  required="true" requiredMessage="Please enter your name..." />&nbsp;
-               <h:message for="username" errorClass="errorMessage" />
-            </h:panelGroup>
-            <h:outputText value="Status:" />
-            <h:inputTextarea id="statusupdate"
-               value="#{sendingClient.status.statusMessage}" rows="10"
-               styleClass="enterstatus"
-               validatorMessage="Maximum length of the status message is 160">
-               <f:validateLength maximum="160" />
-            </h:inputTextarea>
-            <h:message for="statusupdate" errorClass="errorMessage" />
-            <h:commandButton id="sendButton" value="Send" action="#{sendingClient.sendStatusUpdate}" />
-         </h:panelGrid>
-      </h:form>
-   </div>
+    <div class="content">
+        <h:form>
+            <h:panelGrid columns="1">
+                <h:outputText value="Name:"/>
+                <h:panelGroup>
+                    <h:inputText id="username" value="#{sendingClient.status.username}" size="20"
+                                 required="true" requiredMessage="Please enter your name..."/>
+                    &nbsp;
+                    <h:message for="username" errorClass="errorMessage"/>
+                </h:panelGroup>
+                <h:outputText value="Status:"/>
+                <h:inputTextarea id="statusupdate"
+                                 value="#{sendingClient.status.statusMessage}" rows="10"
+                                 styleClass="enterstatus"
+                                 validatorMessage="Maximum length of the status message is 160">
+                    <f:validateLength maximum="160"/>
+                </h:inputTextarea>
+                <h:message for="statusupdate" errorClass="errorMessage"/>
+                <h:commandButton id="sendButton" value="Send" action="#{sendingClient.sendStatusUpdate}"/>
+            </h:panelGrid>
+        </h:form>
+    </div>
 
 </h:body>
-</html> 
+</html>

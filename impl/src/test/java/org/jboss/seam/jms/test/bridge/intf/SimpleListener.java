@@ -22,22 +22,21 @@ import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
 /**
- *
  * @author johnament
  */
 public class SimpleListener implements javax.jms.MessageListener {
-    private boolean observed=false;
-    private String data=null;
+    private boolean observed = false;
+    private String data = null;
+
     @Override
     public void onMessage(Message msg) {
-    	observed =true;
-    	if(msg instanceof TextMessage) { 
-    		try {
-				data = ((TextMessage)msg).getText();
-			} catch (JMSException e) {
-			}
-    	}
-    	else if(msg instanceof ObjectMessage) {
+        observed = true;
+        if (msg instanceof TextMessage) {
+            try {
+                data = ((TextMessage) msg).getText();
+            } catch (JMSException e) {
+            }
+        } else if (msg instanceof ObjectMessage) {
             ObjectMessage om = (ObjectMessage) msg;
             try {
                 data = om.getObject().toString();

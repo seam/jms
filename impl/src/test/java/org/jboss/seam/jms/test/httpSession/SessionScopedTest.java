@@ -18,6 +18,7 @@ package org.jboss.seam.jms.test.httpSession;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
+
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.MessageManager;
@@ -31,20 +32,23 @@ import org.junit.runner.RunWith;
 
 /**
  * Test case for injecting objects into session scoped object.
- * 
+ *
  * @author johnament
  */
 @SessionScoped
 @RunWith(Arquillian.class)
 public class SessionScopedTest {
     @Deployment
-    public static Archive<?> createDeployment()
-    {
-        return Util.createDeployment(MessageManager.class,RouteBuilder.class);
+    public static Archive<?> createDeployment() {
+        return Util.createDeployment(MessageManager.class, RouteBuilder.class);
     }
-    @Inject MessageManager msgMgr;
-    @Inject RouteBuilder rbild;
-    @Inject RouteManager rmgr;
+
+    @Inject
+    MessageManager msgMgr;
+    @Inject
+    RouteBuilder rbild;
+    @Inject
+    RouteManager rmgr;
 
     @Test
     public void simpleTest() {

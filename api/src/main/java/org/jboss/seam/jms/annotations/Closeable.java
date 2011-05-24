@@ -16,27 +16,28 @@
  */
 package org.jboss.seam.jms.annotations;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import javax.inject.Qualifier;
 
-/** Closeable objects can be turned off/closed on application shutdown.
- *  Injecting an event with the closeable qualifier causes the fired
-* object to be shutdown on shutdown.
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+/**
+ * Closeable objects can be turned off/closed on application shutdown.
+ * Injecting an event with the closeable qualifier causes the fired
+ * object to be shutdown on shutdown.
  *
  * @author johnament
  */
 @Qualifier
 @Documented
-@Target( { FIELD, METHOD, TYPE, PARAMETER })
+@Target({FIELD, METHOD, TYPE, PARAMETER})
 @Retention(RUNTIME)
 public @interface Closeable {
 

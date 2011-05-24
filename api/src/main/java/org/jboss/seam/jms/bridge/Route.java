@@ -21,37 +21,38 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
 import javax.enterprise.inject.spi.AnnotatedParameter;
 import javax.enterprise.inject.spi.BeanManager;
-
 import javax.jms.Destination;
 
 /**
  * Routing configuration between CDI and JMS.
- * 
+ *
  * @author Jordan Ganoff
- * 
  */
 public interface Route {
 
     /**
      * Connect this route to a destination. Multiple destinations may be defined.
      *
-     * @param <D> Destination type
-     * @param d Destination type (e.g. javax.jms.Topic)
+     * @param <D>         Destination type
+     * @param d           Destination type (e.g. javax.jms.Topic)
      * @param destination Destination to connect this route to
      * @return this
      */
     public <D extends Destination> Route connectTo(Class<D> d, D destination);
 
-    /**Add multiple destinations to this route
+    /**
+     * Add multiple destinations to this route
      *
      * @param d destinations to be added.
      * @return this
      */
     public Route addDestinations(Destination... d);
 
-    /**Adds a collection of destinations to this route.
+    /**
+     * Adds a collection of destinations to this route.
      *
      * @param d Destinations to be added
      * @return this
@@ -113,45 +114,43 @@ public interface Route {
     public boolean validate();
 
     public void build(BeanManager beanManager);
-    
+
     public Route id(String id);
-    
+
     public String getId();
-    
+
     /**
      * Determines if this route is enabled for Egress routes.
      * If the route is ingress, this returns false always.
-     * 
-     * @return true if enabled for egress routes, else false. 
+     *
+     * @return true if enabled for egress routes, else false.
      */
     public boolean isEgressEnabled();
-    
+
     /**
      * Determines if this route is enabled for ingress routes.
      * If the route is egress, this returns false always.
-     * 
-     * @return true if enabled for ingress routes, else false. 
+     *
+     * @return true if enabled for ingress routes, else false.
      */
     public boolean isIngressEnabled();
-    
+
     /**
      * Disables egress routing for this route.
-     * 
      */
     public void disableEgress();
-    
+
     /**
      * Enables egress routing for this route.
      * Ineffective if the route is ingress.
-     * 
      */
     public void enableEgress();
-    
+
     /**
      * Disables ingress routing for this route.
      */
     public void disableIngress();
-    
+
     /**
      * Enables ingress routing for this route.
      * Ineffective if the route is egress.

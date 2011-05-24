@@ -1,149 +1,149 @@
 body {
-	margin: 0px;
-	padding: 0px;
-	border-width: 0px;
-	background-color: #eeeeee;
-	font-family:trebuchet MS, Lucida Sans Unicode, Lucida Sans, Sans-Serif;
+    margin: 0px;
+    padding: 0px;
+    border-width: 0px;
+    background-color: #eeeeee;
+    font-family: trebuchet MS, Lucida Sans Unicode, Lucida Sans, Sans-Serif;
 }
 
 div.header {
-   height: 27px;
-   width: 400px;
-   margin-left: 1px;
-   margin-right: 1px;
-   margin-top: 1px;
-   margin-bottom: 2px;
-   padding: 2px;
-   border: 1px solid;
-   border-color: #7f7f7f;
-   background-color: #b4cad9;
+    height: 27px;
+    width: 400px;
+    margin-left: 1px;
+    margin-right: 1px;
+    margin-top: 1px;
+    margin-bottom: 2px;
+    padding: 2px;
+    border: 1px solid;
+    border-color: #7f7f7f;
+    background-color: #b4cad9;
 }
 
 div.content {
-   width:400px;
-   margin: 1px;
-   padding: 2px;
-   padding-bottom: 5px;
-   border: 1px solid;
-   border-color: #7f7f7f;
-   background-color: #e5e5e5;
+    width: 400px;
+    margin: 1px;
+    padding: 2px;
+    padding-bottom: 5px;
+    border: 1px solid;
+    border-color: #7f7f7f;
+    background-color: #e5e5e5;
 }
 
 span#title {
-	 font-size: 22px;
-	 font-weight: bold;
-	 color: #465fbd;
-	 padding-left: 3px;
-	 font-stretch: wider;
+    font-size: 22px;
+    font-weight: bold;
+    color: #465fbd;
+    padding-left: 3px;
+    font-stretch: wider;
 }
 
 div.watchmenu {
-   height: 50px;
-   width: 500px;
-   margin-left: 1px;
-   margin-right: 1px;
-   margin-top: 1px;
-   margin-bottom: 2px;
-   padding: 2px;
-   border: 1px solid;
-   border-color: #7f7f7f;
-   background-color: #b4cad9;
+    height: 50px;
+    width: 500px;
+    margin-left: 1px;
+    margin-right: 1px;
+    margin-top: 1px;
+    margin-bottom: 2px;
+    padding: 2px;
+    border: 1px solid;
+    border-color: #7f7f7f;
+    background-color: #b4cad9;
 }
 
 div.watchcontent {
-   width:497px;
-   margin-left: 1px;
-   margin-right: 1px;
-   margin-top: 1px;
-   margin-bottom: 1px;
-   padding: 2px;
-   padding-left:5px;
-   border: 1px solid;
-   border-color: #7f7f7f;
+    width: 497px;
+    margin-left: 1px;
+    margin-right: 1px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    padding: 2px;
+    padding-left: 5px;
+    border: 1px solid;
+    border-color: #7f7f7f;
 }
 
 div.watchtitle {
-	 float: left;
+    float: left;
     font-size: 25px;
     font-weight: bold;
     color: #465fbd;
     margin-bottom: 3px;
     margin-right: 40px;
     margin-left: 15px;
-    padding-top:8px;
+    padding-top: 8px;
 }
 
 div.statusupdate {
-   width:475px;
-   height:40px;
-   overflow: auto;
-   margin: 0px;
-   padding: 2px;
-   padding-top: 4px;
-   border-top: 1px solid;
-   border-color: #b2b2b2;
-   margin-bottom: 8px;
-   margin-right: 3px;
-   color: #7f7f7f;
-   font-size: 12px;
+    width: 475px;
+    height: 40px;
+    overflow: auto;
+    margin: 0px;
+    padding: 2px;
+    padding-top: 4px;
+    border-top: 1px solid;
+    border-color: #b2b2b2;
+    margin-bottom: 8px;
+    margin-right: 3px;
+    color: #7f7f7f;
+    font-size: 12px;
 }
 
 div.divider {
-  float: left;
-  width: 2px;
-  height: 25px;
-  margin-left: 6px;
-  margin-right: 6px;  
-  background: url(../image/divider.png) top left no-repeat;
-  margin-top: 13px;
+    float: left;
+    width: 2px;
+    height: 25px;
+    margin-left: 6px;
+    margin-right: 6px;
+    background: url(../image/divider.png) top left no-repeat;
+    margin-top: 13px;
 }
 
 div.menuitem {
-  float: left;
-  margin-left: 4px;
-  margin-right: 4px;
-  padding-top:15px;
-  color: #ffffff;
+    float: left;
+    margin-left: 4px;
+    margin-right: 4px;
+    padding-top: 15px;
+    color: #ffffff;
 }
 
 div.menuitem a, div.menuitem a:visited {
-  margin-left: 6px;
-  margin-right: 6px;  
-  padding-top:16px;
-  color: #ffffff;
-  text-decoration: none;
+    margin-left: 6px;
+    margin-right: 6px;
+    padding-top: 16px;
+    color: #ffffff;
+    text-decoration: none;
 }
 
 div.menuitem a:hover {
-  margin-left: 6px;
-  margin-right: 6px;  
-  padding-top:15px;
-  color: #465fbd;
+    margin-left: 6px;
+    margin-right: 6px;
+    padding-top: 15px;
+    color: #465fbd;
 }
 
 span.username {
-	font-weight: bold;
-	color: #393b71; /*464d97*/
-	margin-right: 3px;
+    font-weight: bold;
+    color: #393b71; /*464d97*/
+    margin-right: 3px;
 }
 
 span.statuslabel {
-	font-size: 12px;
-	margin-right: 2px;
+    font-size: 12px;
+    margin-right: 2px;
 }
 
 span.date {
-	font-weight: bold;
-	margin-right: 2px;
+    font-weight: bold;
+    margin-right: 2px;
 }
 
 .errorMessage {
-	color:red;
-	font-size:12px;
-	padding-left:3px;
+    color: red;
+    font-size: 12px;
+    padding-left: 3px;
 }
 
 .enterstatus {
-   width: 385px;
-   padding-bottom: 5px;
+    width: 385px;
+    padding-bottom: 5px;
 }

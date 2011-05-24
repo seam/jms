@@ -20,26 +20,26 @@ import javax.enterprise.util.AnnotationLiteral;
 
 import org.jboss.seam.jms.bridge.RouteType;
 
-/**RoutingLiteral - literal implementation of the Routing qualifier.
- * 
+/**
+ * RoutingLiteral - literal implementation of the Routing qualifier.
+ * <p/>
  * provides two static members, representing EGRESS and INGRESS.
- * 
- * @author johnament
  *
+ * @author johnament
  */
 public class RoutingLiteral extends AnnotationLiteral<Routing> implements Routing {
-	private RouteType routeType;
-	
-	public static final Routing EGRESS = new RoutingLiteral(RouteType.EGRESS);
-	public static final Routing INGRESS = new RoutingLiteral(RouteType.INGRESS);
-	
-	public RoutingLiteral(RouteType routeType) {
-		this.routeType = routeType;
-	}
-	
-	@Override
-	public RouteType value() {
-		return routeType;
-	}
+    private RouteType routeType;
+
+    public static final Routing EGRESS = new RoutingLiteral(RouteType.EGRESS);
+    public static final Routing INGRESS = new RoutingLiteral(RouteType.INGRESS);
+
+    public RoutingLiteral(RouteType routeType) {
+        this.routeType = routeType;
+    }
+
+    @Override
+    public RouteType value() {
+        return routeType;
+    }
 
 }

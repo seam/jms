@@ -29,7 +29,7 @@ public interface RouteManager extends Serializable {
      * Creates a new instance of a Route based on given {@link RouteType} and
      * payload type
      *
-     * @param type The RouteType to create.
+     * @param type        The RouteType to create.
      * @param payloadType The type of payload to use.
      * @return a new Route instance.
      */

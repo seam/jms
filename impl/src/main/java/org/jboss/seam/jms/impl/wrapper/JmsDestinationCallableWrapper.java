@@ -16,8 +16,6 @@
  */
 package org.jboss.seam.jms.impl.wrapper;
 
-import static org.jboss.seam.jms.impl.wrapper.JmsDestinationAnnotatedWrapper.needsDecorating;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -31,79 +29,68 @@ import javax.enterprise.inject.spi.AnnotatedType;
 
 import org.jboss.seam.jms.annotations.JmsDestination;
 
+import static org.jboss.seam.jms.impl.wrapper.JmsDestinationAnnotatedWrapper.needsDecorating;
+
 /**
  * Wraps {@link AnnotatedCallable}s that declare transitive annotations to
  * {@link JmsDestination} with the actual {@link JmsDestination}. Only the
  * {@link javax.enterprise.inject.spi.Annotated} that define the transitive
  * annotations will be wrapped.
- * 
+ *
  * @author Jordan Ganoff
  */
-public abstract class JmsDestinationCallableWrapper<X> implements AnnotatedCallable<X>
-{
+public abstract class JmsDestinationCallableWrapper<X> implements AnnotatedCallable<X> {
 
-   private AnnotatedCallable<X> decorated;
-   private List<AnnotatedParameter<X>> parameters;
+    private AnnotatedCallable<X> decorated;
+    private List<AnnotatedParameter<X>> parameters;
 
-   public JmsDestinationCallableWrapper(AnnotatedCallable<X> decorated)
-   {
-      this.decorated = decorated;
+    public JmsDestinationCallableWrapper(AnnotatedCallable<X> decorated) {
+        this.decorated = decorated;
 
-      parameters = new ArrayList<AnnotatedParameter<X>>();
-      for (AnnotatedParameter<X> p : decorated.getParameters())
-      {
-         parameters.add(decorate(p));
-      }
-      parameters = Collections.unmodifiableList(parameters);
-   }
+        parameters = new ArrayList<AnnotatedParameter<X>>();
+        for (AnnotatedParameter<X> p : decorated.getParameters()) {
+            parameters.add(decorate(p));
+        }
+        parameters = Collections.unmodifiableList(parameters);
+    }
 
-   private AnnotatedParameter<X> decorate(AnnotatedParameter<X> parameter)
-   {
-      return needsDecorating(parameter) ? new JmsDestinationParameterWrapper<X>(parameter) : parameter;
-   }
+    private AnnotatedParameter<X> decorate(AnnotatedParameter<X> parameter) {
+        return needsDecorating(parameter) ? new JmsDestinationParameterWrapper<X>(parameter) : parameter;
+    }
 
-   protected AnnotatedCallable<X> decorated()
-   {
-      return decorated;
-   }
+    protected AnnotatedCallable<X> decorated() {
+        return decorated;
+    }
 
-   public List<AnnotatedParameter<X>> getParameters()
-   {
-      return parameters;
-   }
+    public List<AnnotatedParameter<X>> getParameters() {
+        return parameters;
+    }
 
-   public <T extends Annotation> T getAnnotation(Class<T> annotationType)
-   {
-      return decorated.getAnnotation(annotationType);
-   }
+    public <T extends Annotation> T getAnnotation(Class<T> annotationType) {
+        return decorated.getAnnotation(annotationType);
+    }
 
-   public Set<Annotation> getAnnotations()
-   {
-      return decorated.getAnnotations();
-   }
+    public Set<Annotation> getAnnotations() {
+        return decorated.getAnnotations();
+    }
 
-   public Type getBaseType()
-   {
-      return decorated.getBaseType();
-   }
+    public Type getBaseType() {
+        return decorated.getBaseType();
+    }
 
-   public AnnotatedType<X> getDeclaringType()
-   {
-      return decorated.getDeclaringType();
-   }
+    public AnnotatedType<X> getDeclaringType() {
+        return decorated.getDeclaringType();
+    }
 
-   public Set<Type> getTypeClosure()
-   {
-      return decorated.getTypeClosure();
-   }
+    public Set<Type> getTypeClosure() {
+        return decorated.getTypeClosure();
+    }
 
-   public boolean isAnnotationPresent(Class<? extends Annotation> annotationType)
-   {
-      return decorated.isAnnotationPresent(annotationType);
-   }
+    public boolean isAnnotationPresent(Class<? extends Annotation> annotationType) {
+        return decorated.isAnnotationPresent(annotationType);
+    }
 
-   public boolean isStatic()
-   {
-      return decorated.isStatic();
-   }
+    public boolean isStatic() {
+        return decorated.isStatic();
+    }
 }

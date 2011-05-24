@@ -16,8 +16,6 @@
  */
 package org.jboss.seam.jms.test.bridge;
 
-import static org.jboss.seam.jms.bridge.RouteType.EGRESS;
-
 import java.lang.annotation.Annotation;
 
 import javax.enterprise.util.AnnotationLiteral;
@@ -28,27 +26,30 @@ import org.jboss.seam.jms.bridge.RouteImpl;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class RouteImplTest
-{
-   @Qualifier public @interface TestQualifier {}
-   
-   @SuppressWarnings("serial")
-   @Test
-   public void addQualifier()
-   {
-      Route r = new RouteImpl(EGRESS, Object.class);
-      Annotation qualifier = new AnnotationLiteral<TestQualifier>() {};
-      r.addQualifiers(qualifier);
-      Assert.assertFalse(r.getQualifiers().isEmpty());
-      Assert.assertEquals(1, r.getQualifiers().size());
-      Assert.assertEquals(qualifier, r.getQualifiers().iterator().next());
-   }
-   
-   @SuppressWarnings("serial")
-   @Test(expected=IllegalArgumentException.class)
-   public void addQualifier_non_qualifier()
-   {
-      Route r = new RouteImpl(EGRESS, Object.class);
-      r.addQualifiers(new AnnotationLiteral<Deprecated>() {});
-   }
+import static org.jboss.seam.jms.bridge.RouteType.EGRESS;
+
+public class RouteImplTest {
+    @Qualifier
+    public @interface TestQualifier {
+    }
+
+    @SuppressWarnings("serial")
+    @Test
+    public void addQualifier() {
+        Route r = new RouteImpl(EGRESS, Object.class);
+        Annotation qualifier = new AnnotationLiteral<TestQualifier>() {
+        };
+        r.addQualifiers(qualifier);
+        Assert.assertFalse(r.getQualifiers().isEmpty());
+        Assert.assertEquals(1, r.getQualifiers().size());
+        Assert.assertEquals(qualifier, r.getQualifiers().iterator().next());
+    }
+
+    @SuppressWarnings("serial")
+    @Test(expected = IllegalArgumentException.class)
+    public void addQualifier_non_qualifier() {
+        Route r = new RouteImpl(EGRESS, Object.class);
+        r.addQualifiers(new AnnotationLiteral<Deprecated>() {
+        });
+    }
 }

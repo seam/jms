@@ -18,28 +18,26 @@ package org.jboss.seam.jms.bridge;
 
 /**
  * All valid {@link Route} types.
- * 
+ *
  * @author Jordan Ganoff
- * 
  */
-public enum RouteType
-{
-   /**
-    * Inbound route. Any route defined as INGRESS will listen for objects
-    * delivered to the registered destinations and fire events for all that
-    * match the configuration as defined by the route.
-    */
-   INGRESS,
+public enum RouteType {
+    /**
+     * Inbound route. Any route defined as INGRESS will listen for objects
+     * delivered to the registered destinations and fire events for all that
+     * match the configuration as defined by the route.
+     */
+    INGRESS,
 
-   /**
-    * Outbound route. Any route defined as EGRESS will forward CDI events that
-    * match the configuration as defined by the route to the registered
-    * destinations.
-    */
-   EGRESS,
+    /**
+     * Outbound route. Any route defined as EGRESS will forward CDI events that
+     * match the configuration as defined by the route to the registered
+     * destinations.
+     */
+    EGRESS,
 
-   /**
+    /**
     * A route of type BOTH will be represented as ingress as well as egress.
-    */
-   BOTH;
+     */
+    BOTH;
 }

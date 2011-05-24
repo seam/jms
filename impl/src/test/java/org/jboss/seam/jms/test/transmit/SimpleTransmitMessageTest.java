@@ -33,33 +33,33 @@ import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 public class SimpleTransmitMessageTest {
-	@Deployment
-	public static Archive<?> createDeployment() {
-		return Util.createDeployment(SimpleTransmitMessageTest.class,
-				MessageManager.class);
-	}
+    @Deployment
+    public static Archive<?> createDeployment() {
+        return Util.createDeployment(SimpleTransmitMessageTest.class,
+                MessageManager.class);
+    }
 
-	@Inject
-	MessageManager messageBuilder;
+    @Inject
+    MessageManager messageBuilder;
 
-	@Test
-	public void sendMessage_topic() throws JMSException {
-		sendMessage("/jms/T");
-	}
+    @Test
+    public void sendMessage_topic() throws JMSException {
+        sendMessage("/jms/T");
+    }
 
-	@Test
-	public void sendMessage_queue() throws JMSException {
-		sendMessage("/jms/Q");
-	}
+    @Test
+    public void sendMessage_queue() throws JMSException {
+        sendMessage("/jms/Q");
+    }
 
-	private void sendMessage(String destination) throws JMSException {
-		String expected = "test";
-		MessageConsumer mc = messageBuilder.createMessageConsumer(destination);
-		messageBuilder.sendTextToDestinations(expected, destination);
-		Message received = mc.receive(3000);
-		Assert.assertNotNull(received);
-		Assert.assertTrue(received instanceof TextMessage);
-		TextMessage tm = TextMessage.class.cast(received);
-		Assert.assertEquals(expected, tm.getText());
-	}
+    private void sendMessage(String destination) throws JMSException {
+        String expected = "test";
+        MessageConsumer mc = messageBuilder.createMessageConsumer(destination);
+        messageBuilder.sendTextToDestinations(expected, destination);
+        Message received = mc.receive(3000);
+        Assert.assertNotNull(received);
+        Assert.assertTrue(received instanceof TextMessage);
+        TextMessage tm = TextMessage.class.cast(received);
+        Assert.assertEquals(expected, tm.getText());
+    }
 }

@@ -17,7 +17,9 @@
 package org.jboss.seam.jms.test.locator;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.annotations.Routing;
@@ -31,22 +33,27 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- *
  * @author johnament
  */
 @RunWith(Arquillian.class)
 public class LocatorTest {
-    @Inject RouteLocator routeLocator;
-    @Inject @Routing(RouteType.EGRESS) List<Route> egressRoutes;
-    @Inject @Routing(RouteType.INGRESS) List<Route> ingressRoutes;
-    	@Deployment
+    @Inject
+    RouteLocator routeLocator;
+    @Inject
+    @Routing(RouteType.EGRESS)
+    List<Route> egressRoutes;
+    @Inject
+    @Routing(RouteType.INGRESS)
+    List<Route> ingressRoutes;
+
+    @Deployment
     public static Archive<?> createDeployment() {
-        return Util.createDeployment(RouteLocator.class,LocatorInterface.class);
+        return Util.createDeployment(RouteLocator.class, LocatorInterface.class);
     }
 
     @Test
     public void testLocatorVerify() {
-        Route route = routeLocator.findById(LocatorInterface.class.getCanonicalName()+"."+"obsStringToTopic");
+        Route route = routeLocator.findById(LocatorInterface.class.getCanonicalName() + "." + "obsStringToTopic");
         Assert.assertNotNull(route);
         Assert.assertEquals("Failed size match", egressRoutes.size(), 1, 0);
         Assert.assertEquals("Failed size match", ingressRoutes.size(), 0, 0);

@@ -25,6 +25,5 @@ import org.jboss.seam.jms.annotations.JmsSession;
 
 @Retention(RetentionPolicy.RUNTIME)
 @JmsSession(transacted = false, acknowledgementMode = Session.DUPS_OK_ACKNOWLEDGE)
-public @interface EventSession
-{
+public @interface EventSession {
 }

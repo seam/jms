@@ -23,18 +23,18 @@ package org.jboss.seam.jms.examples.rest;
 
 import javax.enterprise.event.Observes;
 import javax.jms.Topic;
+
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.jms.bridge.RouteType;
 
 /**
- *
  * @author johnament
  */
 public interface MappingInterface {
     @Routing(RouteType.EGRESS)
-    public void mapLongsToTopic(@Observes String s, @JmsDestination(jndiName="jms/LongT2") Topic t);
+    public void mapLongsToTopic(@Observes String s, @JmsDestination(jndiName = "jms/LongT2") Topic t);
 
     @Routing(RouteType.INGRESS)
-    public void mapsObjsToTop(@Observes Long l, @JmsDestination(jndiName="jms/LongT4") Topic t);
+    public void mapsObjsToTop(@Observes Long l, @JmsDestination(jndiName = "jms/LongT4") Topic t);
 }

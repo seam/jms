@@ -18,19 +18,21 @@ package org.jboss.seam.jms.test.bridge.intf;
 
 import javax.enterprise.event.Observes;
 import javax.jms.Topic;
+
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.jms.bridge.RouteType;
 
 /**
- *
  * @author johnament
  */
 public interface ObserverInterface {
     @Routing(RouteType.EGRESS)
-    public void obsStringToTopic(@Observes String s, @JmsDestination(jndiName="jms/T2") Topic t);
+    public void obsStringToTopic(@Observes String s, @JmsDestination(jndiName = "jms/T2") Topic t);
+
     @Routing(RouteType.INGRESS)
-    public void obsLongToTopic(@Observes Long l, @JmsDestination(jndiName="jms/T2") Topic t);
+    public void obsLongToTopic(@Observes Long l, @JmsDestination(jndiName = "jms/T2") Topic t);
+
     @Routing(RouteType.BOTH)
-    public void obsDoubleToTopic(@Observes Double d, @JmsDestination(jndiName="jms/T2") Topic t);
+    public void obsDoubleToTopic(@Observes Double d, @JmsDestination(jndiName = "jms/T2") Topic t);
 }

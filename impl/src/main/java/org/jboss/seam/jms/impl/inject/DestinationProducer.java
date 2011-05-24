@@ -29,23 +29,23 @@ import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Module;
 import org.jboss.seam.solder.reflection.AnnotationInspector;
 
+import static org.jboss.seam.jms.impl.inject.InjectionUtil.getExpectedQualifier;
+
 public class DestinationProducer
 {
    @Inject BeanManager beanManager;
    
-   @Produces
-   @JmsDestination
-   public Topic getTopic(InjectionPoint ip, @Module Context c) throws NamingException
-   {
+    @Produces
+    @JmsDestination
+    public Topic getTopic(InjectionPoint ip, @Module Context c) throws NamingException {
 	  JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-      return (Topic) c.lookup(d.jndiName());
-   }
-   
-   @Produces
-   @JmsDestination
-   public Queue getQueue(InjectionPoint ip, @Module Context c) throws NamingException
-   {
+        return (Topic) c.lookup(d.jndiName());
+    }
+
+    @Produces
+    @JmsDestination
+    public Queue getQueue(InjectionPoint ip, @Module Context c) throws NamingException {
 	  JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-      return (Queue) c.lookup(d.jndiName());
-   }
+        return (Queue) c.lookup(d.jndiName());
+    }
 }

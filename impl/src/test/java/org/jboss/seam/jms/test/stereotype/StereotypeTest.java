@@ -34,10 +34,9 @@ import junit.framework.Assert;
 public class StereotypeTest {
 	
    @Deployment
-   public static Archive<?> createDeployment()
-   {
+   public static Archive<?> createDeployment() {
       return Util.createDeployment(StereotypeTest.class);
-   }
+    }
 	
 	@Inject @MyDestination Queue q;
 	

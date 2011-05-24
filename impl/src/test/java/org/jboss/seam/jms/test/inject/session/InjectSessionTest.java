@@ -32,72 +32,65 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class InjectSessionTest
-{
+public class InjectSessionTest {
 
-   @Deployment
-   public static Archive<?> createDeployment()
-   {
-      return Util.createDeployment(InjectSessionTest.class);
-   }
+    @Deployment
+    public static Archive<?> createDeployment() {
+        return Util.createDeployment(InjectSessionTest.class);
+    }
 
-   @Inject
-   private Instance<Session> s;
-   
-   @Inject
-   @JmsSessionSelector(transacted=false, acknowledgementMode=Session.AUTO_ACKNOWLEDGE)
-   private Instance<Session> qualified;
+    @Inject
+    private Instance<Session> s;
 
-   @Inject
-   @JmsSession(transacted = false, acknowledgementMode = Session.CLIENT_ACKNOWLEDGE)
-   private Instance<Session> configuredSession;
+    @Inject
+    @JmsSessionSelector(transacted = false, acknowledgementMode = Session.AUTO_ACKNOWLEDGE)
+    private Instance<Session> qualified;
 
-   @Inject
-   @EventSession
-   private Instance<Session> eventSession;
+    @Inject
+    @JmsSession(transacted = false, acknowledgementMode = Session.CLIENT_ACKNOWLEDGE)
+    private Instance<Session> configuredSession;
 
-   @Inject
-   SessionSelectorBean selectorBean;
-   
-   @Test
-   public void injectSession()
-   {
-      Assert.assertNotNull(s.get());
-   }
+    @Inject
+    @EventSession
+    private Instance<Session> eventSession;
 
-   @Test
-   public void injectSession_annotated() throws JMSException
-   {
-      Session s = configuredSession.get();
-      Assert.assertNotNull(s);
-      Assert.assertFalse(s.getTransacted());
-      Assert.assertEquals(Session.CLIENT_ACKNOWLEDGE, s.getAcknowledgeMode());
-   }
+    @Inject
+    SessionSelectorBean selectorBean;
 
-   @Test
-   public void injectSession_meta_annotated() throws JMSException
-   {
-      Session s = eventSession.get();
-      Assert.assertNotNull(s);
-      Assert.assertFalse(s.getTransacted());
-      Assert.assertEquals(Session.DUPS_OK_ACKNOWLEDGE, s.getAcknowledgeMode());
-   }
+    @Test
+    public void injectSession() {
+        Assert.assertNotNull(s.get());
+    }
 
-   @Test
-   public void injectQualifiedSession() throws JMSException
-   {
-      Session s = qualified.get();
-      Assert.assertNotNull(s);
-      Assert.assertFalse(s.getTransacted());
-      Assert.assertEquals(Session.AUTO_ACKNOWLEDGE, s.getAcknowledgeMode());
-   }
+    @Test
+    public void injectSession_annotated() throws JMSException {
+        Session s = configuredSession.get();
+        Assert.assertNotNull(s);
+        Assert.assertFalse(s.getTransacted());
+        Assert.assertEquals(Session.CLIENT_ACKNOWLEDGE, s.getAcknowledgeMode());
+    }
 
-   @Test
-   public void injectSessionWithLiteral() throws JMSException
-   {
-      Session session = selectorBean.get();
-      Assert.assertNotNull(session);
-      Assert.assertFalse(session.getTransacted());
-      Assert.assertEquals(Session.DUPS_OK_ACKNOWLEDGE, session.getAcknowledgeMode());
-   }
+    @Test
+    public void injectSession_meta_annotated() throws JMSException {
+        Session s = eventSession.get();
+        Assert.assertNotNull(s);
+        Assert.assertFalse(s.getTransacted());
+        Assert.assertEquals(Session.DUPS_OK_ACKNOWLEDGE, s.getAcknowledgeMode());
+    }
+
+    @Test
+    public void injectQualifiedSession() throws JMSException {
+        Session s = qualified.get();
+        Assert.assertNotNull(s);
+        Assert.assertFalse(s.getTransacted());
+        Assert.assertEquals(Session.AUTO_ACKNOWLEDGE, s.getAcknowledgeMode());
+    }
+
+    @Test
+    public void injectSessionWithLiteral() throws JMSException {
+        Session session = selectorBean.get();
+        Assert.assertNotNull(session);
+        Assert.assertFalse(session.getTransacted());
+        Assert.assertEquals(Session.DUPS_OK_ACKNOWLEDGE, session.getAcknowledgeMode());
+    }
 }

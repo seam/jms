@@ -16,9 +16,6 @@
  */
 package org.jboss.seam.jms.test.bridge.intf;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Connection;
@@ -42,8 +39,10 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
- *
  * @author johnament
  */
 @RunWith(Arquillian.class)
@@ -53,15 +52,22 @@ public class ObserverTest {
     public static Archive<?> createDeployment() {
         return Util.createDeployment(ObserverInterface.class, ImmutableInjectionPoint.class, MessagePubSubProducer.class);
     }
+
     private static final String EVENT_MSG = "hello, world!";
 
     @Inject @Outbound
     Event<String> stringEvent;
-    @Inject Connection conn;
-    @Inject Session session;
-    @Inject @JmsDestination(jndiName="jms/T2") Topic t;
-    @Inject RouteBuilder routeBuilder;
+    @Inject
+    Connection conn;
+    @Inject
+    Session session;
+    @Inject
+    @JmsDestination(jndiName = "jms/T2")
+    Topic t;
+    @Inject
+    RouteBuilder routeBuilder;
     Logger log = Logger.getLogger(ObserverTest.class);
+
     @Test
     public void testObserve() throws JMSException {
         log.debug("Running ObserverTest");
@@ -74,11 +80,11 @@ public class ObserverTest {
             Thread.sleep(10 * 1000);
             assertTrue(sl.isObserved());
             String data = sl.getData();
-            assertEquals(data,EVENT_MSG);
+            assertEquals(data, EVENT_MSG);
             mc.close();
             //c.stop();
         } catch (InterruptedException ex) {
-            log.info("Error",ex);
+            log.info("Error", ex);
         }
 
     }

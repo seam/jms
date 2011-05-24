@@ -26,25 +26,24 @@ import javax.jms.Destination;
 
 /**
  * Configuration for the forwarding of events to JMS.
- * 
+ *
  * @author Jordan Ganoff
  */
 @Named
 @ApplicationScoped
-public interface JmsForwarding
-{
-   /**
-    * Destinations to forward events to.
-    */
-   public Set<? extends Destination> getDestinations();
+public interface JmsForwarding {
+    /**
+     * Destinations to forward events to.
+     */
+    public Set<? extends Destination> getDestinations();
 
-   /**
-    * Event type to observe and forward.
-    */
-   public Type getEventType();
-   
-   /**
-    * Set of qualifiers that must exist on each event of type {@link #getEventType()}.
-    */
-   public Set<Annotation> getQualifiers();
+    /**
+     * Event type to observe and forward.
+     */
+    public Type getEventType();
+
+    /**
+     * Set of qualifiers that must exist on each event of type {@link #getEventType()}.
+     */
+    public Set<Annotation> getQualifiers();
 }

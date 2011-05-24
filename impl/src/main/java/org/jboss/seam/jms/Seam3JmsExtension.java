@@ -53,11 +53,12 @@ import org.jboss.seam.solder.literal.NamedLiteral;
 
 /**
  * Seam 3 JMS Portable Extension
- * 
+ *
  * @author Jordan Ganoff
  * @author <a href="john.d.ament@gmail.com">John Ament</a>
  */
 public class Seam3JmsExtension implements Extension {
+
 
     private static final Logger log = Logger.getLogger(Seam3JmsExtension.class);
     private List<Route> ingressRoutes = new ArrayList<Route>();
@@ -81,7 +82,7 @@ public class Seam3JmsExtension implements Extension {
                 abd.addDefinitionError(ex);
                 break;
             }
-            for(AnnotatedMethod<?> am : at.getMethods()) {
+            for (AnnotatedMethod<?> am : at.getMethods()) {
                 Object result = null;
                 try {
                     result = am.getJavaMember().invoke(instance, routeManager);
@@ -119,7 +120,7 @@ public class Seam3JmsExtension implements Extension {
             }
             Class<?> intfClazz = m.getJavaMember().getDeclaringClass();
             String methodName = m.getJavaMember().getName();
-            String routeId = intfClazz.getCanonicalName()+"."+methodName;
+            String routeId = intfClazz.getCanonicalName() + "." + methodName;
             Routing routing = null;
             if (m.isAnnotationPresent(Routing.class)) {
                 routing = m.getAnnotation(Routing.class);
@@ -191,6 +192,7 @@ public class Seam3JmsExtension implements Extension {
 
     /**
      * Generates the observer method registry for all interfaces that have observer methods.
+     *
      * @param pat
      */
     public void registerObserverMethods(@Observes ProcessAnnotatedType<?> pat) {
@@ -206,7 +208,7 @@ public class Seam3JmsExtension implements Extension {
                     sams.add(m);
                 }
             }
-            if(!sams.isEmpty()){
+            if (!sams.isEmpty()) {
                 pat.veto();
                 this.eventRoutingRegistry.add(pat.getAnnotatedType());
             }
@@ -233,11 +235,11 @@ public class Seam3JmsExtension implements Extension {
     public List<Route> getIngressRoutes() {
         return this.ingressRoutes;
     }
-    
+
     public List<Route> getEgressRoutes() {
-    	return this.egressRoutes;
+        return this.egressRoutes;
     }
-    
+
     private static Set<Annotation> getQualifiersFrom(Set<Annotation> annotations) {
         Set<Annotation> q = new HashSet<Annotation>();
         log.debug("Annotations in getQualifiersFrom: " + annotations);

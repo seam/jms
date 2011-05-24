@@ -16,42 +16,38 @@
  */
 package org.jboss.seam.jms.test.bridge.route;
 
-import static org.jboss.seam.jms.bridge.RouteType.EGRESS;
-
 import java.util.Arrays;
 import java.util.Collection;
-import javax.annotation.Resource;
 
+import javax.annotation.Resource;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.jms.Queue;
-import org.jboss.seam.jms.annotations.EventRouting;
 
+import org.jboss.seam.jms.annotations.EventRouting;
 import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.bridge.RouteManager;
 
-public class RoutingConfig
-{
-   @Resource(mappedName="queue/DLQ") Queue q;
-   
-   private static final AnnotationLiteral<BridgedViaCollection> BRIDGED_VIA_COLLECTION = new AnnotationLiteral<BridgedViaCollection>()
-   {
-      private static final long serialVersionUID = 1L;
-   };
+import static org.jboss.seam.jms.bridge.RouteType.EGRESS;
 
-   private static final AnnotationLiteral<BridgedViaRoute> BRIDGED_VIA_ROUTE = new AnnotationLiteral<BridgedViaRoute>()
-   {
-      private static final long serialVersionUID = 1L;
-   };
+public class RoutingConfig {
+    @Resource(mappedName = "queue/DLQ")
+    Queue q;
 
-   @EventRouting
-   public Collection<Route> getRoutes(RouteManager routeManager)
-   {
-      return Arrays.asList(routeManager.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_COLLECTION).addDestinationJndiName("queue/DLQ"));
-   }
-   
-   @EventRouting
-   public Route getRoute(RouteManager routeManager)
-   {
-      return routeManager.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_ROUTE).addDestinationJndiName("queue/DLQ");
-   }
+    private static final AnnotationLiteral<BridgedViaCollection> BRIDGED_VIA_COLLECTION = new AnnotationLiteral<BridgedViaCollection>() {
+        private static final long serialVersionUID = 1L;
+    };
+
+    private static final AnnotationLiteral<BridgedViaRoute> BRIDGED_VIA_ROUTE = new AnnotationLiteral<BridgedViaRoute>() {
+        private static final long serialVersionUID = 1L;
+    };
+
+    @EventRouting
+    public Collection<Route> getRoutes(RouteManager routeManager) {
+        return Arrays.asList(routeManager.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_COLLECTION).addDestinationJndiName("queue/DLQ"));
+    }
+
+    @EventRouting
+    public Route getRoute(RouteManager routeManager) {
+        return routeManager.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_ROUTE).addDestinationJndiName("queue/DLQ");
+    }
 }
