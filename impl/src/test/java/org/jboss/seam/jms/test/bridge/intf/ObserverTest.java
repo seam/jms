@@ -31,6 +31,7 @@ import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.annotations.JmsDestination;
+import org.jboss.seam.jms.annotations.Outbound;
 import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.jms.bridge.RouteBuilder;
 import org.jboss.seam.jms.bridge.RouteType;
@@ -54,7 +55,7 @@ public class ObserverTest {
     }
     private static final String EVENT_MSG = "hello, world!";
 
-    @Inject @Routing(RouteType.EGRESS)
+    @Inject @Outbound
     Event<String> stringEvent;
     @Inject Connection conn;
     @Inject Session session;

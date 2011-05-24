@@ -32,6 +32,7 @@ import org.jboss.seam.solder.reflection.AnnotationInspector;
 public class DestinationProducer
 {
    @Inject BeanManager beanManager;
+   
    @Produces
    @JmsDestination
    public Topic getTopic(InjectionPoint ip, @Module Context c) throws NamingException

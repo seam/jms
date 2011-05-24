@@ -210,6 +210,25 @@ public class MessageManagerImpl implements MessageManager {
 		}
 	}
 	
+	@Override
+	public MessageConsumer createMessageConsumer(String destination, String selector, MessageListener... listeners) {
+		try {
+			MessageConsumer mc = this.session.createConsumer(lookupDestination(destination),selector);
+			if(mc != null && listeners != null) {
+				for(MessageListener listener : listeners)
+					try {
+						mc.setMessageListener(listener);
+					} catch (JMSException e) {
+						logger.warn("Unable to map listener "+listener+" to consumer "+mc,e);
+					}
+			}
+			return mc;
+		} catch (JMSException e) {
+			logger.warn("Unable to create message consumer",e);
+			return null;
+		}
+	}
+	
 	protected MessageConsumer createMessageConsumer(Destination destination) {
 		try {
 			return this.session.createConsumer(destination);
@@ -264,6 +283,14 @@ public class MessageManagerImpl implements MessageManager {
 		MessageConsumer mc = this.createMessageConsumer(destination, listeners);
 		return (TopicSubscriber)mc;
 	}
+	
+	@Override
+	public TopicSubscriber createTopicSubscriber(String destination,
+			String selector,
+			MessageListener... listeners) {
+		MessageConsumer mc = this.createMessageConsumer(destination, listeners);
+		return (TopicSubscriber)mc;
+	}
 
 	@Override
 	public QueueReceiver createQueueReceiver(String destination,
@@ -285,6 +312,11 @@ public class MessageManagerImpl implements MessageManager {
 				}
 		}
 		return mc;
+	}
+
+	@Override
+	public TopicBuilder createTopicBuilder() {
+		return new TopicBuilderImpl(this);
 	}
 	
 }

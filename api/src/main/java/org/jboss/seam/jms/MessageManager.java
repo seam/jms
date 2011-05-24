@@ -167,6 +167,8 @@ public interface MessageManager extends Serializable {
 	 */
 	public TopicPublisher createTopicPublisher(String destination);
 	
+	public TopicBuilder createTopicBuilder();
+	
 	/**
 	 * Creates a QueueSender for the given queue.
 	 * 
@@ -210,4 +212,10 @@ public interface MessageManager extends Serializable {
 	 * @return a new QueueReceiver that is ready to work.
 	 */
 	public QueueReceiver createQueueReceiver(String destination, MessageListener... listeners);
+
+	public MessageConsumer createMessageConsumer(String destination, String selector,
+			MessageListener... listeners);
+
+	public TopicSubscriber createTopicSubscriber(String destination, String selector,
+			MessageListener... listeners);
 }
