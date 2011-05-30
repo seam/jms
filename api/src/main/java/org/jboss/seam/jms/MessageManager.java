@@ -166,7 +166,17 @@ public interface MessageManager extends Serializable {
      */
     public TopicPublisher createTopicPublisher(String destination);
 
+    /**
+     * Creates a TopicBuilder, simple interface for working with Topics.
+     * @return a new TopicBuilder
+     */
 	public TopicBuilder createTopicBuilder();
+	
+	/**
+	 * Creates a QueueBuilder, simple interface for working with Queues
+	 * @return a new QueueBuilder
+	 */
+	public QueueBuilder createQueueBuilder();
 	
     /**
      * Creates a QueueSender for the given queue.

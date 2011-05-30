@@ -321,5 +321,10 @@ public class MessageManagerImpl implements MessageManager {
 	public TopicBuilder createTopicBuilder() {
 		return new TopicBuilderImpl(this);
     }
+	
+	@Override
+	public QueueBuilder createQueueBuilder() {
+		return new QueueBuilderImpl(this);
+	}
 
 }
