@@ -40,6 +40,8 @@ import javax.jms.Destination;
 
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.annotations.EventRouting;
+import org.jboss.seam.jms.annotations.Inbound;
+import org.jboss.seam.jms.annotations.Outbound;
 import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.jms.bridge.EgressRoutingObserver;
 import org.jboss.seam.jms.bridge.Route;
@@ -121,13 +123,18 @@ public class Seam3JmsExtension implements Extension {
             Class<?> intfClazz = m.getJavaMember().getDeclaringClass();
             String methodName = m.getJavaMember().getName();
             String routeId = intfClazz.getCanonicalName() + "." + methodName;
-            Routing routing = null;
-            if (m.isAnnotationPresent(Routing.class)) {
-                routing = m.getAnnotation(Routing.class);
+            RouteType routeType = null;
+            if(m.isAnnotationPresent(Inbound.class)) {
+            	routeType = RouteType.INGRESS;
+            } else if(m.isAnnotationPresent(Outbound.class)) {
+            	routeType = RouteType.EGRESS;
+            } else if (m.isAnnotationPresent(Routing.class)) {
+                Routing routing = m.getAnnotation(Routing.class);
+                routeType = routing.value();
             } else {
                 log.debug("Routing not found on method " + m.getJavaMember().getName());
+                routeType = RouteType.BOTH; 
             }
-            RouteType routeType = (routing == null) ? RouteType.BOTH : routing.value();
             Route route = new RouteImpl(routeType).id(routeId);
             boolean isResourced = m.isAnnotationPresent(Resource.class);
             if (isResourced) {

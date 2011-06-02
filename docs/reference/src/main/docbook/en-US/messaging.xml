@@ -24,6 +24,32 @@
 		The Seam JMS Messaging API is a higher level abstraction of the JMS API to provide a number of convenient methods for creating consumers, producers, etc.
 	</para>
 
+	<section id="messaging-builder-apis">
+		<title>QueueBuilder and TopicBuilder</title>
+		<para>
+			The <code>QueueBuilder</code> and <code>TopicBuilder</code> interfaces are meant to ease the integration of JMS while still sticking close to the base APIs.
+			Within the single class you can work with both listeners and send messages.  
+			References to these classes can be injected or retrieved from a MessageManager instance (seen below).
+		</para>
+		<para>
+			Some example usages.
+		</para>
+                <programlisting role="Java"><![CDATA[@RequestScoped
+		@Named
+                public class FormBean {
+		    private String formData;
+                    @Inject QueueBuilder queueBuilder;
+		    @Inject TopicBuilder topicBuilder;
+		    public void sendFormDataToQueue() {
+			queueBuilder.destination("jms/SomeQueue").send(formData);
+		    }
+		    public void sendFormDataToTopic() {
+			topicBuilder.destination("jms/SomeTopic").send(formData);
+		    }
+                }
+                ]]></programlisting>
+	</section>
+
 	<section id="messaging-api-jms-local">
 		<title>Message Manager</title>
 		<para>
@@ -54,6 +80,8 @@
 	public MessageConsumer createMessageConsumer(Destination destination, MessageListener... listeners);
 	public TopicSubscriber createTopicSubscriber(String destination, MessageListener... listeners);
 	public QueueReceiver createQueueReceiver(String destination, MessageListener... listeners);
+	public TopicBuilder createTopicBuilder();
+	public QueueBuilder createQueueBuilder();
 }]]></programlisting>
                 <para>
                     The interface above defines a full set of capabilities for creating

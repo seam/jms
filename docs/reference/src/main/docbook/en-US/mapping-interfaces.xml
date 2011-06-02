@@ -35,21 +35,21 @@
        </para>
        <programlisting role="Java"><![CDATA[
            public interface MappingInterface {
-               @Routing(RouteType.INGRESS)
+               @Inbound
                public void routeStringsFromTopic(@Observes String s, @JmsDestination(jndiName="jms/MyTopic") Topic t);
                
-               @Routing(RouteType.EGRESS)
+               @Outbound
                public void routeLongsToQueue(@Observes Long l, @JmsDestination(jndiName="jms/MyQueue") Queue q);
 
-               @Routing(RouteType.BOTH)
                public void bidirectionRouteDoublesToQueue(@Observes Double d, @JmsDestination(jndiName="jms/DblQueue") Queue q);
            }
        ]]></programlisting>
        <para>
            This interface defines three routes.  The first one being an ingress route - messages coming in to the topic jms/MyTopic
-           will be fired as events with the type String.  The second being an egress route - events fired of type Long will
-           be turned into ObjectMessages and using a MessageProducer sent to the queue jms/MyQueue.  The last is a bidirectional route,
-           it defines messages that get fired
+           will be fired as events with the type String.  We indicate this by using the @Inbound annotation or @Routing(RouteType.INGRESS).
+	   The second being an egress route - events fired of type Long will be turned into ObjectMessages and using a MessageProducer sent
+	   to the queue jms/MyQueue.  We indicate this by using the @Outbound annotation or @Routing(RouteType.EGRESS).  The last is a bidirectional route,
+           it defines messages that get fired in both directions.  You can leave the method unannotated or use the @Routing(RouteType.BOTH) annotation.
        </para>
        <para>
            The object being observed can have qualifiers.  These qualifiers will be carried over in the fired event and follow
@@ -66,7 +66,7 @@
            method.  Taking the third route as an example, here is how you would raise events to it
        </para>
        <programlisting role="Java"><![CDATA[
-            @Inject @Routing(RouteType.EGRESS) Event<Double> doubleEvent
+            @Inject @Outbound Event<Double> doubleEvent
             ...
             doubleEvent.fire(d);
        ]]></programlisting>
@@ -75,7 +75,7 @@
        </para>
        <programlisting role="Java"><![CDATA[
            public class MyEventObserverBean {
-            public void sendMessage(@Observes @Routing(RouteType.INGRESS) Double d) {
+            public void sendMessage(@Observes @Inbound Double d) {
                 System.out.println(d);
             }
            }

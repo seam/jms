@@ -68,10 +68,10 @@
 		<itemizedlist>
 			<title>Event Bridge</title>
 			<listitem>
-				Egress: Routes CDI events to JMS destinations
+				Inbound: Routes CDI events to JMS destinations
 			</listitem>
 			<listitem>
-				Ingress: Fires CDI events based on the reception of JMS messages
+				Outbound: Fires CDI events based on the reception of JMS messages
 			</listitem>
 		</itemizedlist>
 	</section>

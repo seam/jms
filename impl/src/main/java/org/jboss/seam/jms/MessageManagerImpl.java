@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
@@ -317,11 +318,13 @@ public class MessageManagerImpl implements MessageManager {
         return mc;
 	}
 
+    @Produces
 	@Override
 	public TopicBuilder createTopicBuilder() {
 		return new TopicBuilderImpl(this);
     }
 	
+	@Produces
 	@Override
 	public QueueBuilder createQueueBuilder() {
 		return new QueueBuilderImpl(this);
