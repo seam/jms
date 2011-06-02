@@ -30,6 +30,7 @@
    
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>org.jboss.seam</groupId>
                 <artifactId>seam-bom</artifactId>
@@ -37,7 +38,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
+            <!--dependency>
                 <groupId>org.jboss.spec</groupId>
                 <artifactId>jboss-javaee-6.0</artifactId>
                 <version>1.0.0.Final</version>
@@ -54,7 +55,7 @@
                 <groupId>org.jboss.seam.solder</groupId>
                 <artifactId>seam-solder</artifactId>
                 <version>3.0.0.Final</version>
-            </dependency>
+            </dependency-->
             <dependency>
                 <groupId>org.jboss.seam.jms</groupId>
                 <artifactId>seam-jms-api</artifactId>
@@ -76,12 +77,12 @@
                 <version>1.0.0.Final</version>
                 <scope>provided</scope>
             </dependency>
-            <dependency>
+            <!--dependency>
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging</artifactId>
                 <version>3.0.0.Beta4</version>
                 <scope>provided</scope>
-            </dependency>
+            </dependency-->
             <dependency>
                 <groupId>org.jboss.spec.javax.servlet</groupId>
                 <artifactId>jboss-servlet-api_3.0_spec</artifactId>
