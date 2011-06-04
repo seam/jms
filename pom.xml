@@ -30,7 +30,6 @@
    
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>org.jboss.seam</groupId>
                 <artifactId>seam-bom</artifactId>
@@ -38,24 +37,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!--dependency>
-                <groupId>org.jboss.spec</groupId>
-                <artifactId>jboss-javaee-6.0</artifactId>
-                <version>1.0.0.Final</version>
-                <type>pom</type>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-               <groupId>javax.enterprise</groupId>
-               <artifactId>cdi-api</artifactId>
-               <version>1.0-SP4</version>
-               <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.seam.solder</groupId>
-                <artifactId>seam-solder</artifactId>
-                <version>3.0.0.Final</version>
-            </dependency-->
             <dependency>
                 <groupId>org.jboss.seam.jms</groupId>
                 <artifactId>seam-jms-api</artifactId>
@@ -70,24 +51,6 @@
                 <groupId>org.jboss.seam.jms</groupId>
                 <artifactId>seam-jms</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.spec.javax.jms</groupId>
-                <artifactId>jboss-jms-api_1.1_spec</artifactId>
-                <version>1.0.0.Final</version>
-                <scope>provided</scope>
-            </dependency>
-            <!--dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging</artifactId>
-                <version>3.0.0.Beta4</version>
-                <scope>provided</scope>
-            </dependency-->
-            <dependency>
-                <groupId>org.jboss.spec.javax.servlet</groupId>
-                <artifactId>jboss-servlet-api_3.0_spec</artifactId>
-                <version>1.0.0.Final</version>
-                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
