@@ -93,5 +93,10 @@ public class TopicBuilderImpl implements TopicBuilder {
 	public TopicBuilder newBuilder() {
 		return new TopicBuilderImpl(this.messageManager);
 	}
-
+	public List<String> getDestinations() {
+		return this.destinations;
+	}
+	public String getSubtopic() {
+		return this.subtopic;
+	}
 }

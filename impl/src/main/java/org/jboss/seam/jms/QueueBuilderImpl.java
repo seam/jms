@@ -75,5 +75,7 @@ public class QueueBuilderImpl implements QueueBuilder {
 	public QueueBuilder newBuilder() {
 		return new QueueBuilderImpl(this.messageManager);
 	}
-
+	public List<String> getDestinations() {
+		return this.destinations;
+	}
 }
