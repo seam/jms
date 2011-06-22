@@ -12,11 +12,10 @@
 </h:head>
 <h:body>
     <h:form>
-
         <div class="watchmenu">
             <div class="watchtitle">StatusWatcher</div>
             <div class="menuitem">
-                <h:selectBooleanCheckbox id="changeFollowing" onchange="submit();"
+                <h:selectBooleanCheckbox id="changeFollowing" 
                                          value="#{receivingClient.followAll}"
                                          valueChangeListener="#{receivingClient.changeFollowing}"/>
                 Follow all

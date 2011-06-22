@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>seam-jms-impl</artifactId>
+    <artifactId>seam-jms</artifactId>
     <packaging>jar</packaging>
 
     <name>Seam JMS Implementation</name>

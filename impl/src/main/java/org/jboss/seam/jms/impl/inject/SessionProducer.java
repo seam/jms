@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.util.Iterator;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -56,29 +57,8 @@ public class SessionProducer {
         return c.createSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
-    public void closeSession(@Disposes Session s) throws JMSException {
+    public void closeSession(@Disposes @Any Session s) throws JMSException {
         s.close();
     }
 
-    @Produces
-    @JmsSessionSelector
-    public Session getSelectedSession(InjectionPoint ip, Connection c) throws JMSException {
-        JmsSessionSelector s = null;
-        Iterator<Annotation> qualifiers = ip.getQualifiers().iterator();
-        while (qualifiers.hasNext()) {
-            Annotation qualifier = qualifiers.next();
-            if (JmsSessionSelector.class.isAssignableFrom(qualifier.getClass())) {
-                s = (JmsSessionSelector) qualifier;
-                break;
-            }
-        }
-        if (s == null) {
-            throw new IllegalArgumentException("Injection point " + ip + " does not have @" + JmsSessionSelector.class.getSimpleName() + " qualifier");
-        }
-        return c.createSession(s.transacted(), s.acknowledgementMode());
-    }
-
-    public void closeSelectedSession(@Disposes @JmsSessionSelector Session s) throws JMSException {
-        s.close();
-    }
 }

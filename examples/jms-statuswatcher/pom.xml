@@ -17,7 +17,7 @@
    <properties>
       <jboss.home>${env.JBOSS_HOME}</jboss.home>
       <jboss.domain>default</jboss.domain>
-      <seam.jms.version>3.0.0.Beta1</seam.jms.version>
+      <seam.jms.version>3.0.0-SNAPSHOT</seam.jms.version>
       <jsf.version>2.0.2-FCS</jsf.version>
       <ajax4jsf.version>1.0.5</ajax4jsf.version>
    </properties>
@@ -26,13 +26,7 @@
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
-         <artifactId>seam-jms-api</artifactId>
-         <version>${seam.jms.version}</version>
-      </dependency>
-
-      <dependency>
-         <groupId>org.jboss.seam.jms</groupId>
-         <artifactId>seam-jms-impl</artifactId>
+         <artifactId>seam-jms</artifactId>
          <version>${seam.jms.version}</version>
       </dependency>
 

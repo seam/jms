@@ -25,7 +25,6 @@
     <modules>
         <module>api</module>
         <module>impl</module>
-        <module>combined</module>
     </modules>
    
     <dependencyManagement>
@@ -40,11 +39,6 @@
             <dependency>
                 <groupId>org.jboss.seam.jms</groupId>
                 <artifactId>seam-jms-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.seam.jms</groupId>
-                <artifactId>seam-jms-impl</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
