@@ -51,7 +51,7 @@
 
    <para>
       If you are using <ulink url="http://maven.apache.org/">Maven</ulink> as your build tool use the following 
-      dependency, which will bring in both API and Implementation for Seam JMS:
+      dependency:
    </para>
       
    <programlisting role="XML"><![CDATA[<dependency>
@@ -59,6 +59,24 @@
    <artifactId>seam-jms</artifactId>
    <version>${seam.jms.version}</version>
 </dependency>]]></programlisting>
+
+   <para>
+      Alternatively, you can use the API at compile time and only include the implementation at runtime. This protects you from inadvertantly depending on an implementation class.
+   </para>
+
+   <programlisting role="XML"><![CDATA[<dependency>
+   <groupId>org.jboss.seam.jms</groupId>
+   <artifactId>seam-jms-api</artifactId>
+   <version>${seam.jms.version}</version>
+   <scope>compile</scope>
+</dependency>
+<dependency>
+   <groupId>org.jboss.seam.jms</groupId>
+   <artifactId>seam-jms-impl</artifactId>
+   <version>${seam.jms.version}</version>
+   <scope>runtime</scope>
+</dependency>
+]]></programlisting>
 
    <tip>
       <para>
