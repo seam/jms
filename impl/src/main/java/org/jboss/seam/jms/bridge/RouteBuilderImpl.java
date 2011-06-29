@@ -44,11 +44,6 @@ public class RouteBuilderImpl implements RouteBuilder, java.io.Serializable {
     @Inject
     BeanManager beanManager;
 
-    public RouteBuilderImpl() {
-        Logger log = Logger.getLogger(RouteBuilderImpl.class);
-        log.debug("Creating a new RouteBuilder()");
-    }
-
     @Override
     public void handleStartup(@Observes ServletContext servletContext) {
         log.debug("Starting up Seam JMS via ServletContext callback.");
@@ -78,27 +73,4 @@ public class RouteBuilderImpl implements RouteBuilder, java.io.Serializable {
             this.messageBuilder.createMessageConsumer(d, listener);
         }
     }
-    /*
-     @Override
-     public void registerDurableIngressRoute(Route ingressRoute, String clientId) {
-         if(ingressRoute.getType() == RouteType.INGRESS) {
-             ingressRoute.build(beanManager);
-             ClassLoader prevCl = Thread.currentThread().getContextClassLoader();
-             log.debug("About to create listener for route " + ingressRoute);
-             log.debug("Routes: " + ingressRoute.getDestinations());
-             for (Destination d : ingressRoute.getDestinations()) {
-                     IngressMessageListener listener = new IngressMessageListener(
-                                     beanManager, prevCl, ingressRoute);
-                     this.messageBuilder.createDurableSubscriber(d, clientId, listener);
-             }
-         } else {
-             throw new IllegalArgumentException("Route "+ingressRoute+" is not valid, it must be an ingress route.");
-         }
-     }
-
-     @Override
-     public void unregisterRoute(String clientId) {
-         this.messageBuilder.unsubscribe(clientId);
-     }
-     */
 }
