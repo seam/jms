@@ -39,7 +39,7 @@ public class TopicBuilderImpl implements TopicBuilder {
 	}
 
 	@Override
-	public TopicBuilder send(Object obj) {
+	public TopicBuilder sendObject(Object obj) {
 		send(this.messageManager.createObjectMessage(obj));
 		return this;
 	}
@@ -65,13 +65,13 @@ public class TopicBuilderImpl implements TopicBuilder {
 	}
 
 	@Override
-	public TopicBuilder send(Map m) {
+	public TopicBuilder sendMap(Map m) {
 		send(this.messageManager.createMapMessage(m));
 		return this;
 	}
 
 	@Override
-	public TopicBuilder send(String s) {
+	public TopicBuilder sendString(String s) {
 		send(this.messageManager.createTextMessage(s));
 		return this;
 	}

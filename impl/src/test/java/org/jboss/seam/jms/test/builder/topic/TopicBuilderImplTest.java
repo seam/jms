@@ -96,21 +96,21 @@ public class TopicBuilderImplTest {
 	public void testSendMap() {
 		Map mapData = new HashMap<String,String>();
 		TopicTestListener ttl = new TopicTestListener();
-		topicBuilder.newBuilder().destination("jms/T").listen(ttl).send(mapData);
+		topicBuilder.newBuilder().destination("jms/T3").listen(ttl).sendMap(mapData);
 		testMessageSent(true,MapMessage.class,ttl);
 	}
 	@Test
 	public void testSendString() {
 		String data = "new data";
 		TopicTestListener ttl = new TopicTestListener();
-		topicBuilder.newBuilder().destination("jms/T").listen(ttl).send(data);
+		topicBuilder.newBuilder().destination("jms/T1").listen(ttl).sendString(data);
 		testMessageSent(true,TextMessage.class,ttl);
 	}
 	@Test
 	public void testSendObject() {
 		Object data = 33L;
 		TopicTestListener ttl = new TopicTestListener();
-		topicBuilder.newBuilder().destination("jms/T").listen(ttl).send(data);
+		topicBuilder.newBuilder().destination("jms/T2").listen(ttl).sendObject(data);
 		testMessageSent(true,ObjectMessage.class,ttl);
 	}
 }

@@ -70,7 +70,14 @@
 public @interface MyTopic {}</programlisting>
          </para>
          
+         <para>
+         You can then use it in place of the <literal>@JmsDestination</literal> qualifier anywhere it's required:
 
+         <programlisting role="Java">
+@Inject @MyTopic TopicPublisher myPub;
+...
+@Inject @MyTopic Topic myTopic;</programlisting>
+         </para>
       </section>
       
       <section id="injection.configuration">

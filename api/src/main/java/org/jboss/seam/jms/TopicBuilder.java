@@ -14,10 +14,10 @@ import javax.jms.MessageListener;
 public interface TopicBuilder {
 	public TopicBuilder destination(String destination);
 	public TopicBuilder subtopic(String subtopic);
-	public TopicBuilder send(Object obj);
+	public TopicBuilder sendObject(Object obj);
 	public TopicBuilder send(Message m);
-	public TopicBuilder send(Map m);
-	public TopicBuilder send(String s);
+	public TopicBuilder sendMap(Map m);
+	public TopicBuilder sendString(String s);
 	public TopicBuilder listen(MessageListener... ml);
 	public TopicBuilder newBuilder();
 }

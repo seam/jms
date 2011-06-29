@@ -84,19 +84,19 @@ public class QueueBuilderImplTest {
 	@Test
 	public void testSendMap() {
 		Map mapData = new HashMap<String,String>();
-		queueBuilder.newBuilder().destination("jms/Q").listen(ttl).send(mapData);
+		queueBuilder.newBuilder().destination("jms/QA").listen(ttl).sendMap(mapData);
 		testMessageSent(true,MapMessage.class,ttl);
 	}
 	@Test
 	public void testSendString() {
 		String data = "new data";
-		queueBuilder.newBuilder().destination("jms/Q").listen(ttl).send(data);
+		queueBuilder.newBuilder().destination("jms/QB").listen(ttl).sendString(data);
 		testMessageSent(true,TextMessage.class,ttl);
 	}
 	@Test
 	public void testSendObject() {
 		Object data = 33L;
-		queueBuilder.newBuilder().destination("jms/Q").listen(ttl).send(data);
+		queueBuilder.newBuilder().destination("jms/QC").listen(ttl).sendObject(data);
 		testMessageSent(true,ObjectMessage.class,ttl);
 	}
 }

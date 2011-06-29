@@ -33,7 +33,7 @@ public class QueueBuilderImpl implements QueueBuilder {
 	}
 
 	@Override
-	public QueueBuilder send(Object obj) {
+	public QueueBuilder sendObject(Object obj) {
 		send(this.messageManager.createObjectMessage(obj));
 		return this;
 	}
@@ -52,13 +52,13 @@ public class QueueBuilderImpl implements QueueBuilder {
 	}
 
 	@Override
-	public QueueBuilder send(Map m) {
+	public QueueBuilder sendMap(Map m) {
 		send(this.messageManager.createMapMessage(m));
 		return this;
 	}
 
 	@Override
-	public QueueBuilder send(String s) {
+	public QueueBuilder sendString(String s) {
 		send(this.messageManager.createTextMessage(s));
 		return this;
 	}

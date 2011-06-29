@@ -26,8 +26,7 @@ public class BidirectionalTest {
     @Deployment
     public static Archive<?> createDeployment() {
         return Util.createDeployment(ObserverInterface.class, ImmutableInjectionPoint.class,
-                DestinationProducer.class, MessagePubSubProducer.class,
-                RouteBuilderImpl.class, ConnectionProducer.class);
+                DestinationProducer.class, RouteBuilderImpl.class, ConnectionProducer.class);
     }
 
     @Inject

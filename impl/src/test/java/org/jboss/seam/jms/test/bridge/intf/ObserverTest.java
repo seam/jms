@@ -50,7 +50,7 @@ public class ObserverTest {
 
     @Deployment
     public static Archive<?> createDeployment() {
-        return Util.createDeployment(ObserverInterface.class, ImmutableInjectionPoint.class, MessagePubSubProducer.class);
+        return Util.createDeployment(ObserverInterface.class, ImmutableInjectionPoint.class);
     }
 
     private static final String EVENT_MSG = "hello, world!";

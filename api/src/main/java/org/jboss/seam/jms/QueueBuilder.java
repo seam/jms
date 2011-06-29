@@ -13,10 +13,10 @@ import javax.jms.MessageListener;
  */
 public interface QueueBuilder {
 	public QueueBuilder destination(String destination);
-	public QueueBuilder send(Object obj);
+	public QueueBuilder sendObject(Object obj);
 	public QueueBuilder send(Message m);
-	public QueueBuilder send(Map m);
-	public QueueBuilder send(String s);
+	public QueueBuilder sendMap(Map m);
+	public QueueBuilder sendString(String s);
 	public QueueBuilder listen(MessageListener... ml);
 	public QueueBuilder newBuilder();
 }
