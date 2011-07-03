@@ -45,8 +45,7 @@ public class QueueBuilderImplTest {
     }
 	
 	@Inject QueueBuilder queueBuilder;
-	private static QueueTestListener ttl = new QueueTestListener();
-	
+		
 	@Test
 	public void testNewBuilder() {
 		QueueBuilder tb = queueBuilder.newBuilder();
@@ -77,24 +76,29 @@ public class QueueBuilderImplTest {
 	
 	@Test
 	public void testListen() {
+		QueueTestListener ttl = new QueueTestListener();
 		queueBuilder.newBuilder().listen(ttl);
 		testMessageSent(false,null,ttl);
 	}
 	
 	@Test
 	public void testSendMap() {
+		QueueTestListener ttl = new QueueTestListener();
 		Map mapData = new HashMap<String,String>();
+		mapData.put("my key","my value");
 		queueBuilder.newBuilder().destination("jms/QA").listen(ttl).sendMap(mapData);
 		testMessageSent(true,MapMessage.class,ttl);
 	}
 	@Test
 	public void testSendString() {
+		QueueTestListener ttl = new QueueTestListener();
 		String data = "new data";
 		queueBuilder.newBuilder().destination("jms/QB").listen(ttl).sendString(data);
 		testMessageSent(true,TextMessage.class,ttl);
 	}
 	@Test
 	public void testSendObject() {
+		QueueTestListener ttl = new QueueTestListener();
 		Object data = 33L;
 		queueBuilder.newBuilder().destination("jms/QC").listen(ttl).sendObject(data);
 		testMessageSent(true,ObjectMessage.class,ttl);
