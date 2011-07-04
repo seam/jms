@@ -20,6 +20,7 @@ import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
 import javax.jms.JMSException;
@@ -32,8 +33,7 @@ import javax.jms.TopicPublisher;
 import javax.jms.TopicSubscriber;
 
 import org.jboss.seam.jms.annotations.JmsDestination;
-
-import static org.jboss.seam.jms.impl.inject.InjectionUtil.getExpectedQualifier;
+import org.jboss.seam.solder.reflection.AnnotationInspector;
 
 public class MessagePubSubProducer {
     @Inject
@@ -43,11 +43,14 @@ public class MessagePubSubProducer {
     @Inject
     @Any
     Instance<Queue> anyQueue;
+    
+    @Inject
+    BeanManager beanManager;
 
     @Produces
     @JmsDestination
     public TopicPublisher createTopicProducer(InjectionPoint ip, Session s) throws JMSException {
-        JmsDestination d = getExpectedQualifier(JmsDestination.class, ip.getQualifiers());
+        JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
         Topic t = anyTopic.select(d).get();
         return TopicPublisher.class.cast(s.createProducer(t));
     }
@@ -59,7 +62,7 @@ public class MessagePubSubProducer {
     @Produces
     @JmsDestination
     public TopicSubscriber createTopicSubscriber(InjectionPoint ip, Session s) throws JMSException {
-        JmsDestination d = getExpectedQualifier(JmsDestination.class, ip.getQualifiers());
+    	JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
         Topic t = anyTopic.select(d).get();
         return TopicSubscriber.class.cast(s.createConsumer(t));
     }
@@ -71,7 +74,7 @@ public class MessagePubSubProducer {
     @Produces
     @JmsDestination
     public QueueSender createQueueSender(InjectionPoint ip, Session s) throws JMSException {
-        JmsDestination d = getExpectedQualifier(JmsDestination.class, ip.getQualifiers());
+    	JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
         Queue q = anyQueue.select(d).get();
         return QueueSender.class.cast(s.createProducer(q));
     }
@@ -83,7 +86,7 @@ public class MessagePubSubProducer {
     @Produces
     @JmsDestination
     public QueueReceiver createQueueReceiver(InjectionPoint ip, Session s) throws JMSException {
-        JmsDestination d = getExpectedQualifier(JmsDestination.class, ip.getQualifiers());
+    	JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
         Queue q = anyQueue.select(d).get();
         return QueueReceiver.class.cast(s.createConsumer(q));
     }

@@ -49,7 +49,6 @@ import org.jboss.seam.jms.bridge.RouteImpl;
 import org.jboss.seam.jms.bridge.RouteManager;
 import org.jboss.seam.jms.bridge.RouteManagerImpl;
 import org.jboss.seam.jms.bridge.RouteType;
-import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 import org.jboss.seam.solder.core.VersionLoggerUtil;
 import org.jboss.seam.solder.literal.NamedLiteral;
 

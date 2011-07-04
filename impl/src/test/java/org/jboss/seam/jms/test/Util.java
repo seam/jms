@@ -22,7 +22,6 @@ import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.jms.annotations.JmsSession;
 import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.impl.inject.ConnectionProducer;
-import org.jboss.seam.jms.impl.wrapper.JmsAnnotatedTypeWrapper;
 import org.jboss.seam.jms.test.bridge.IngressInterfaceProducer;
 import org.jboss.seam.solder.core.VersionLoggerUtil;
 import org.jboss.seam.solder.reflection.AnnotationInspector;
@@ -41,7 +40,6 @@ public class Util {
         ejbModule.addPackage(Seam3JmsExtension.class.getPackage());
         ejbModule.addPackage(JmsSession.class.getPackage());
         ejbModule.addPackage(ConnectionProducer.class.getPackage());
-        ejbModule.addPackage(JmsAnnotatedTypeWrapper.class.getPackage());
         ejbModule.addPackage(Route.class.getPackage());
         ejbModule.addClasses(IngressInterfaceProducer.class,VersionLoggerUtil.class, AnnotationInspector.class);
         ejbModule.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");

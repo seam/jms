@@ -29,8 +29,6 @@ import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Module;
 import org.jboss.seam.solder.reflection.AnnotationInspector;
 
-import static org.jboss.seam.jms.impl.inject.InjectionUtil.getExpectedQualifier;
-
 public class DestinationProducer
 {
    @Inject BeanManager beanManager;
