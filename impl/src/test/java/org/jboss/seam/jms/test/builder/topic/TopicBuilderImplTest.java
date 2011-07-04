@@ -93,27 +93,27 @@ public class TopicBuilderImplTest {
 	}
 	
 	@Test
-	public void testSendMap() throws Exception {
+	public void testSendMap() {
 		Map mapData = new HashMap<String,String>();
 		TopicTestListener ttl = new TopicTestListener();
 		topicBuilder.newBuilder().destination("jms/T3").listen(ttl).sendMap(mapData);
-		Thread.sleep(5000);
+		Util.pause(5000);
 		testMessageSent(true,MapMessage.class,ttl);
 	}
 	@Test
-	public void testSendString() throws Exception {
+	public void testSendString() {
 		String data = "new data";
 		TopicTestListener ttl = new TopicTestListener();
 		topicBuilder.newBuilder().destination("jms/T1").listen(ttl).sendString(data);
-		Thread.sleep(5000);
+		Util.pause(5000);
 		testMessageSent(true,TextMessage.class,ttl);
 	}
 	@Test
-	public void testSendObject() throws Exception {
+	public void testSendObject() {
 		Object data = 33L;
 		TopicTestListener ttl = new TopicTestListener();
 		topicBuilder.newBuilder().destination("jms/T2").listen(ttl).sendObject(data);
-		Thread.sleep(5000);
+		Util.pause(5000);
 		testMessageSent(true,ObjectMessage.class,ttl);
 	}
 }

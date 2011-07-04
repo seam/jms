@@ -87,6 +87,7 @@ public class QueueBuilderImplTest {
 		Map mapData = new HashMap<String,String>();
 		mapData.put("my key","my value");
 		queueBuilder.newBuilder().destination("jms/QA").listen(ttl).sendMap(mapData);
+		Util.pause(5000);
 		testMessageSent(true,MapMessage.class,ttl);
 	}
 	@Test

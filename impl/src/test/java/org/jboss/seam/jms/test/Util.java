@@ -43,7 +43,7 @@ public class Util {
         ejbModule.addPackage(ConnectionProducer.class.getPackage());
         ejbModule.addPackage(JmsAnnotatedTypeWrapper.class.getPackage());
         ejbModule.addPackage(Route.class.getPackage());
-      ejbModule.addClasses(IngressInterfaceProducer.class,VersionLoggerUtil.class, AnnotationInspector.class);
+        ejbModule.addClasses(IngressInterfaceProducer.class,VersionLoggerUtil.class, AnnotationInspector.class);
         ejbModule.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         ejbModule.addAsServiceProvider(Extension.class, Seam3JmsExtension.class);
         for (Class<?> c : classes) {
@@ -54,5 +54,11 @@ public class Util {
         war.addAsWebInfResource(HORNETQ_JMS_DEPLOYMENT_CONFIG, HORNETQ_JMS_DEPLOYMENT_CONFIG);
         // TODO Add this conditionally based on test profile to support other containers
         return war;
+    }
+    
+    public static void pause(long time) {
+    	try{
+			Thread.sleep(time);
+		} catch (Exception e) { }
     }
 }
