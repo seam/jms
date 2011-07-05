@@ -34,7 +34,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 public class Util {
     public static final String HORNETQ_JMS_DEPLOYMENT_CONFIG = "hornetq-jms.xml";
 
-    public static Archive<?> createDeployment(Class<?>... classes) {
+    public static WebArchive createDeployment(Class<?>... classes) {
         JavaArchive ejbModule = ShrinkWrap.create(JavaArchive.class, "test.jar");
         ejbModule.addPackage(Util.class.getPackage());
         ejbModule.addPackage(Seam3JmsExtension.class.getPackage());

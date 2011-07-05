@@ -21,12 +21,18 @@ import javax.inject.Inject;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.QueueReceiver;
+import javax.jms.TopicSubscriber;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.annotations.Closeable;
+import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Module;
 import org.jboss.seam.jms.impl.inject.ConnectionProducer;
+import org.jboss.seam.jms.impl.inject.DestinationProducer;
+import org.jboss.seam.jms.impl.inject.MessagePubSubProducer;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.seam.jms.tools.JMSResourceManager;
 import org.jboss.shrinkwrap.api.Archive;
@@ -41,12 +47,31 @@ public class JMSResourceManagerTest {
 
     @Deployment
     public static Archive<?> createDeployment() {
-        return Util.createDeployment(Closeable.class, JMSResourceManager.class, ConnectionProducer.class, JMSResourceManagerTest.class);
+        return Util.createDeployment(Closeable.class, 
+        		JMSResourceManager.class, 
+        		ConnectionProducer.class, 
+        		JMSResourceManagerTest.class,
+        		DestinationProducer.class, 
+        		MessagePubSubProducer.class);
     }
+    
+    @Inject @JmsDestination(jndiName="jms/QA") MessageConsumer qr;
+    @Inject @JmsDestination(jndiName="jms/QB") MessageConsumer mc;
+    @Inject @JmsDestination(jndiName="jms/T5") MessageConsumer ts;
 
     @Inject
     @Closeable
     Event<Connection> connectionHandler;
+    
+    @Inject @Closeable
+    Event<TopicSubscriber> topicSubscriberHandler;
+    
+    @Inject @Closeable
+    Event<MessageConsumer> messageConsumerHandler;
+    
+    @Inject @Closeable
+    Event<QueueReceiver> queueReceiverHandler;
+    
     @Inject
     @Module
     ConnectionFactory connectionFactory;
@@ -55,5 +80,20 @@ public class JMSResourceManagerTest {
     public void testClosingConnection() throws JMSException {
         Connection conn = connectionFactory.createConnection();
         connectionHandler.fire(conn);
+    }
+    
+    @Test
+    public void testClosingTS() throws JMSException {
+    	topicSubscriberHandler.fire((TopicSubscriber)ts);
+    }
+    
+    @Test
+    public void testClosingQR() throws JMSException {
+    	this.queueReceiverHandler.fire((QueueReceiver)qr);
+    }
+    
+    @Test
+    public void testClosingMC() throws JMSException {
+    	this.messageConsumerHandler.fire(mc);
     }
 }

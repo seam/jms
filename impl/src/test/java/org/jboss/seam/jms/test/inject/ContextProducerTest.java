@@ -28,5 +28,6 @@ public class ContextProducerTest {
 	@Test
 	public void testInjectionResolved() {
 		Assert.assertFalse(contextInstance.isUnsatisfied());
+		Assert.assertNotNull(contextInstance.get());
 	}
 }

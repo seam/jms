@@ -95,6 +95,7 @@ public class QueueBuilderImplTest {
 		QueueTestListener ttl = new QueueTestListener();
 		String data = "new data";
 		queueBuilder.newBuilder().destination("jms/QB").listen(ttl).sendString(data);
+		Util.pause(5000);
 		testMessageSent(true,TextMessage.class,ttl);
 	}
 	@Test
@@ -102,6 +103,7 @@ public class QueueBuilderImplTest {
 		QueueTestListener ttl = new QueueTestListener();
 		Object data = 33L;
 		queueBuilder.newBuilder().destination("jms/QC").listen(ttl).sendObject(data);
+		Util.pause(5000);
 		testMessageSent(true,ObjectMessage.class,ttl);
 	}
 }

@@ -20,6 +20,7 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
+import javax.jms.Destination;
 import javax.jms.Queue;
 import javax.jms.Topic;
 import javax.naming.Context;
@@ -37,13 +38,23 @@ public class DestinationProducer
     @JmsDestination
     public Topic getTopic(InjectionPoint ip, @Module Context c) throws NamingException {
 	  JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-        return (Topic) c.lookup(d.jndiName());
+      return resolveTopic(d.jndiName(),c);
     }
 
     @Produces
     @JmsDestination
     public Queue getQueue(InjectionPoint ip, @Module Context c) throws NamingException {
 	  JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-        return (Queue) c.lookup(d.jndiName());
+	  return resolveQueue(d.jndiName(),c);
+    }
+    
+    public static Topic resolveTopic(String jndiName, Context c) throws NamingException {
+    	return (Topic)  resolveDestination(jndiName,c);
+    }
+    public static Queue resolveQueue(String jndiName, Context c) throws NamingException {
+    	return (Queue) resolveDestination(jndiName,c);
+    }
+    public static Destination resolveDestination(String jndiName, Context c) throws NamingException {
+    	return (Destination) c.lookup(jndiName);
     }
 }

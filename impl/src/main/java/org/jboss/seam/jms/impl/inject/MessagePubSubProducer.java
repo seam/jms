@@ -23,7 +23,10 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.inject.Inject;
+import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.QueueReceiver;
 import javax.jms.QueueSender;
@@ -31,8 +34,11 @@ import javax.jms.Session;
 import javax.jms.Topic;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSubscriber;
+import javax.naming.Context;
+import javax.naming.NamingException;
 
 import org.jboss.seam.jms.annotations.JmsDestination;
+import org.jboss.seam.jms.annotations.Module;
 import org.jboss.seam.solder.reflection.AnnotationInspector;
 
 public class MessagePubSubProducer {
@@ -46,52 +52,33 @@ public class MessagePubSubProducer {
     
     @Inject
     BeanManager beanManager;
+    
+    @Inject
+    @Module
+    Context c;
 
     @Produces
     @JmsDestination
-    public TopicPublisher createTopicProducer(InjectionPoint ip, Session s) throws JMSException {
-        JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-        Topic t = anyTopic.select(d).get();
-        return TopicPublisher.class.cast(s.createProducer(t));
-    }
-
-    public void disposeTopicProducer(@Disposes @Any TopicPublisher tp) throws JMSException {
-        tp.close();
-    }
-
-    @Produces
-    @JmsDestination
-    public TopicSubscriber createTopicSubscriber(InjectionPoint ip, Session s) throws JMSException {
+    public MessageConsumer createMessageConsumer(InjectionPoint ip, Session s) throws JMSException, NamingException {
     	JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-        Topic t = anyTopic.select(d).get();
-        return TopicSubscriber.class.cast(s.createConsumer(t));
+    	Destination dest = DestinationProducer.resolveDestination(d.jndiName(), c);
+        return s.createConsumer(dest);
     }
-
-    public void disposesTopicSubscriber(@Disposes @Any TopicSubscriber ts) throws JMSException {
-        ts.close();
+    
+    public void disposesMessageConsumer(@Disposes @Any MessageConsumer mc) throws JMSException {
+        mc.close();
     }
-
+    
     @Produces
     @JmsDestination
-    public QueueSender createQueueSender(InjectionPoint ip, Session s) throws JMSException {
+    public MessageProducer createMessageProducer(InjectionPoint ip, Session s) throws JMSException, NamingException {
     	JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-        Queue q = anyQueue.select(d).get();
-        return QueueSender.class.cast(s.createProducer(q));
+    	Destination dest = DestinationProducer.resolveDestination(d.jndiName(), c);
+        return s.createProducer(dest);
+    }
+    
+    public void disposesMessageProducer(@Disposes @Any MessageProducer mp) throws JMSException {
+        mp.close();
     }
 
-    public void disposesQueueSender(@Disposes @Any QueueSender qs) throws JMSException {
-        qs.close();
-    }
-
-    @Produces
-    @JmsDestination
-    public QueueReceiver createQueueReceiver(InjectionPoint ip, Session s) throws JMSException {
-    	JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-        Queue q = anyQueue.select(d).get();
-        return QueueReceiver.class.cast(s.createConsumer(q));
-    }
-
-    public void disposesQueueReceiver(@Disposes @Any QueueReceiver qr) throws JMSException {
-        qr.close();
-    }
 }
