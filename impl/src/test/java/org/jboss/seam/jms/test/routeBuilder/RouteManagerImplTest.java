@@ -16,32 +16,33 @@
  */
 package org.jboss.seam.jms.test.routeBuilder;
 
-import javax.inject.Inject;
-import javax.jms.JMSException;
-
 import junit.framework.Assert;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.jms.bridge.RouteBuilder;
-import org.jboss.seam.jms.bridge.RouteBuilderImpl;
+import org.jboss.seam.jms.bridge.Route;
+import org.jboss.seam.jms.bridge.RouteManager;
+import org.jboss.seam.jms.bridge.RouteManagerImpl;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class RouteBuilderImplTest {
+public class RouteManagerImplTest {
 	@Deployment
     public static Archive<?> createDeployment() {
-        return Util.createDeployment(RouteBuilderImpl.class);
+        return Util.createDeployment(RouteManagerImplTest.class);
     }
 	
-	@Inject RouteBuilder routeBuilder;
-	
 	@Test
-	public void testInit() throws JMSException {
-		routeBuilder.init();
-		Assert.assertTrue(true);
+	public void testRouteManagerResults() {
+		RouteManagerImpl rm = new RouteManagerImpl();
+		Route r1 = rm.createInboundRoute(Object.class);
+		Assert.assertFalse(r1.isEgressEnabled());
+		Assert.assertTrue(r1.isIngressEnabled());
+		Route r2 = rm.createOutboundRoute(Long.class);
+		Assert.assertTrue(r2.isEgressEnabled());
+		Assert.assertFalse(r2.isIngressEnabled());
 	}
 }

@@ -131,7 +131,7 @@ public class MessageManagerImpl implements MessageManager {
         this.sendMessage(this.createBytesMessage(bytes), destinations);
     }
 
-    protected Destination lookupDestination(String jndiName) {
+    public Destination lookupDestination(String jndiName) {
         try {
             Context c = new InitialContext();
             return (Destination) c.lookup(jndiName);
@@ -328,6 +328,11 @@ public class MessageManagerImpl implements MessageManager {
 	@Override
 	public QueueBuilder createQueueBuilder() {
 		return new QueueBuilderImpl(this);
+	}
+
+	@Override
+	public JmsMessage createJmsMessage(Class<?> payloadType, Object payload) {
+		return new JmsMessageImpl(payloadType,payload,this);
 	}
 
 }
