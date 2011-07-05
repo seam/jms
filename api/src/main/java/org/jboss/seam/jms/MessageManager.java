@@ -227,4 +227,8 @@ public interface MessageManager extends Serializable {
 
 	public TopicSubscriber createTopicSubscriber(String destination, String selector,
 			MessageListener... listeners);
+	
+	public Destination lookupDestination(String jndiName);
+	
+	public JmsMessage createJmsMessage(Class<?> payloadType, Object payload);
 }
