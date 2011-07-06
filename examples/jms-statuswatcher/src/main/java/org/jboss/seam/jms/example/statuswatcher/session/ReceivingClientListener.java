@@ -25,12 +25,10 @@ public class ReceivingClientListener implements javax.jms.MessageListener {
     public void onMessage(Message message) {
         try{
         	if (message instanceof ObjectMessage) {
-        
 	            ObjectMessage om = (ObjectMessage) message;
 	            Object obj = om.getObject();
-	            if (obj instanceof Status) {
-	                client.notify((Status) obj);
-	            }
+	            Integer id = (Integer)obj;
+	            client.notify(id);
 	        } else {
 	        	logger.infof("Received an invalid message %s", message);
 	        }

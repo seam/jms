@@ -1,5 +1,6 @@
 package org.jboss.seam.jms;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.jms.Message;
@@ -11,7 +12,7 @@ import javax.jms.MessageListener;
  * @author johnament
  *
  */
-public interface QueueBuilder {
+public interface QueueBuilder extends Serializable {
 	public QueueBuilder destination(String destination);
 	public QueueBuilder sendObject(Object obj);
 	public QueueBuilder send(Message m);

@@ -1,5 +1,6 @@
 package org.jboss.seam.jms;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.jms.Message;
@@ -11,7 +12,7 @@ import javax.jms.MessageListener;
  * @author johnament
  *
  */
-public interface TopicBuilder {
+public interface TopicBuilder extends Serializable {
 	public TopicBuilder destination(String destination);
 	public TopicBuilder subtopic(String subtopic);
 	public TopicBuilder sendObject(Object obj);

@@ -21,8 +21,7 @@ public class StatusManagerImpl implements StatusManager {
         if (status.getDatetime() == null) {
             status.setDatetime(new Date());
         }
-        em.merge(status);
-        return status;
+        return em.merge(status);
     }
 
     public List<Status> getAllStatuses() {
@@ -32,4 +31,9 @@ public class StatusManagerImpl implements StatusManager {
         List<Status> stats = q.getResultList();
         return stats;
     }
+
+	@Override
+	public Status find(int id) {
+		return em.find(Status.class, id);
+	}
 }

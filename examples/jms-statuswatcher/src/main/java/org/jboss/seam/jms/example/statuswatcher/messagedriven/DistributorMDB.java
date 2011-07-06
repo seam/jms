@@ -2,6 +2,7 @@ package org.jboss.seam.jms.example.statuswatcher.messagedriven;
 
 import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.inject.Inject;
 import javax.jms.Connection;
@@ -26,7 +27,7 @@ public class DistributorMDB implements MessageListener {
     @Inject
     private Logger log;
 
-    @Inject
+    @EJB
     private StatusManager manager;
 
     @Resource(mappedName = "/ConnectionFactory")
@@ -41,11 +42,11 @@ public class DistributorMDB implements MessageListener {
         try {
             ObjectMessage om = (ObjectMessage) message;
             Status status = (Status) om.getObject();
-            status = manager.addStatusMessage(status);
+            Status result = manager.addStatusMessage(status);
             connection = connectionFactory.createConnection();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             TopicPublisher publisher = ((TopicSession) session).createPublisher(statusTopic);
-            ObjectMessage update = session.createObjectMessage(status);
+            ObjectMessage update = session.createObjectMessage(result.getId());
             publisher.send(update);
         } catch (JMSException e) {
             log.error(e.getMessage());

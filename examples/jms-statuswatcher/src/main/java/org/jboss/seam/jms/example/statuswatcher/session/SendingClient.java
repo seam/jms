@@ -23,8 +23,9 @@ public class SendingClient {
         this.status = new Status();
     }
 
-    public void sendStatusUpdate() throws Exception {
+    public String sendStatusUpdate() throws Exception {
         statusEvent.fire(status);
+        return "/watchstatus.xhtml";
     }
 
     public Status getStatus() {

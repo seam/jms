@@ -16,12 +16,13 @@
  */
 package org.jboss.seam.jms;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import javax.jms.Destination;
 
-public interface JmsMessage {
+public interface JmsMessage extends Serializable {
 	public JmsMessage destination(Destination destination);
 	public JmsMessage destination(String destination);
 	public JmsMessage headers(Map<String,Object> headers);

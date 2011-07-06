@@ -1,10 +1,12 @@
 package org.jboss.seam.jms.example.statuswatcher.session;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
@@ -26,23 +28,33 @@ public class ReceivingClient implements Serializable {
     @Inject
     private StatusManager manager;
     private LinkedList<Status> receivedStatuses;
+    private List<Integer> pendingStatuses;
 
     private boolean followAll = false;
 
     @Inject TopicBuilder topicBuilder;
+    @EJB StatusManager statusManager;
 
     @PostConstruct
     public void initialize() {
-    	log.info("Creating new ReceivingClient.");
+    	log.debug("Creating new ReceivingClient.");
+    	this.pendingStatuses = new ArrayList<Integer>();
         this.receivedStatuses = new LinkedList<Status>();
+        topicBuilder.destination("jms/statusInfoTopic").listen(new ReceivingClientListener(this));
     }
-
-    public void changeFollowing(ValueChangeEvent e) throws Exception {
-        if (followAll) {
-        	topicBuilder.destination("jms/statusInfoTopic").listen(new ReceivingClientListener(this));
-        } else {
-
-        }
+    
+    public String receive() {
+    	for(Integer statusId: this.pendingStatuses) {
+    		Status status = statusManager.find(statusId);
+            log.debug("Received status update");
+            receivedStatuses.offerFirst(status);
+    	}
+    	this.pendingStatuses.clear();
+    	return "/watchstatus.xhtml";
+    }
+    
+    public String send() {
+    	return "/sendstatus.xhtml";
     }
 
     public void history() {
@@ -65,9 +77,8 @@ public class ReceivingClient implements Serializable {
         this.followAll = followAll;
     }
 
-    public void notify(Status status) {
-        log.info("Received status update");
-        receivedStatuses.offerFirst(status);
+    public void notify(Integer statusId) {
+    	this.pendingStatuses.add(statusId);
     }
 
 }

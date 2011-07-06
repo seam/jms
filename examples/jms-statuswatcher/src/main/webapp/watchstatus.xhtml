@@ -2,9 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:s="http://jboss.com/products/seam/taglib">
-
+      xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
     <title>Messaging example</title>
     <link rel="stylesheet" href="style/style.css" type="text/css" media="screen"/>
@@ -14,30 +12,26 @@
     <h:form>
         <div class="watchmenu">
             <div class="watchtitle">StatusWatcher</div>
-            <div class="menuitem">
-                <h:selectBooleanCheckbox id="changeFollowing" 
-                                         value="#{receivingClient.followAll}"
-                                         valueChangeListener="#{receivingClient.changeFollowing}"/>
-                Follow all
-            </div>
             <div class="divider"></div>
             <div class="menuitem">
                 <h:commandLink id="receive" value="Receive" action="#{receivingClient.receive}"/>
             </div>
-            <div class="divider"></div>
+            <div class="menuitem">
+            	<h:commandLink id="send" value="Send" action="#{receivingClient.send}"/>
+            </div>
             <div class="menuitem">
                 <h:commandLink id="history" value="History" action="#{receivingClient.history}"/>
             </div>
         </div>
 
         <div class="watchcontent">
+        	<h:outputText value="Looking for messages? Hit Receive." rendered="#{empty receivingClient.receivedStatuses}"/>
             <h:dataTable id="receivedStatuses" value="#{receivingClient.receivedStatuses}" var="status">
                 <h:column>
                     <span class="username"><h:outputText value="#{status.username}"/></span>
                     <span class="statuslabel"> changed his/her status </span>
                     <span class="date"><h:outputText value=" #{status.friendlyDate}"/></span>
                     <span class="statuslabel"> to ...</span>
-
                     <div class="statusupdate">
                         <h:outputText value="#{status.statusMessage}"></h:outputText>
                     </div>

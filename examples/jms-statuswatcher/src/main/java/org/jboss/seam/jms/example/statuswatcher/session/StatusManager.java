@@ -11,4 +11,6 @@ public interface StatusManager {
     public Status addStatusMessage(Status status);
 
     public List<Status> getAllStatuses();
+    
+    public Status find(int id);
 }
