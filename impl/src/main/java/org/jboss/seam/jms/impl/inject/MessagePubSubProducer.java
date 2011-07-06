@@ -38,7 +38,6 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 
 import org.jboss.seam.jms.annotations.JmsDestination;
-import org.jboss.seam.jms.annotations.Module;
 import org.jboss.seam.solder.reflection.AnnotationInspector;
 
 public class MessagePubSubProducer {
@@ -54,7 +53,6 @@ public class MessagePubSubProducer {
     BeanManager beanManager;
     
     @Inject
-    @Module
     Context c;
 
     @Produces

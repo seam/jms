@@ -61,7 +61,8 @@ public class RouteTest {
     Event<String> plainEvent;
 
     private void clear(QueueReceiver qr) throws JMSException {
-        while (qr.receiveNoWait() != null) ;
+        if(qr != null)
+        	while (qr.receiveNoWait() != null) ;
     }
 
 

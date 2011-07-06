@@ -6,7 +6,6 @@ import javax.naming.Context;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.jms.annotations.Module;
 import org.jboss.seam.jms.impl.inject.ContextProducer;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.Archive;
@@ -22,7 +21,7 @@ public class ContextProducerTest {
         return Util.createDeployment(ContextProducerTest.class,ContextProducer.class);
     }
 	
-	@Inject @Module
+	@Inject
 	Instance<Context> contextInstance;
 	
 	@Test

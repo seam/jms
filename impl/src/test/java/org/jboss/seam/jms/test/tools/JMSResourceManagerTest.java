@@ -28,9 +28,8 @@ import javax.jms.TopicSubscriber;
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.annotations.Closeable;
+import org.jboss.seam.jms.annotations.JmsDefault;
 import org.jboss.seam.jms.annotations.JmsDestination;
-import org.jboss.seam.jms.annotations.Module;
-import org.jboss.seam.jms.impl.inject.ConnectionProducer;
 import org.jboss.seam.jms.impl.inject.DestinationProducer;
 import org.jboss.seam.jms.impl.inject.MessagePubSubProducer;
 import org.jboss.seam.jms.test.Util;
@@ -49,7 +48,6 @@ public class JMSResourceManagerTest {
     public static Archive<?> createDeployment() {
         return Util.createDeployment(Closeable.class, 
         		JMSResourceManager.class, 
-        		ConnectionProducer.class, 
         		JMSResourceManagerTest.class,
         		DestinationProducer.class, 
         		MessagePubSubProducer.class);
@@ -73,7 +71,7 @@ public class JMSResourceManagerTest {
     Event<QueueReceiver> queueReceiverHandler;
     
     @Inject
-    @Module
+    @JmsDefault("connectionFactory")
     ConnectionFactory connectionFactory;
 
     @Test

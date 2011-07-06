@@ -31,6 +31,6 @@ import javax.inject.Qualifier;
 @Documented
 @Target( { FIELD, METHOD, TYPE, PARAMETER })
 @Retention(RUNTIME)
-public @interface Inbound {
-
+public @interface JmsDefault {
+	public String value();
 }

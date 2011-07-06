@@ -4,13 +4,10 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.jms.BytesMessage;
-import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
@@ -31,16 +28,16 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.jboss.logging.Logger;
+import org.jboss.seam.jms.annotations.JmsDefault;
 
 @Dependent
 public class MessageManagerImpl implements MessageManager {
 
-    @Inject
-    Connection connection;
-    protected Session session;
+    @Inject @JmsDefault("session")
+    Session session;
 
     private Logger logger = Logger.getLogger(MessageManagerImpl.class);
-
+/*
     @PostConstruct
     public void init() {
         try {
@@ -57,7 +54,7 @@ public class MessageManagerImpl implements MessageManager {
         } catch (JMSException e) {
         }
     }
-
+*/
     @Override
     public ObjectMessage createObjectMessage(Object object) {
         if (!(object instanceof Serializable)) {

@@ -14,23 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.seam.jms.annotations;
+package org.jboss.seam.jms.inject;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.jms.Connection;
+import javax.jms.JMSException;
+import javax.jms.Session;
 
-import javax.inject.Qualifier;
+import org.jboss.seam.jms.annotations.JmsDefault;
 
-@Qualifier
-@Documented
-@Target( { FIELD, METHOD, TYPE, PARAMETER })
-@Retention(RUNTIME)
-public @interface Inbound {
-
+public class JmsSessionProducer {
+	@Inject Connection connection;
+	
+	@Produces @Dependent @JmsDefault("session")
+	public Session produceSession() throws JMSException {
+		return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+	}
 }

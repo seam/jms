@@ -14,7 +14,7 @@ import javax.jms.TopicSubscriber;
 
 import org.jboss.logging.Logger;
 import org.jboss.seam.jms.annotations.Durable;
-import org.jboss.seam.jms.annotations.Module;
+import org.jboss.seam.jms.annotations.JmsDefault;
 
 @Dependent
 @Durable
@@ -23,12 +23,12 @@ public class DurableMessageManagerImpl
         implements DurableMessageManager {
 
     private Logger logger = Logger.getLogger(DurableMessageManagerImpl.class);
-    @Inject
-    @Module
+    @Inject @JmsDefault("connectionFactory")
     ConnectionFactory connectionFactory;
+    
     private Connection connection;
 
-    @Override
+    //@Override
     @PostConstruct
     public void init() {
         try {

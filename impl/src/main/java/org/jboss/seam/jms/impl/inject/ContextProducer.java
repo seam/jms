@@ -22,16 +22,13 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.seam.jms.annotations.Module;
-
 public class ContextProducer {
     @Produces
-    @Module
     public Context getContext() throws NamingException {
         return new InitialContext();
     }
 
-    public void disposeContext(@Disposes @Module Context ctx) throws NamingException {
+    public void disposeContext(@Disposes Context ctx) throws NamingException {
         ctx.close();
     }
 }

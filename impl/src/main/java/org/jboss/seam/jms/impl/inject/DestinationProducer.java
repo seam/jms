@@ -27,7 +27,6 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 
 import org.jboss.seam.jms.annotations.JmsDestination;
-import org.jboss.seam.jms.annotations.Module;
 import org.jboss.seam.solder.reflection.AnnotationInspector;
 
 public class DestinationProducer
@@ -36,14 +35,14 @@ public class DestinationProducer
    
     @Produces
     @JmsDestination
-    public Topic getTopic(InjectionPoint ip, @Module Context c) throws NamingException {
+    public Topic getTopic(InjectionPoint ip, Context c) throws NamingException {
 	  JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
       return resolveTopic(d.jndiName(),c);
     }
 
     @Produces
     @JmsDestination
-    public Queue getQueue(InjectionPoint ip, @Module Context c) throws NamingException {
+    public Queue getQueue(InjectionPoint ip, Context c) throws NamingException {
 	  JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
 	  return resolveQueue(d.jndiName(),c);
     }

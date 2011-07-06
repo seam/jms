@@ -11,7 +11,6 @@ import org.jboss.seam.jms.annotations.Routing;
 import org.jboss.seam.jms.bridge.RouteBuilder;
 import org.jboss.seam.jms.bridge.RouteBuilderImpl;
 import org.jboss.seam.jms.bridge.RouteType;
-import org.jboss.seam.jms.impl.inject.ConnectionProducer;
 import org.jboss.seam.jms.impl.inject.DestinationProducer;
 import org.jboss.seam.jms.impl.inject.MessagePubSubProducer;
 import org.jboss.seam.jms.test.Util;
@@ -26,7 +25,7 @@ public class BidirectionalTest {
     @Deployment
     public static Archive<?> createDeployment() {
         return Util.createDeployment(ObserverInterface.class, ImmutableInjectionPoint.class,
-                DestinationProducer.class, RouteBuilderImpl.class, ConnectionProducer.class);
+                DestinationProducer.class, RouteBuilderImpl.class);
     }
 
     @Inject
