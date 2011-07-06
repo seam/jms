@@ -32,16 +32,6 @@
    </itemizedlist>
 
    <para>
-      Seam JMS has a combined build that can reduce your dependencies to:
-   </para>
-   
-   <itemizedlist>
-      <listitem>seam-jms.jar</listitem>
-      <listitem>seam-solder.jar</listitem>
-   </itemizedlist>
-
-
-   <para>
       Seam JMS has an optional dependency on Seam Servlet, for application loading capabilities:
    </para>
 
@@ -76,6 +66,9 @@
       </para>
       <para>
          If you are running within a Servlet Container, and include the Seam Servlet module, RouteBuilder will automatically start up.
+      </para>
+      <para>
+      	The default implementation expects to find a ConnectionFactory at the JNDI location /ConnectionFactory
       </para>
    </tip>
 

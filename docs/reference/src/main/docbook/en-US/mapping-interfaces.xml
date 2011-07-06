@@ -71,7 +71,7 @@
             doubleEvent.fire(d);
        ]]></programlisting>
        <para>
-           and this is the appropriate observer method to handle the incoming mesages.
+           and this is the appropriate observer method to handle the incoming messages.
        </para>
        <programlisting role="Java"><![CDATA[
            public class MyEventObserverBean {

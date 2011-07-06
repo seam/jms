@@ -24,7 +24,7 @@
     <para>
       This chapter is designed to detail how to configure the CDI to JMS event bridge.  Routing has two sides, sending
       of events to JMS destinations and translating received messages from JMS destinations back into CDI events.  The
-      sections of this chapter will describe how to achieve both.
+      sections of this chapter describe how to achieve both.
     </para>
    
     <section id="routing.bridge">
@@ -33,8 +33,7 @@
         <para>
          Simply sending or receiving a message over JMS involves a few players:  Connection, Session, Destination, and
          the message itself.  Surely you can inject all required resources and perform the routing yourself but that 
-         takes away from the whole reason you're using a tool in the first place!  Let's let a little configuration do 
-         the work for us.
+         takes away from the whole reason you're using a tool in the first place!
         </para>
       
         <section id="routing.bridge.route">

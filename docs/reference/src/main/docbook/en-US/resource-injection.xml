@@ -28,7 +28,7 @@
    <section id="injection">
       <title>JMS Resource Injection</title>
 
-      <para>The following JMS resources are now available for injection:</para>
+      <para>The following JMS resources are available for injection:</para>
 
       <itemizedlist>
          <listitem>
@@ -53,23 +53,13 @@
          <title>Destination Based Injection</title>
 
          <para>
-            The injection of resources that are themselves a <literal>javax.jms.Destination</literal> or require one needs
-            a hint:  What destination do you want to work with?  This is provided by the 
-            <literal>@JmsDestination</literal> annotatation.
+            The qualifier <literal>@JmsDestination</literal> is available to decorate JNDI oriented objects.  This includes instances of <literal>javax.jms.Destination</literal>
+            as well as MessageConsumers and MessageProducers.
          
             <programlisting role="Java">
 @Inject @JmsDestination(jndiName="jms/MyTopic") Topic t;
 @Inject @JmsDestination(jndiName="jms/MyQueue") Queue q;</programlisting>
          </para>
-            
-         <para>            
-            You should create your own qualifier to provide type safe injection of predefined destinations:
-            <programlisting role="Java">
-@Qualifier
-@JmsDestination(jndiName = "jms/MyTopic")
-public @interface MyTopic {}</programlisting>
-         </para>
-         
 
       </section>
       
@@ -84,4 +74,34 @@ public @interface MyTopic {}</programlisting>
          </para>
       </section>
    </section>
+   
+   <section id="extensions">
+		<title>Module Extensions</title>
+		<para>
+			The Seam JMS module has certain points of extension, where the application developer can customize the behavior to match their needs.  This is done by extending any of three base classes:
+		</para>
+		<itemizedlist>
+			<listitem>
+				org.jboss.seam.jms.inject.JmsConnectionFactoryProducer
+			</listitem>
+			<listitem>
+				org.jboss.seam.jms.inject.JmsConnectionProducer
+			</listitem>
+			<listitem>
+				org.jboss.seam.jms.inject.JmsSessionProducer
+			</listitem>
+		</itemizedlist>
+		<para>
+			This can be done using CDI specializations and extending the base class to change the produced object. 
+			This allows the application developer to customize the produced behavior.  
+			For example, the base implementation assumes a Java EE container, however an extension to the JmsConnectionFactoryProducer could bootstrap a JMS container for you
+			or change the default JNDI location of the <literal>ConnectionFactory</literal>
+		</para>
+		<tip>
+			Extending JmsConnectionFactoryProducer to bootstrap a SE compliant JMS container will be provided out of the box in the next release, supporting HornetQ, OpenMQ and ActiveMQ.
+		</tip>
+		<para>
+			Each producer in these classes generates an instance based on The <literal>@JmsDefault</literal> annotation.  This object is used within other places of the API, so you can control the Session generated that is injected into a MessageManager this way.
+		</para>
+	</section>
 </chapter>

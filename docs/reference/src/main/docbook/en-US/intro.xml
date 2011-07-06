@@ -23,7 +23,7 @@
 
 	<para>
 		Seam extends the CDI programming model into the messaging world
-		by allowing you to inject JMS resources into your beans. Further, Seam
+		by allowing you to inject JMS resources into your beans. Furthermore, Seam
 		bridges the CDI event bus over JMS; this gives you the benefits of
 		CDI-style type-safety for inter-application communication.
 	</para>
@@ -49,19 +49,22 @@
 		<itemizedlist>
 			<title>JMS Resource Injection</title>
 			<listitem>
+				ConnectionFactory
+			</listitem>
+			<listitem>
 				Connection
 			</listitem>
 			<listitem>
 				Session
 			</listitem>
 			<listitem>
-				Destination (Topic/Queue)
+				Topics &amp; Queues
 			</listitem>
 			<listitem>
-				Message Producer (TopicPublisher/QueueSender)
+				Message Producer
 			</listitem>
 			<listitem>
-				Message Received (TopicSubscriber/QueueReceiver)
+				Message Consumer
 			</listitem>
 		</itemizedlist>
 
@@ -75,4 +78,5 @@
 			</listitem>
 		</itemizedlist>
 	</section>
+	
 </chapter>
