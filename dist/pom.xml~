@@ -41,15 +41,15 @@
          <optional>true</optional>
       </dependency>
 
-      <dependency>
+      <!--dependency>
          <groupId>org.jboss.seam.jms</groupId>
-         <artifactId>seam-jms-api</artifactId>
-         <version>${project.version}</version>
-      </dependency>
+         <artifactId>seam-jms-impl</artifactId>
+         <optional>true</optional>
+      </dependency-->
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
-         <artifactId>seam-jms</artifactId>
+         <artifactId>seam-jms-impl</artifactId>
          <version>${project.version}</version>
          <classifier>sources</classifier>
          <optional>true</optional>
@@ -57,7 +57,7 @@
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
-         <artifactId>seam-jms</artifactId>
+         <artifactId>seam-jms-impl</artifactId>
          <version>${project.version}</version>
          <classifier>javadoc</classifier>
          <optional>true</optional>
