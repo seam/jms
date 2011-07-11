@@ -32,17 +32,21 @@
  
     Provided libraries
 
- lib/
-
-    Dependencies
-
- docs/
+ doc/
 
     API Docs and reference guide
   
  examples/
 
     Examples for module
+
+ lib/
+
+    Dependencies
+        
+ source/
+ 
+    Source code for this module
   
  Licensing
  =========
