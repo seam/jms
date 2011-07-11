@@ -95,7 +95,7 @@
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
             <include>org.jboss.seam.jms:seam-jms-api:*:sources</include>
-            <include>org.jboss.seam.jms:seam-jms-impl:*:sources</include>
+            <include>org.jboss.seam.jms:seam-jms:*:sources</include>
          </includes>
          <unpackOptions>
             <excludes>
