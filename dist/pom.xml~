@@ -19,6 +19,11 @@
    </properties>
 
    <dependencies>
+      <!--dependency>
+         <groupId>org.jboss.seam.jms</groupId>
+         <artifactId>seam-jms-api</artifactId>
+         <optional>true</optional>
+      </dependency-->
 
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>

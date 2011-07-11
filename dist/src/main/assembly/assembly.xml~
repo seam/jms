@@ -29,7 +29,6 @@
          <useProjectArtifact>false</useProjectArtifact>
          <includes>
             <include>org.jboss.seam.jms:seam-jms</include>
-            <include>org.jboss.seam.jms:seam-jms-api</include>
          </includes>
           <excludes>
             <exclude>org.jboss.seam.jms:*:*:javadoc</exclude>
