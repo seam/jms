@@ -59,9 +59,9 @@ public class TopicBuilderImplTest {
 			Assert.assertFalse(true);
 		}
 		TopicBuilderImpl tbi = (TopicBuilderImpl)tb;
-		List<String> destinations = tbi.getDestinations();
+		List<javax.jms.Topic> destinations = tbi.getDestinations();
 		Assert.assertEquals(1, destinations.size());
-		Assert.assertEquals("myDestination",destinations.get(0));
+		Assert.assertNull(destinations.get(0));
 	}
 	
 	@Test

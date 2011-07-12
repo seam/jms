@@ -16,6 +16,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
+import javax.jms.Queue;
 import javax.jms.QueueReceiver;
 import javax.jms.QueueSender;
 import javax.jms.Session;
@@ -213,8 +214,13 @@ public class MessageManagerImpl implements MessageManager {
 
 	@Override
 	public MessageConsumer createMessageConsumer(String destination, String selector, MessageListener... listeners) {
+		return createMessageConsumer(lookupDestination(destination),selector,listeners);
+	}
+	
+	@Override
+	public MessageConsumer createMessageConsumer(Destination destination, String selector, MessageListener... listeners) {
 		try {
-			MessageConsumer mc = this.session.createConsumer(lookupDestination(destination),selector);
+			MessageConsumer mc = this.session.createConsumer(destination,selector);
 			if(mc != null && listeners != null) {
 				for(MessageListener listener : listeners)
 					try {
@@ -289,8 +295,15 @@ public class MessageManagerImpl implements MessageManager {
 	public TopicSubscriber createTopicSubscriber(String destination,
 			String selector,
 			MessageListener... listeners) {
-		MessageConsumer mc = this.createMessageConsumer(destination, listeners);
-		return (TopicSubscriber)mc;
+    	return (TopicSubscriber)this.createMessageConsumer(destination, selector, listeners);
+	}
+    
+    @Override
+	public TopicSubscriber createTopicSubscriber(Destination destination,
+			String selector,
+			MessageListener... listeners) {
+		return (TopicSubscriber)this.createMessageConsumer(destination, selector, listeners);
+		
 	}
 
 	@Override
@@ -330,6 +343,16 @@ public class MessageManagerImpl implements MessageManager {
 	@Override
 	public JmsMessage createJmsMessage(Class<?> payloadType, Object payload) {
 		return new JmsMessageImpl(payloadType,payload,this);
+	}
+
+	@Override
+	public TopicPublisher createTopicPublisher(Topic topic) {
+		return (TopicPublisher)this.createMessageProducer(topic);
+	}
+
+	@Override
+	public QueueSender createQueueSender(Queue queue) {
+		return (QueueSender)this.createMessageProducer(queue);
 	}
 
 }

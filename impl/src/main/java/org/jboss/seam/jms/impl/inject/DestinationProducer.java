@@ -47,13 +47,13 @@ public class DestinationProducer
 	  return resolveQueue(d.jndiName(),c);
     }
     
-    public static Topic resolveTopic(String jndiName, Context c) throws NamingException {
+    public Topic resolveTopic(String jndiName, Context c) throws NamingException {
     	return (Topic)  resolveDestination(jndiName,c);
     }
-    public static Queue resolveQueue(String jndiName, Context c) throws NamingException {
+    public Queue resolveQueue(String jndiName, Context c) throws NamingException {
     	return (Queue) resolveDestination(jndiName,c);
     }
-    public static Destination resolveDestination(String jndiName, Context c) throws NamingException {
+    public Destination resolveDestination(String jndiName, Context c) throws NamingException {
     	return (Destination) c.lookup(jndiName);
     }
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.Queue;
 import javax.jms.QueueSender;
 import javax.jms.Session;
 import javax.jms.TopicPublisher;
@@ -17,18 +18,24 @@ import org.jboss.logging.Logger;
 public class QueueBuilderImpl implements QueueBuilder {
 
 	private MessageManager messageManager;
-	private List<String> destinations;
+	private List<Queue> destinations;
 	private Logger logger;
 	
 	QueueBuilderImpl(MessageManager messageManager) {
 		this.logger = Logger.getLogger(QueueBuilder.class);
 		this.messageManager = messageManager;
-		this.destinations = new ArrayList<String>();
+		this.destinations = new ArrayList<Queue>();
 	}
 	
 	@Override
 	public QueueBuilder destination(String destination) {
-		destinations.add(destination);
+		Queue queue = (Queue)this.messageManager.lookupDestination(destination);
+		return destination(queue);
+	}
+	
+	@Override
+	public QueueBuilder destination(Queue queue) {
+		destinations.add(queue);
 		return this;
 	}
 
@@ -40,8 +47,8 @@ public class QueueBuilderImpl implements QueueBuilder {
 
 	@Override
 	public QueueBuilder send(Message m) {
-		for(String destination : this.destinations) {
-			QueueSender qs = messageManager.createQueueSender(destination);
+		for(Queue queue : this.destinations) {
+			QueueSender qs = messageManager.createQueueSender(queue);
 			try {
 				qs.send(m);
 			} catch (JMSException e) {
@@ -65,8 +72,8 @@ public class QueueBuilderImpl implements QueueBuilder {
 
 	@Override
 	public QueueBuilder listen(MessageListener... listeners) {
-		for(String destination : this.destinations) {
-			this.messageManager.createQueueReceiver(destination, listeners);
+		for(Queue queue : this.destinations) {
+			this.messageManager.createMessageConsumer(queue, listeners);
 		}
 		return this;
 	}
@@ -75,7 +82,7 @@ public class QueueBuilderImpl implements QueueBuilder {
 	public QueueBuilder newBuilder() {
 		return new QueueBuilderImpl(this.messageManager);
 	}
-	public List<String> getDestinations() {
+	public List<Queue> getDestinations() {
 		return this.destinations;
 	}
 }

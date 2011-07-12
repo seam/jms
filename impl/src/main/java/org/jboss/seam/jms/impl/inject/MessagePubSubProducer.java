@@ -52,6 +52,8 @@ public class MessagePubSubProducer {
     @Inject
     BeanManager beanManager;
     
+    @Inject DestinationProducer destinationProducer;
+    
     @Inject
     Context c;
 
@@ -59,7 +61,7 @@ public class MessagePubSubProducer {
     @JmsDestination
     public MessageConsumer createMessageConsumer(InjectionPoint ip, Session s) throws JMSException, NamingException {
     	JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-    	Destination dest = DestinationProducer.resolveDestination(d.jndiName(), c);
+    	Destination dest = destinationProducer.resolveDestination(d.jndiName(), c);
         return s.createConsumer(dest);
     }
     
@@ -71,7 +73,7 @@ public class MessagePubSubProducer {
     @JmsDestination
     public MessageProducer createMessageProducer(InjectionPoint ip, Session s) throws JMSException, NamingException {
     	JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-    	Destination dest = DestinationProducer.resolveDestination(d.jndiName(), c);
+    	Destination dest = destinationProducer.resolveDestination(d.jndiName(), c);
         return s.createProducer(dest);
     }
     
