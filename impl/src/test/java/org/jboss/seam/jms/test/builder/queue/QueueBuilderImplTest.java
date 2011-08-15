@@ -27,7 +27,7 @@ import javax.jms.TextMessage;
 
 import junit.framework.Assert;
 
-import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.QueueBuilder;
 import org.jboss.seam.jms.QueueBuilderImpl;

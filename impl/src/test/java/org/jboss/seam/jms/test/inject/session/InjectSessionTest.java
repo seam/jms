@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
-import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.annotations.JmsSession;
 import org.jboss.seam.jms.annotations.JmsSessionSelector;

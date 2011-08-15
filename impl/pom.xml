@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.jboss.seam.jms</groupId>
         <artifactId>seam-jms-parent</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -22,17 +22,41 @@
             <name>glassfish</name>
             <url>http://download.java.net/maven/glassfish</url>
         </repository>
+        <repository>
+            <id>jboss-public</id>
+            <name>jboss-public</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>jboss-deprecated-repository</id>
+            <name>JBoss Deprecated Maven Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/deprecated/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+
     </repositories>
     <dependencies>
         <dependency>
             <groupId>org.jboss.spec</groupId>
             <artifactId>jboss-javaee-6.0</artifactId>
-	    <version>1.0.0.Final</version>
+            <version>1.0.0.Final</version>
             <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>org.jboss.arquillian</groupId>
-            <artifactId>arquillian-junit</artifactId>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-core</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>org.jboss.arquillian.container</groupId>
+           <artifactId>arquillian-container-test-api</artifactId>    
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -49,6 +73,7 @@
         <dependency>
             <groupId>org.jboss.seam.solder</groupId>
             <artifactId>seam-solder</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

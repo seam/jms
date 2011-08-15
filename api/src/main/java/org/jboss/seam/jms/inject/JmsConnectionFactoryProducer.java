@@ -23,9 +23,10 @@ import javax.jms.ConnectionFactory;
 import javax.naming.Context;
 import javax.naming.NamingException;
 
-import org.jboss.logging.Logger;
+import org.jboss.seam.solder.logging.Logger;
 import org.jboss.seam.jms.annotations.JmsDefault;
 
+@ApplicationScoped
 public class JmsConnectionFactoryProducer {
 	private String connectionFactoryJNDILocation = "/ConnectionFactory";
 	private Logger logger = Logger.getLogger(JmsConnectionFactoryProducer.class);

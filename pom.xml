@@ -5,26 +5,29 @@
     <parent>
         <groupId>org.jboss.seam</groupId>
         <artifactId>seam-parent</artifactId>
-        <version>10</version>
+        <version>12</version>
     </parent>
 
     <groupId>org.jboss.seam.jms</groupId>
     <artifactId>seam-jms-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.1.0-SNAPSHOT</version>
 
     <name>Seam JMS Module</name>
     <url>http://sfwk.org/Seam3/JMS</url>
 
     <properties>
-        <seam.version>3.0.0.Final</seam.version>
-        <arquillian.version>1.0.0.Alpha5</arquillian.version>
+        <seam.version>3.1.0.Beta1</seam.version>
+        <arquillian.version>1.0.0.CR2</arquillian.version>
         <emma.version>2.0.5312</emma.version>
     </properties>
 
     <modules>
         <module>api</module>
         <module>impl</module>
+<!--	<module>modules/hornetq</module>
+	<module>modules/openmq</module> 
+	<module>modules/activemq</module> -->
     </modules>
    
     <dependencyManagement>
@@ -61,6 +64,11 @@
                         <enabled>false</enabled>
                         <updatePolicy>never</updatePolicy>
                     </snapshots>
+                </repository>
+                <repository>
+                    <id>jboss-staging-repository-group</id>
+                    <name>JBoss Staging Maven Repository Group</name>
+                    <url>https://repository.jboss.org/nexus/content/groups/staging/</url>
                 </repository>
             </repositories>
    <!-- Only build the distribution if requested explicitly -->
