@@ -27,7 +27,7 @@ import javax.jms.TextMessage;
 
 import junit.framework.Assert;
 
-import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.QueueBuilder;
 import org.jboss.seam.jms.QueueBuilderImpl;
@@ -60,9 +60,9 @@ public class QueueBuilderImplTest {
 			Assert.assertFalse(true);
 		}
 		QueueBuilderImpl tbi = (QueueBuilderImpl)tb;
-		List<String> destinations = tbi.getDestinations();
+		List<javax.jms.Queue> destinations = tbi.getDestinations();
 		Assert.assertEquals(1, destinations.size());
-		Assert.assertEquals("myDestination",destinations.get(0));
+		Assert.assertNull(destinations.get(0));
 	}
 	
 	private static void testMessageSent(boolean observed,Class<?> type,QueueTestListener ttl) {

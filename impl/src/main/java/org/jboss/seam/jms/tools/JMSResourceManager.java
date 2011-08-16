@@ -28,7 +28,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.QueueReceiver;
 import javax.jms.TopicSubscriber;
 
-import org.jboss.logging.Logger;
+import org.jboss.seam.solder.logging.Logger;
 import org.jboss.seam.jms.annotations.Closeable;
 
 /**

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jboss.seam.jms</groupId>
+		<artifactId>seam-jms-parent</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+	<groupId>org.jboss.seam.jms</groupId>
+	<artifactId>seam-jms-openmq</artifactId>
+	<packaging>jar</packaging>
+	<version>3.0.0-SNAPSHOT</version>
+	<name>Seam JMS OpenMQ Integration</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.seam.jms</groupId>
+			<artifactId>seam-jms-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.messaging.mq</groupId>
+			<artifactId>jms</artifactId>
+			<version>4.5-b29</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.messaging.mq</groupId>
+			<artifactId>imq</artifactId>
+			<version>4.5-b29</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.messaging.mq</groupId>
+			<artifactId>imqjmx</artifactId>
+			<version>4.5-b29</version>
+		</dependency>
+	</dependencies>
+</project>

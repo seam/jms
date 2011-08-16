@@ -27,7 +27,7 @@ import javax.jms.TextMessage;
 
 import junit.framework.Assert;
 
-import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.TopicBuilder;
 import org.jboss.seam.jms.TopicBuilderImpl;
@@ -59,9 +59,9 @@ public class TopicBuilderImplTest {
 			Assert.assertFalse(true);
 		}
 		TopicBuilderImpl tbi = (TopicBuilderImpl)tb;
-		List<String> destinations = tbi.getDestinations();
+		List<javax.jms.Topic> destinations = tbi.getDestinations();
 		Assert.assertEquals(1, destinations.size());
-		Assert.assertEquals("myDestination",destinations.get(0));
+		Assert.assertNull(destinations.get(0));
 	}
 	
 	@Test

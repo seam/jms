@@ -16,13 +16,14 @@ import javax.jms.Topic;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
 
-import org.jboss.logging.Logger;
+import org.jboss.seam.solder.logging.Logger;
 import org.jboss.seam.jms.example.statuswatcher.model.Status;
 import org.jboss.seam.jms.example.statuswatcher.session.StatusManager;
 
 @MessageDriven(name = "OrderProcessor", activationConfig = {
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-        @ActivationConfigProperty(propertyName = "destination", propertyValue = "/jms/updateStatusQueue")})
+        @ActivationConfigProperty(propertyName = "destination", propertyValue = "/jms/updateStatusQueue")},
+        mappedName="jms/updateStatusQueue")
 public class DistributorMDB implements MessageListener {
     @Inject
     private Logger log;

@@ -11,10 +11,12 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
+import javax.jms.Queue;
 import javax.jms.QueueReceiver;
 import javax.jms.QueueSender;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import javax.jms.Topic;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSubscriber;
 
@@ -165,6 +167,14 @@ public interface MessageManager extends Serializable {
      * @return a new TopicPublisher that is ready to work.
      */
     public TopicPublisher createTopicPublisher(String destination);
+    
+    /**
+     * Creates a TopicPublisher for the given topic.
+     *
+     * @param destination JNDI Location of Destination in use
+     * @return a new TopicPublisher that is ready to work.
+     */
+    public TopicPublisher createTopicPublisher(Topic topic);
 
     /**
      * Creates a TopicBuilder, simple interface for working with Topics.
@@ -185,6 +195,14 @@ public interface MessageManager extends Serializable {
      * @return a new QueueSender that is ready to work.
      */
     public QueueSender createQueueSender(String destination);
+    
+    /**
+     * Creates a QueueSender for the given queue.
+     *
+     * @param destination JNDI Location of Destination in use
+     * @return a new QueueSender that is ready to work.
+     */
+    public QueueSender createQueueSender(Queue queue);
 
     /**
      * Creates a new MessageConsumer that will be managed by the used session
@@ -222,10 +240,15 @@ public interface MessageManager extends Serializable {
      */
     public QueueReceiver createQueueReceiver(String destination, MessageListener... listeners);
 
+    public MessageConsumer createMessageConsumer(Destination destination, String selector, MessageListener... listeners);
+    
 	public MessageConsumer createMessageConsumer(String destination, String selector,
 			MessageListener... listeners);
 
 	public TopicSubscriber createTopicSubscriber(String destination, String selector,
+			MessageListener... listeners);
+	
+	public TopicSubscriber createTopicSubscriber(Destination destination, String selector,
 			MessageListener... listeners);
 	
 	public Destination lookupDestination(String jndiName);

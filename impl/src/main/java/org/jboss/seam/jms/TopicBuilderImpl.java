@@ -8,27 +8,34 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.Session;
+import javax.jms.Topic;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSubscriber;
 
-import org.jboss.logging.Logger;
+import org.jboss.seam.solder.logging.Logger;
 
 public class TopicBuilderImpl implements TopicBuilder {
 
 	private MessageManager messageManager;
-	private List<String> destinations;
+	private List<Topic> destinations;
 	private String subtopic = null;
 	private Logger logger;
 	
 	TopicBuilderImpl(MessageManager messageManager) {
 		this.logger = Logger.getLogger(TopicBuilder.class);
 		this.messageManager = messageManager;
-		this.destinations = new ArrayList<String>();
+		this.destinations = new ArrayList<Topic>();
 	}
 	
 	@Override
 	public TopicBuilder destination(String destination) {
-		destinations.add(destination);
+		Topic topic = (Topic)this.messageManager.lookupDestination(destination);
+		return destination(topic);
+	}
+	
+	@Override
+	public TopicBuilder destination(Topic topic) {
+		this.destinations.add(topic);
 		return this;
 	}
 
@@ -46,8 +53,8 @@ public class TopicBuilderImpl implements TopicBuilder {
 
 	@Override
 	public TopicBuilder send(Message m) {
-		for(String destination : this.destinations) {
-			TopicPublisher tp = messageManager.createTopicPublisher(destination);
+		for(Topic topic : this.destinations) {
+			TopicPublisher tp = messageManager.createTopicPublisher(topic);
 			if(this.subtopic != null) {
 				try{
 					m.setStringProperty("sm_jms_subtopic", subtopic);
@@ -78,12 +85,12 @@ public class TopicBuilderImpl implements TopicBuilder {
 
 	@Override
 	public TopicBuilder listen(MessageListener... ml) {
-		for(String destination : this.destinations) {
+		for(Topic topic : this.destinations) {
 			if(this.subtopic != null) {
 				String topicSelector = String.format("sm_jms_subtopic = '%s'",subtopic);
-				this.messageManager.createTopicSubscriber(destination, topicSelector, ml);
+				this.messageManager.createTopicSubscriber(topic, topicSelector, ml);
 			} else {
-				this.messageManager.createTopicSubscriber(destination, ml);
+				this.messageManager.createMessageConsumer(topic, ml);
 			}
 		}
 		return this;
@@ -93,10 +100,12 @@ public class TopicBuilderImpl implements TopicBuilder {
 	public TopicBuilder newBuilder() {
 		return new TopicBuilderImpl(this.messageManager);
 	}
-	public List<String> getDestinations() {
+	public List<Topic> getDestinations() {
 		return this.destinations;
 	}
 	public String getSubtopic() {
 		return this.subtopic;
 	}
+
+	
 }

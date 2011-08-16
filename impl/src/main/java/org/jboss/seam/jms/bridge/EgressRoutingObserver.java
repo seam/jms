@@ -34,7 +34,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.logging.Logger;
+import org.jboss.seam.solder.logging.Logger;
 import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.jms.annotations.OutboundLiteral;

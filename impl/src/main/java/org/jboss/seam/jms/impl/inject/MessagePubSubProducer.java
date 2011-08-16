@@ -37,6 +37,7 @@ import javax.jms.TopicSubscriber;
 import javax.naming.Context;
 import javax.naming.NamingException;
 
+import org.jboss.seam.jms.annotations.JmsDefault;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.solder.reflection.AnnotationInspector;
 
@@ -52,14 +53,16 @@ public class MessagePubSubProducer {
     @Inject
     BeanManager beanManager;
     
+    @Inject DestinationProducer destinationProducer;
+    
     @Inject
     Context c;
 
     @Produces
     @JmsDestination
-    public MessageConsumer createMessageConsumer(InjectionPoint ip, Session s) throws JMSException, NamingException {
+    public MessageConsumer createMessageConsumer(InjectionPoint ip, @JmsDefault("session") Session s) throws JMSException, NamingException {
     	JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-    	Destination dest = DestinationProducer.resolveDestination(d.jndiName(), c);
+    	Destination dest = destinationProducer.resolveDestination(d.jndiName(), c);
         return s.createConsumer(dest);
     }
     
@@ -69,9 +72,9 @@ public class MessagePubSubProducer {
     
     @Produces
     @JmsDestination
-    public MessageProducer createMessageProducer(InjectionPoint ip, Session s) throws JMSException, NamingException {
+    public MessageProducer createMessageProducer(InjectionPoint ip, @JmsDefault("session") Session s) throws JMSException, NamingException {
     	JmsDestination d = AnnotationInspector.getAnnotation(ip.getAnnotated(), JmsDestination.class, beanManager);
-    	Destination dest = DestinationProducer.resolveDestination(d.jndiName(), c);
+    	Destination dest = destinationProducer.resolveDestination(d.jndiName(), c);
         return s.createProducer(dest);
     }
     

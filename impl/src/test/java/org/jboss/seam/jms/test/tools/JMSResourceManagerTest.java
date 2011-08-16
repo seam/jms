@@ -25,7 +25,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.QueueReceiver;
 import javax.jms.TopicSubscriber;
 
-import org.jboss.arquillian.api.Deployment;
+import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.annotations.Closeable;
 import org.jboss.seam.jms.annotations.JmsDefault;

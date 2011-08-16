@@ -38,7 +38,7 @@ import javax.inject.Inject;
 import javax.inject.Qualifier;
 import javax.jms.Destination;
 
-import org.jboss.logging.Logger;
+import org.jboss.seam.solder.logging.Logger;
 import org.jboss.seam.jms.annotations.EventRouting;
 import org.jboss.seam.jms.annotations.Inbound;
 import org.jboss.seam.jms.annotations.Outbound;
