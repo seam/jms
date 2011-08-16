@@ -26,9 +26,16 @@
       <dependency>
          <groupId>org.jboss.seam.jms</groupId>
          <artifactId>seam-jms</artifactId>
+         <scope>compile</scope>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.jboss.seam.solder</groupId>
+        <artifactId>seam-solder</artifactId>
+        <scope>compile</scope>
       </dependency>
 
-      <dependency>
+     <dependency>
          <groupId>org.jboss.seam.servlet</groupId>
          <artifactId>seam-servlet</artifactId>
       </dependency>
