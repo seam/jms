@@ -43,6 +43,7 @@
         </repository>
 
     </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.jboss.spec</groupId>
@@ -84,6 +85,17 @@
         </dependency>
     </dependencies>
 
+    <build>
+       <plugins>
+          <plugin>
+             <artifactId>maven-surefire-plugin</artifactId>
+             <configuration>
+                <skipTests>true</skipTests>
+             </configuration>
+          </plugin>
+       </plugins>
+    </build>
+
     <profiles>
         <profile>
             <id>code-coverage</id>
@@ -112,6 +124,7 @@
                 </plugins>
             </build>
         </profile>
+        
         <profile>
             <id>jbossas-remote-6</id>
             <dependencies>
@@ -136,6 +149,7 @@
                 </testResources>
             </build>
         </profile>
+
         <profile>
             <id>arq-glassfish-embedded</id>
             <dependencies>
@@ -163,6 +177,7 @@
                 </testResources>
             </build>
         </profile>
+
         <profile>
             <id>jbossas-managed-6</id>
             <activation>
