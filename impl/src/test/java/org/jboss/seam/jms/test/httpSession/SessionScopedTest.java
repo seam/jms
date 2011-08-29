@@ -23,6 +23,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.bridge.RouteBuilder;
+import org.jboss.seam.jms.bridge.RouteBuilderImpl;
 import org.jboss.seam.jms.bridge.RouteManager;
 import org.jboss.seam.jms.test.Util;
 import org.jboss.shrinkwrap.api.Archive;
@@ -40,15 +41,13 @@ import org.junit.runner.RunWith;
 public class SessionScopedTest {
     @Deployment
     public static Archive<?> createDeployment() {
-        return Util.createDeployment(MessageManager.class, RouteBuilder.class);
+        return Util.createDeployment(MessageManager.class, RouteBuilder.class, RouteManager.class, RouteBuilderImpl.class);
     }
 
     @Inject
     MessageManager msgMgr;
     @Inject
     RouteBuilder rbild;
-    @Inject
-    RouteManager rmgr;
 
     @Test
     public void simpleTest() {

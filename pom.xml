@@ -17,8 +17,7 @@
     <url>http://sfwk.org/Seam3/JMS</url>
 
     <properties>
-        <seam.version>3.1.0.Beta1</seam.version>
-        <arquillian.version>1.0.0.CR2</arquillian.version>
+        <seam.version>3.1.0.Beta2</seam.version>
         <emma.version>2.0.5312</emma.version>
     </properties>
 
