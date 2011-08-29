@@ -24,17 +24,16 @@ import org.jboss.seam.jms.bridge.Route;
 import org.jboss.seam.jms.impl.inject.SessionProducer;
 import org.jboss.seam.jms.inject.JmsConnectionProducer;
 import org.jboss.seam.jms.test.bridge.IngressInterfaceProducer;
-import org.jboss.seam.solder.core.VersionLoggerUtil;
-import org.jboss.seam.solder.reflection.AnnotationInspector;
-import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 
 public class Util {
     public static final String HORNETQ_JMS_DEPLOYMENT_CONFIG = "hornetq-jms.xml";
-
+    
     public static WebArchive createDeployment(Class<?>... classes) {
         JavaArchive ejbModule = ShrinkWrap.create(JavaArchive.class, "test.jar");
         ejbModule.addPackage(Util.class.getPackage());
@@ -43,7 +42,7 @@ public class Util {
         ejbModule.addPackage(SessionProducer.class.getPackage());
         ejbModule.addPackage(JmsConnectionProducer.class.getPackage());
         ejbModule.addPackage(Route.class.getPackage());
-        ejbModule.addClasses(IngressInterfaceProducer.class,VersionLoggerUtil.class, AnnotationInspector.class);
+        ejbModule.addClasses(IngressInterfaceProducer.class);
         ejbModule.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
         ejbModule.addAsServiceProvider(Extension.class, Seam3JmsExtension.class);
         for (Class<?> c : classes) {
@@ -52,6 +51,12 @@ public class Util {
         WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
         war.addAsLibraries(ejbModule);
         war.addAsWebInfResource(HORNETQ_JMS_DEPLOYMENT_CONFIG, HORNETQ_JMS_DEPLOYMENT_CONFIG);
+        
+        war.addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
+                .loadReposFromPom("pom.xml")
+                .artifact("org.jboss.seam.solder:seam-solder")
+                .resolveAs(JavaArchive.class));
+        
         // TODO Add this conditionally based on test profile to support other containers
         return war;
     }

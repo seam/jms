@@ -13,7 +13,7 @@ import javax.jms.Session;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSubscriber;
 
-import org.jboss.seam.solder.logging.Logger;
+import org.jboss.seam.logging.Logger;
 
 public class QueueBuilderImpl implements QueueBuilder {
 
