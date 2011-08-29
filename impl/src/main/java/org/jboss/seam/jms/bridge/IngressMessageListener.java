@@ -27,7 +27,7 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
-import org.jboss.seam.solder.logging.Logger;
+import org.jboss.seam.logging.Logger;
 import org.jboss.seam.jms.AbstractMessageListener;
 import org.jboss.seam.jms.annotations.InboundLiteral;
 

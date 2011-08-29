@@ -16,7 +16,7 @@ import javax.jms.Topic;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
 
-import org.jboss.seam.solder.logging.Logger;
+import org.jboss.seam.logging.Logger;
 import org.jboss.seam.jms.example.statuswatcher.model.Status;
 import org.jboss.seam.jms.example.statuswatcher.session.StatusManager;
 
