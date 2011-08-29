@@ -23,7 +23,7 @@ import java.util.Map;
 
 import javax.jms.Destination;
 
-import org.jboss.seam.solder.logging.Logger;
+import org.jboss.seam.logging.Logger;
 
 public class JmsMessageImpl implements JmsMessage {
 	private MessageManager messageManager;
