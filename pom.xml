@@ -81,7 +81,7 @@
             </activation>
             <modules>
                 <module>dist</module>
-                <module>docs/reference</module>
+                <module>docs</module>
                 <module>examples/jms-statuswatcher</module>
             </modules>
         </profile>
