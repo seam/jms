@@ -18,7 +18,7 @@
 
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="intro">
+<chapter id="jms-intro">
 	<title>Introduction</title>
 
 	<para>
@@ -28,7 +28,7 @@
 		CDI-style type-safety for inter-application communication.
 	</para>
 
-	<section id="mission">
+	<section id="jms-mission">
 		<title>Mission statement</title>
 
 		<para>
@@ -38,7 +38,7 @@
 		</para>
 	</section>
 
-	<section id="overview">
+	<section id="jms-overview">
 		<title>Seam 3 JMS Module Overview</title>
 
 		<para>
