@@ -18,14 +18,14 @@
 
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="resource-injection">
+<chapter id="jms-resource-injection">
    <title>Resource Injection</title>
 
    <para>
       In this chapter we'll look at how to inject some of the common JMS resource types.
    </para>
 
-   <section id="injection">
+   <section id="jms-injection">
       <title>JMS Resource Injection</title>
 
       <para>The following JMS resources are available for injection:</para>
@@ -49,7 +49,7 @@
          </listitem>
       </itemizedlist>
 
-      <section id="injection.destination-based">
+      <section id="jms-injection.destination-based">
          <title>Destination Based Injection</title>
 
          <para>
@@ -63,7 +63,7 @@
 
       </section>
       
-      <section id="injection.configuration">
+      <section id="jms-injection.configuration">
          <title>Resource Configuration</title>
          
          <para>
@@ -75,7 +75,7 @@
       </section>
    </section>
    
-   <section id="extensions">
+   <section id="jms-extensions">
 		<title>Module Extensions</title>
 		<para>
 			The Seam JMS module has certain points of extension, where the application developer can customize the behavior to match their needs.  This is done by extending any of three base classes:
