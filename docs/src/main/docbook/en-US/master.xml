@@ -21,10 +21,10 @@
 <book lang="en">
    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="book_info.xml" />
    <toc />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="intro.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="installation.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="resource-injection.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="messaging.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="routing.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="mapping-interfaces.xml" />
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-intro.xml" />
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-installation.xml" />
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-resource-injection.xml" />
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-messaging.xml" />
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-routing.xml" />
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-mapping-interfaces.xml" />
 </book>
