@@ -50,26 +50,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-            <repositories>
-                <repository>
-                    <id>jboss-public-repository-group</id>
-                    <name>JBoss Public Maven Repository Group</name>
-                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </snapshots>
-                </repository>
-                <repository>
-                    <id>jboss-staging-repository-group</id>
-                    <name>JBoss Staging Maven Repository Group</name>
-                    <url>https://repository.jboss.org/nexus/content/groups/staging/</url>
-                </repository>
-            </repositories>
    <!-- Only build the distribution if requested explicitly -->
     <profiles>
         <profile>
@@ -159,30 +139,6 @@
                     </plugins>
                 </pluginManagement>
             </build>
-        </profile>
-        <profile>
-            <id>jboss-public-repository</id>
-            <activation>
-                <property>
-                    <name>jboss-public-repository</name>
-                    <value>!false</value>
-                </property>
-            </activation>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>jboss-public-repository-group</id>
-                    <name>JBoss Public Maven Repository Group</name>
-                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
         </profile>
     </profiles>
 
