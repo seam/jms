@@ -8,10 +8,6 @@
         <version>3.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <properties>
-        <el-api.version>2.2</el-api.version>
-        <hornetq.version>2.2.5.Final</hornetq.version>
-    </properties>
     <artifactId>seam-jms</artifactId>
     <packaging>jar</packaging>
 
@@ -20,11 +16,6 @@
 	<!-- url required for JAR Manifest -->
     <url>${project.parent.url}</url>
     <repositories>
-        <repository>
-            <id>glassfish</id>
-            <name>glassfish</name>
-            <url>http://download.java.net/maven/glassfish</url>
-        </repository>
         <repository>
             <id>jboss-public</id>
             <name>jboss-public</name>
@@ -54,25 +45,6 @@
             <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-           <groupId>org.jboss.arquillian.container</groupId>
-           <artifactId>arquillian-container-test-api</artifactId>
-           <scope>test</scope>
-        </dependency>
-        <dependency>
-           <groupId>org.jboss.shrinkwrap.resolver</groupId>
-           <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-           <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
         </dependency>
@@ -89,180 +61,6 @@
             <artifactId>seam-solder</artifactId>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jboss.seam.solder</groupId>
-            <artifactId>seam-solder-logging</artifactId>
-            <version>3.1.0.Beta1</version>
-        </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>code-coverage</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>emma-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.maven.plugin</groupId>
-                        <artifactId>emma4it-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        
-        <profile>
-            <id>weld-hornetq-emb</id>
-            <dependencies>
-                <dependency>
-                    <groupId>javax.el</groupId>
-                    <artifactId>el-api</artifactId>
-                    <version>${el-api.version}</version>
-                </dependency>
-		
-                <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-weld-se-embedded-1.1</artifactId>
-                    <scope>test</scope>
-                </dependency>
-                
-                <dependency>
-                    <groupId>org.hornetq</groupId>
-                    <artifactId>hornetq-jms</artifactId>
-                    <version>${hornetq.version}</version>
-                </dependency>
-                
-                <dependency>
-                    <groupId>org.hornetq</groupId>
-                    <artifactId>hornetq-jms-client</artifactId>
-                    <version>${hornetq.version}</version>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-simple</artifactId>
-                    <scope>test</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.jboss.weld</groupId>
-                    <artifactId>weld-core</artifactId>
-                    <scope>test</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.jboss.weld</groupId>
-                    <artifactId>weld-api</artifactId>
-                    <scope>test</scope>
-                </dependency>
-                
-                <dependency>
-                    <groupId>commons-collections</groupId>
-                    <artifactId>commons-collections</artifactId>
-                    <version>3.2.1</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>jbossas-remote-6</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-jbossas-remote-6</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.jbossas</groupId>
-                    <artifactId>jboss-as-client</artifactId>
-                    <type>pom</type>
-                </dependency>
-            </dependencies>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-jbossas</directory>
-                    </testResource>
-                </testResources>
-            </build>
-        </profile>
-
-        <profile>
-            <id>arq-glassfish-embedded</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
-                    <scope>test</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.glassfish.extras</groupId>
-                    <artifactId>glassfish-embedded-all</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-jbossas</directory>
-                    </testResource>
-                </testResources>
-            </build>
-        </profile>
-
-        <profile>
-            <id>jbossas-managed-6</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.arquillian.container</groupId>
-                    <artifactId>arquillian-jbossas-managed-6</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.jbossas</groupId>
-                    <artifactId>jboss-as-client</artifactId>
-                    <version>6.0.0.Final</version>
-                    <scope>test</scope>
-                    <type>pom</type>
-                </dependency>
-                <dependency>
-                    <groupId>org.jboss.jbossas</groupId>
-                    <artifactId>jboss-server-manager</artifactId>
-                    <version>1.0.3.GA</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <testResources>
-                    <testResource>
-                        <directory>src/test/resources</directory>
-                    </testResource>
-                    <testResource>
-                        <directory>src/test/resources-jbossas</directory>
-                    </testResource>
-                </testResources>
-            </build>
-        </profile>
-    </profiles>
 </project>

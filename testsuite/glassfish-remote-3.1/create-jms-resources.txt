@@ -1,0 +1,9 @@
+create-jms-resource --restype javax.jms.Queue --property Name=T3 jms/T3
+create-jms-resource --restype javax.jms.Topic --property Name=Topic5 jms/T5
+create-jms-resource --restype javax.jms.Topic --property Name=Topic2 jms/T2
+create-jms-resource --restype javax.jms.Topic --property Name=Topic1 jms/T1
+create-jms-resource --restype javax.jms.Topic --property Name=T jms/T
+create-jms-resource --restype javax.jms.Queue --property Name=Q jms/Q
+create-jms-resource --restype javax.jms.Queue --property Name=QC jms/QC
+create-jms-resource --restype javax.jms.Queue --property Name=QB jms/QB
+create-jms-resource --restype javax.jms.Queue --property Name=QA jms/QA
