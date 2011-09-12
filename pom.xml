@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.jboss.seam</groupId>
         <artifactId>seam-parent</artifactId>
-        <version>14</version>
+        <version>15-SNAPSHOT</version>
     </parent>
 
     <groupId>org.jboss.seam.jms</groupId>
@@ -18,7 +18,7 @@
 
     <properties>
         <seam.version>3.1.0.Beta2</seam.version>
-        <emma.version>2.0.5312</emma.version>
+        <hornetq.version>2.2.5.Final</hornetq.version>
     </properties>
 
     <modules>
@@ -27,6 +27,7 @@
 <!--	<module>modules/hornetq</module>
 	<module>modules/openmq</module> 
 	<module>modules/activemq</module> -->
+        <module>testsuite</module>
     </modules>
    
     <dependencyManagement>
@@ -48,6 +49,19 @@
                 <artifactId>seam-jms</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.hornetq</groupId>
+                <artifactId>hornetq-jms</artifactId>
+                <version>${hornetq.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hornetq</groupId>
+                <artifactId>hornetq-jms-client</artifactId>
+                <version>${hornetq.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
    <!-- Only build the distribution if requested explicitly -->
@@ -64,81 +78,6 @@
                 <module>docs</module>
                 <module>examples/jms-statuswatcher</module>
             </modules>
-        </profile>
-        <profile>
-            <id>code-coverage</id>
-            <dependencies>
-                <dependency>
-                    <groupId>emma</groupId>
-                    <artifactId>emma</artifactId>
-                    <version>${emma.version}</version>
-                </dependency>
-            </dependencies>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-dependency-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>deploy-emma-jar</id>
-                                    <phase>process-test-sources</phase>
-                                    <goals>
-                                        <goal>copy</goal>
-                                    </goals>
-                                    <configuration>
-                                        <artifactItems>
-                                            <artifactItem>
-                                                <groupId>emma</groupId>
-                                                <artifactId>emma</artifactId>
-                                                <version>${emma.version}</version>
-                                                <type>jar</type>
-                                                <overWrite>true</overWrite>
-                                                <outputDirectory>${env.JBOSS_HOME}/server/default/lib</outputDirectory>
-                                            </artifactItem>
-                                        </artifactItems>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-antrun-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>retrieve-coverage-file</id>
-                                    <phase>test</phase>
-                                    <goals>
-                                        <goal>run</goal>
-                                    </goals>
-                                    <configuration>
-                                        <tasks>
-                                            <move file="${env.JBOSS_HOME}/bin/coverage.ec" todir="${basedir}" failonerror="false" />
-                                        </tasks>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                        <plugin>
-                            <artifactId>maven-clean-plugin</artifactId>
-                            <configuration>
-                                <filesets>
-                                    <fileset>
-                                        <directory>${basedir}/</directory>
-                                        <includes>
-                                            <include>**/*.ec</include>
-                                            <include>**/*.em</include>
-                                            <include>**/transaction.log</include>
-                                        </includes>
-                                        <followSymlinks>false</followSymlinks>
-                                    </fileset>
-                                </filesets>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
         </profile>
     </profiles>
 

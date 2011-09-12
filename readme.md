@@ -10,13 +10,7 @@ For more information, see the [Seam JMS Module page](http://seamframework.org/Se
 
 ##Testing
 
-   Currently supported application servers: JBoss AS 6 Final.  Two profiles exist to facilitate testing:
-      jbossas-remote-6
-      jbossas-managed-6 - This profile is default when you just run mvn install.
-
-   In order for tests dealing with consumers to pass HornetQ security must be disabled.  See [SEAMJMS-13](https://issues.jboss.org/browse/SEAMJMS-13) for more information.
-
-   In $JBOSS_HOME/server/$PROFILE_NAME/deploy/hornetq/hornetq-configuration.xml you must add <security-enabled>false</security-enabled> below <configuration> root node.
+   See testsuite/readme.md
    
 ##How to release
 

@@ -26,6 +26,7 @@ import org.jboss.seam.jms.inject.JmsConnectionProducer;
 import org.jboss.seam.jms.test.bridge.IngressInterfaceProducer;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
@@ -50,12 +51,22 @@ public class Util {
         }
         WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
         war.addAsLibraries(ejbModule);
+
         war.addAsWebInfResource(HORNETQ_JMS_DEPLOYMENT_CONFIG, HORNETQ_JMS_DEPLOYMENT_CONFIG);
         
         war.addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
+                .configureFrom("../../settings.xml")
                 .loadReposFromPom("pom.xml")
                 .artifact("org.jboss.seam.solder:seam-solder")
                 .resolveAs(JavaArchive.class));
+        // Temporary workaround for SOLDER-119
+        war.addAsWebInfResource(new StringAsset("<jboss-deployment-structure>\n" +
+                "  <deployment>\n" +
+                "    <dependencies>\n" +
+                "      <module name=\"org.jboss.logmanager\" />\n" +
+                "    </dependencies>\n" +
+                "  </deployment>\n" +
+                "</jboss-deployment-structure>"), "jboss-deployment-structure.xml");
         
         // TODO Add this conditionally based on test profile to support other containers
         return war;
