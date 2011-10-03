@@ -27,6 +27,7 @@
 <!--	<module>modules/hornetq</module>
 	<module>modules/openmq</module> 
 	<module>modules/activemq</module> -->
+	<module>testsuite</module>
     </modules>
    
     <dependencyManagement>

@@ -5,3 +5,5 @@ target
 *.sw?
 *~
 transaction.log
+*/bin
+
