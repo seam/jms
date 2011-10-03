@@ -19,7 +19,7 @@ package org.jboss.seam.jms.test.bridge.intf;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 
-import org.jboss.seam.logging.Logger;
+import org.jboss.solder.logging.Logger;
 
 /**
  * @author johnament

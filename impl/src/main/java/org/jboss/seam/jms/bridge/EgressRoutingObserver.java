@@ -34,12 +34,12 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.seam.logging.Logger;
+import org.jboss.solder.logging.Logger;
 import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.Seam3JmsExtension;
 import org.jboss.seam.jms.annotations.OutboundLiteral;
-import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
-import org.jboss.seam.solder.core.Veto;
+import org.jboss.solder.bean.ImmutableInjectionPoint;
+import org.jboss.solder.core.Veto;
 
 import static org.jboss.seam.jms.annotations.RoutingLiteral.EGRESS;
 

@@ -27,7 +27,7 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.servlet.ServletContext;
 
-import org.jboss.seam.logging.Logger;
+import org.jboss.solder.logging.Logger;
 import org.jboss.seam.jms.MessageManager;
 import org.jboss.seam.jms.Seam3JmsExtension;
 

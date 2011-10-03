@@ -39,7 +39,7 @@ import javax.naming.NamingException;
 
 import org.jboss.seam.jms.annotations.JmsDefault;
 import org.jboss.seam.jms.annotations.JmsDestination;
-import org.jboss.seam.solder.reflection.AnnotationInspector;
+import org.jboss.solder.reflection.AnnotationInspector;
 
 public class MessagePubSubProducer {
     @Inject

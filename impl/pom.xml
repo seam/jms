@@ -81,18 +81,13 @@
             <artifactId>seam-jms-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam.solder</groupId>
-            <artifactId>seam-solder-api</artifactId>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.seam.solder</groupId>
-            <artifactId>seam-solder</artifactId>
+            <groupId>org.jboss.solder</groupId>
+            <artifactId>solder-impl</artifactId>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.seam.solder</groupId>
-            <artifactId>seam-solder-logging</artifactId>
-            <version>3.1.0.Beta1</version>
         </dependency>
     </dependencies>
 
@@ -232,7 +227,7 @@
         <profile>
             <id>jbossas-managed-6</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+               <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
                 <dependency>

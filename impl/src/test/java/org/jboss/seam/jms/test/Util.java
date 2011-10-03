@@ -54,7 +54,7 @@ public class Util {
         
         war.addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
                 .loadReposFromPom("pom.xml")
-                .artifact("org.jboss.seam.solder:seam-solder")
+                .artifact("org.jboss.solder:solder-impl")
                 .resolveAs(JavaArchive.class));
         
         // TODO Add this conditionally based on test profile to support other containers

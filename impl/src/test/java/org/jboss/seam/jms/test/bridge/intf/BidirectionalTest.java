@@ -14,7 +14,7 @@ import org.jboss.seam.jms.bridge.RouteType;
 import org.jboss.seam.jms.impl.inject.DestinationProducer;
 import org.jboss.seam.jms.impl.inject.MessagePubSubProducer;
 import org.jboss.seam.jms.test.Util;
-import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
+import org.jboss.solder.bean.ImmutableInjectionPoint;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.runner.RunWith;

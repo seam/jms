@@ -26,12 +26,12 @@ import javax.jms.Topic;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.seam.logging.Logger;
+import org.jboss.solder.logging.Logger;
 import org.jboss.seam.jms.annotations.JmsDestination;
 import org.jboss.seam.jms.annotations.Outbound;
 import org.jboss.seam.jms.bridge.RouteBuilder;
 import org.jboss.seam.jms.test.Util;
-import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
+import org.jboss.solder.bean.ImmutableInjectionPoint;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
