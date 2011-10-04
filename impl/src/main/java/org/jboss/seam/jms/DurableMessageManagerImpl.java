@@ -12,7 +12,7 @@ import javax.jms.Session;
 import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
 
-import org.jboss.seam.logging.Logger;
+import org.jboss.solder.logging.Logger;
 import org.jboss.seam.jms.annotations.Durable;
 import org.jboss.seam.jms.annotations.JmsDefault;
 

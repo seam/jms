@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.jboss.seam</groupId>
         <artifactId>seam-parent</artifactId>
-        <version>14</version>
+        <version>15</version>
     </parent>
 
     <groupId>org.jboss.seam.jms</groupId>
@@ -17,7 +17,7 @@
     <url>http://sfwk.org/Seam3/JMS</url>
 
     <properties>
-        <seam.version>3.1.0.Beta2</seam.version>
+        <seam.version>3.1.0.Beta3</seam.version>
         <emma.version>2.0.5312</emma.version>
     </properties>
 
@@ -27,6 +27,7 @@
 <!--	<module>modules/hornetq</module>
 	<module>modules/openmq</module> 
 	<module>modules/activemq</module> -->
+	<!--<module>testsuite</module>-->
     </modules>
    
     <dependencyManagement>
@@ -50,26 +51,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-            <repositories>
-                <repository>
-                    <id>jboss-public-repository-group</id>
-                    <name>JBoss Public Maven Repository Group</name>
-                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </snapshots>
-                </repository>
-                <repository>
-                    <id>jboss-staging-repository-group</id>
-                    <name>JBoss Staging Maven Repository Group</name>
-                    <url>https://repository.jboss.org/nexus/content/groups/staging/</url>
-                </repository>
-            </repositories>
    <!-- Only build the distribution if requested explicitly -->
     <profiles>
         <profile>
@@ -81,7 +62,7 @@
             </activation>
             <modules>
                 <module>dist</module>
-                <module>docs/reference</module>
+                <module>docs</module>
                 <module>examples/jms-statuswatcher</module>
             </modules>
         </profile>
@@ -159,30 +140,6 @@
                     </plugins>
                 </pluginManagement>
             </build>
-        </profile>
-        <profile>
-            <id>jboss-public-repository</id>
-            <activation>
-                <property>
-                    <name>jboss-public-repository</name>
-                    <value>!false</value>
-                </property>
-            </activation>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>jboss-public-repository-group</id>
-                    <name>JBoss Public Maven Repository Group</name>
-                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
-                    <releases>
-                        <enabled>true</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                        <updatePolicy>never</updatePolicy>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
         </profile>
     </profiles>
 

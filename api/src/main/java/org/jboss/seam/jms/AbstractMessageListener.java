@@ -20,7 +20,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-import org.jboss.seam.logging.Logger;
+import org.jboss.solder.logging.Logger;
 
 /**
  * Supporting base MessageListener for working in CDI enabled environments.

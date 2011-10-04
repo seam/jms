@@ -1,0 +1,12 @@
+connect
+batch
+add-jms-topic --name=T3 --entries=jms/T3
+add-jms-topic --name=Topic5 --entries=jms/T5
+add-jms-topic --name=Topic2 --entries=jms/T2
+add-jms-topic --name=Topic1 --entries=jms/T1
+add-jms-topic --name=T --entries=jms/T
+add-jms-queue --name=Q --entries=jms/Q
+add-jms-queue --name=QC --entries=jms/QC
+add-jms-queue --name=QB --entries=jms/QB
+add-jms-queue --name=QA --entries=jms/QA
+run-batch

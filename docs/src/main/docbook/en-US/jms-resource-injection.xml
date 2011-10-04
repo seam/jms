@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  JBoss, Home of Professional Open Source
+  Copyright 2011, Red Hat, Inc. and/or its affiliates, and individual
+  contributors by the @authors tag. See the copyright.txt in the
+  distribution for a full listing of individual contributors.
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="jms-resource-injection">
+   <title>Resource Injection</title>
+
+   <para>
+      In this chapter we'll look at how to inject some of the common JMS resource types.
+   </para>
+
+   <section id="jms-injection">
+      <title>JMS Resource Injection</title>
+
+      <para>The following JMS resources are available for injection:</para>
+
+      <itemizedlist>
+         <listitem>
+            javax.jms.Connection
+         </listitem>
+         <listitem>
+            javax.jms.Session
+         </listitem>
+      </itemizedlist>
+
+      <para>Destination-based resources:</para>
+      <itemizedlist>
+         <listitem>
+            javax.jms.Topic
+         </listitem>
+         <listitem>
+            javax.jms.Queue
+         </listitem>
+      </itemizedlist>
+
+      <section id="jms-injection.destination-based">
+         <title>Destination Based Injection</title>
+
+         <para>
+            The qualifier <literal>@JmsDestination</literal> is available to decorate JNDI oriented objects.  This includes instances of <literal>javax.jms.Destination</literal>
+            as well as MessageConsumers and MessageProducers.
+         
+            <programlisting role="Java">
+@Inject @JmsDestination(jndiName="jms/MyTopic") Topic t;
+@Inject @JmsDestination(jndiName="jms/MyQueue") Queue q;</programlisting>
+         </para>
+
+      </section>
+      
+      <section id="jms-injection.configuration">
+         <title>Resource Configuration</title>
+         
+         <para>
+             You can use the <literal>@JmsSession</literal> annotation when injecting <literal>javax.jms.Session</literal> to specify transacted and acknowledgement mode:
+      <programlisting role="Java">
+@Inject @JmsSession(transacted=false, acknowledgementMode=Session.CLIENT_ACKNOWLEDGE) Session s;
+</programlisting>
+         </para>
+      </section>
+   </section>
+   
+   <section id="jms-extensions">
+		<title>Module Extensions</title>
+		<para>
+			The Seam JMS module has certain points of extension, where the application developer can customize the behavior to match their needs.  This is done by extending any of three base classes:
+		</para>
+		<itemizedlist>
+			<listitem>
+				org.jboss.seam.jms.inject.JmsConnectionFactoryProducer
+			</listitem>
+			<listitem>
+				org.jboss.seam.jms.inject.JmsConnectionProducer
+			</listitem>
+			<listitem>
+				org.jboss.seam.jms.inject.JmsSessionProducer
+			</listitem>
+		</itemizedlist>
+		<para>
+			This can be done using CDI specializations and extending the base class to change the produced object. 
+			This allows the application developer to customize the produced behavior.  
+			For example, the base implementation assumes a Java EE container, however an extension to the JmsConnectionFactoryProducer could bootstrap a JMS container for you
+			or change the default JNDI location of the <literal>ConnectionFactory</literal>
+		</para>
+		<tip>
+			Extending JmsConnectionFactoryProducer to bootstrap a SE compliant JMS container will be provided out of the box in the next release, supporting HornetQ, OpenMQ and ActiveMQ.
+		</tip>
+		<para>
+			Each producer in these classes generates an instance based on The <literal>@JmsDefault</literal> annotation.  This object is used within other places of the API, so you can control the Session generated that is injected into a MessageManager this way.
+		</para>
+	</section>
+</chapter>

@@ -34,8 +34,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.seam.logging.Logger;
-import org.jboss.seam.solder.bean.ImmutableInjectionPoint;
+import org.jboss.solder.logging.Logger;
+import org.jboss.solder.bean.ImmutableInjectionPoint;
 
 /**
  * JMS Event Bridge Routing

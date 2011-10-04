@@ -38,7 +38,7 @@ import javax.inject.Inject;
 import javax.inject.Qualifier;
 import javax.jms.Destination;
 
-import org.jboss.seam.logging.Logger;
+import org.jboss.solder.logging.Logger;
 import org.jboss.seam.jms.annotations.EventRouting;
 import org.jboss.seam.jms.annotations.Inbound;
 import org.jboss.seam.jms.annotations.Outbound;
@@ -49,8 +49,8 @@ import org.jboss.seam.jms.bridge.RouteImpl;
 import org.jboss.seam.jms.bridge.RouteManager;
 import org.jboss.seam.jms.bridge.RouteManagerImpl;
 import org.jboss.seam.jms.bridge.RouteType;
-import org.jboss.seam.solder.core.VersionLoggerUtil;
-import org.jboss.seam.solder.literal.NamedLiteral;
+import org.jboss.solder.core.VersionLoggerUtil;
+import org.jboss.solder.literal.NamedLiteral;
 
 /**
  * Seam 3 JMS Portable Extension

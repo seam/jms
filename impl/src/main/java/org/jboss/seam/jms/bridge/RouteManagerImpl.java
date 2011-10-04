@@ -18,7 +18,7 @@ package org.jboss.seam.jms.bridge;
 
 import java.lang.reflect.Type;
 
-import org.jboss.seam.solder.core.Veto;
+import org.jboss.solder.core.Veto;
 
 /**
  * Implementation of {@link RouteManager} that creates {@link RouteImpl} instances.

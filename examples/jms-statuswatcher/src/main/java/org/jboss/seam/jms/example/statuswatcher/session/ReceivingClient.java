@@ -8,13 +8,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.seam.logging.Logger;
 import org.jboss.seam.jms.TopicBuilder;
 import org.jboss.seam.jms.example.statuswatcher.model.Status;
+import org.jboss.solder.logging.Logger;
 
 
 @SessionScoped
