@@ -93,10 +93,11 @@
 	</build>
 
 	<profiles>
+    <!--
 		<profile>
 			<id>weld-ee-embedded-1.1</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+        <activeByDefault>true</activeByDefault>
 				<property>
 					<name>arquillian</name>
 					<value>weld-ee-embedded-1.1</value>
@@ -152,6 +153,7 @@
 				</dependency>
 			</dependencies>
 		</profile>
+    -->
 
 		<profile>
 			<id>jbossas-remote-6</id>
