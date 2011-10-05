@@ -47,8 +47,7 @@
          <useProjectArtifact>false</useProjectArtifact>
          <useTransitiveDependencies>true</useTransitiveDependencies>
          <includes>
-             <include>org.jboss.seam.solder:*</include>
-             <include>org.jboss.seam.servlet:*</include>
+             <include>org.jboss.solder:*</include>
          </includes>
          <excludes>
             <exclude>org.jboss.seam.jms:*</exclude>
