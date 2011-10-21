@@ -28,10 +28,13 @@
       <para>seam-jms.jar</para>
     </listitem>
     <listitem>
-      <para>seam-solder-api.jar</para>
+      <para>solder-api.jar</para>
     </listitem>
     <listitem>
-      <para>seam-solder-impl.jar</para>
+      <para>solder-impl.jar</para>
+    </listitem>
+    <listitem>
+      <para>solder-logging.jar</para>
     </listitem>
   </itemizedlist>
   <para>
