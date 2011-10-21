@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
   JBoss, Home of Professional Open Source
   Copyright 2011, Red Hat, Inc. and/or its affiliates, and individual
@@ -14,62 +14,52 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
--->
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+--><!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <chapter id="jms-installation">
-
-   <title>Installation</title>
-   
-   <para>
-      Seam JMS can be used by including a few libraries in your application's library folder:
+  <title>Installation</title>
+  <para>
+      Seam JMS can be used by including a few libraries in your application&apos;s library folder:
    </para>
-   
-   <itemizedlist>
-      <listitem><para>seam-jms-api.jar</para></listitem>
-      <listitem><para>seam-jms.jar</para></listitem>
-      <listitem><para>seam-solder.jar</para></listitem>
-   </itemizedlist>
-
-   <para>
-      Seam JMS has an optional dependency on Seam Servlet, for application loading capabilities:
-   </para>
-
-   <itemizedlist>
-      <listitem><para>seam-servlet.jar</para></listitem>
-   </itemizedlist>
-
-   <para>
+  <itemizedlist>
+    <listitem>
+      <para>seam-jms-api.jar</para>
+    </listitem>
+    <listitem>
+      <para>seam-jms.jar</para>
+    </listitem>
+    <listitem>
+      <para>seam-solder-api.jar</para>
+    </listitem>
+    <listitem>
+      <para>seam-solder-impl.jar</para>
+    </listitem>
+  </itemizedlist>
+  <para>
       If you are using <ulink url="http://maven.apache.org/">Maven</ulink> as your build tool use the following 
       dependency, which will bring in both API and Implementation for Seam JMS:
    </para>
-      
-   <programlisting role="XML"><![CDATA[<dependency>
+  <programlisting role="XML"><![CDATA[<dependency>
    <groupId>org.jboss.seam.jms</groupId>
    <artifactId>seam-jms</artifactId>
    <version>${seam.jms.version}</version>
 </dependency>]]></programlisting>
-
-   <tip>
-      <para>
+  <tip>
+    <para>
          Define or replace the property ${seam.jms.version} with a valid version of Seam JMS.
       </para>
-   </tip>
-
-   <para>
-	The runtime of Seam JMS is defined in two sections.  The first section is related to creating observers, which happens within the Seam JMS CDI Extension.  Observers need to be defined prior to starting up the container, and cannot be created once the application is running.  This part happens automatically.  The second section is related to creating listeners.  This is managed in the component org.jboss.seam.jms.bridge.RouteBuilder.
+  </tip>
+  <para>
+ The runtime of Seam JMS is defined in two sections.  The first section is related to creating observers, which happens within the Seam JMS CDI Extension.  Observers need to be defined prior to starting up the container, and cannot be created once the application is running.  This part happens automatically.  The second section is related to creating listeners.  This is managed in the component org.jboss.seam.jms.bridge.RouteBuilder.
    </para>
-
-   <tip>
-      <para>
+  <tip>
+    <para>
          In order to start any listeners, you may need to inject an instance of the RouteBuilder in to your class.
       </para>
-      <para>
+    <para>
          If you are running within a Servlet Container, and include the Seam Servlet module, RouteBuilder will automatically start up.
       </para>
-      <para>
-      	The default implementation expects to find a ConnectionFactory at the JNDI location /ConnectionFactory
+    <para>
+       The default implementation expects to find a ConnectionFactory at the JNDI location /ConnectionFactory
       </para>
-   </tip>
-
+  </tip>
 </chapter>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
   JBoss, Home of Professional Open Source
   Copyright 2011, Red Hat, Inc. and/or its affiliates, and individual
@@ -14,17 +14,15 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
--->
-
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+--><!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <book lang="en">
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="book_info.xml" />
-   <toc />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-intro.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-installation.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-resource-injection.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-messaging.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-routing.xml" />
-   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-mapping-interfaces.xml" />
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="book_info.xml"/>
+  <toc/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-intro.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-installation.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-resource-injection.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-messaging.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-routing.xml"/>
+  <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="jms-mapping-interfaces.xml"/>
 </book>
