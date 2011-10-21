@@ -34,20 +34,21 @@
 		<para>
 			Some example usages.
 		</para>
-                <programlisting role="Java"><![CDATA[@RequestScoped
-		@Named
-                public class FormBean {
-		    private String formData;
-                    @Inject QueueBuilder queueBuilder;
-		    @Inject TopicBuilder topicBuilder;
-		    public void sendFormDataToQueue() {
-			queueBuilder.destination("jms/SomeQueue").send(formData);
-		    }
-		    public void sendFormDataToTopic() {
-			topicBuilder.destination("jms/SomeTopic").send(formData);
-		    }
-                }
-                ]]></programlisting>
+                <programlisting role="JAVA"><![CDATA[@RequestScoped
+@Named
+public class FormBean {
+  private String formData;
+  @Inject QueueBuilder queueBuilder;
+  @Inject TopicBuilder topicBuilder;
+
+  public void sendFormDataToQueue() {
+      queueBuilder.destination("jms/SomeQueue").sendString(formData);
+  }
+
+  public void sendFormDataToTopic() {
+      topicBuilder.destination("jms/SomeTopic").sendString(formData);
+  }
+}]]></programlisting>
 	</section>
 
 	<section id="messaging-api-jms-local">
@@ -57,7 +58,7 @@
                     It provides almost all of the background functionality for Seam JMS's features (Observer Interfaces, Routing API).
                     The default implementation works against <code>javax.naming.Context</code> assuming running within the same local application server.
 		</para>
-                <programlisting role="Java"><![CDATA[public interface MessageManager {
+                <programlisting role="JAVA"><![CDATA[public interface MessageManager {
 	public ObjectMessage createObjectMessage(Object object);
 	public TextMessage createTextMessage(String string);
 	public MapMessage createMapMessage(Map<Object,Object> map);
@@ -97,7 +98,7 @@
                     message management.  If you want to define a durable subscriber per
                     user session, this is the easiest way to do it.
                 </para>
-                <programlisting role="Java"><![CDATA[@SessionScoped
+                <programlisting role="JAVA"><![CDATA[@SessionScoped
                 public class UserSession {
                     @Inject MessageManager messageManager;
                     @Inject MySessionJMSListener listener;
@@ -120,10 +121,7 @@
                 Seam JMS provides a Messaging API around the JMS Durable Topic Subscriber concept.
                 In order to use it within your code, you need to inject a DurableMessageManager.
             </para>
-            <tip>
-                This API is still experimental, and will be tested further in Beta2.
-            </tip>
-            <programlisting role="Java"><![CDATA[
+            <programlisting role="JAVA"><![CDATA[
             @Inject @Durable DurableMessageManager durableMsgManager;
             ]]></programlisting>
             <para>
@@ -131,7 +129,7 @@
                 first login to the connection with a <code>ClientID</code>, additional methods to create
                 subscribers and an unsubscribe that can be called to unsubscribe a listener.
             </para>
-            <programlisting role="Java"><![CDATA[
+            <programlisting role="JAVA"><![CDATA[
             public void login(String clientId);
             public TopicSubscriber createDurableSubscriber(String topic, String id, MessageListener... listeners);
             public TopicSubscriber createDurableSubscriber(Topic topic, String id, MessageListener... listeners);
@@ -159,7 +157,7 @@
                 The best way to work with MessageListeners is to simply instantiate your own based on
                 our base implementation.
             </para>
-            <programlisting role="Java">
+            <programlisting role="JAVA">
                 //where cl is the class loader, and beanManager is the BeanManager
                 MessageListener ml = new SessionListener(beanManager,cl,this);
                 messageManager.createTopicSubscriber("/jms/myTopic", ml);
@@ -168,7 +166,7 @@
                 Or you may define your own subclass that makes specific invocations to the parent.  Here is an
                 example of that:
             </para>
-            <programlisting role="Java"><![CDATA[@SessionScoped
+            <programlisting role="JAVA"><![CDATA[@SessionScoped
                 public class SessionListener extends AbstractMessageListener {
                     private MySessionObject mso;
                     public SessionListener(BeanManager beanManager, ClassLoader classLoader,
