@@ -59,10 +59,26 @@
          In order to start any listeners, you may need to inject an instance of the RouteBuilder in to your class.
       </para>
     <para>
-         If you are running within a Servlet Container, and include the Seam Servlet module, RouteBuilder will automatically start up.
+         If you are running within a Servlet Container, and include the  Solder, RouteBuilder will automatically start up.
       </para>
     <para>
-       The default implementation expects to find a ConnectionFactory at the JNDI location /ConnectionFactory
-      </para>
+      The default implementation expects to find a ConnectionFactory at the JNDI location <literal>/ConnectionFactory</literal>. This 
+      can be changed by using Solder Config by using a snippet similar to the one below in seam-beans.xml. This will 
+      change the JNDI location Seam JMS looks to <literal>jms/ConnectionFactory</literal>
+    </para>
+
+    <programlisting role="XML"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:s="urn:java:ee"
+    xmlns:jmsi="urn:java:org.jboss.seam.jms.inject"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://docs.jboss.org/cdi/beans_1_0.xsd">
+    
+    <jmsi:JmsConnectionFactoryProducer>
+      <s:modifies />
+      <jmsi:connectionFactoryJNDILocation>jms/ConnectionFactory</jmsi:connectionFactoryJNDILocation>
+    </jmsi:JmsConnectionFactoryProducer>
+  </beans>]]>
+    </programlisting>
   </tip>
 </chapter>
