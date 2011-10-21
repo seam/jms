@@ -26,9 +26,9 @@
    </para>
    
    <itemizedlist>
-      <listitem>seam-jms-api.jar</listitem>
-      <listitem>seam-jms.jar</listitem>
-      <listitem>seam-solder.jar</listitem>
+      <listitem><para>seam-jms-api.jar</para></listitem>
+      <listitem><para>seam-jms.jar</para></listitem>
+      <listitem><para>seam-solder.jar</para></listitem>
    </itemizedlist>
 
    <para>
@@ -36,7 +36,7 @@
    </para>
 
    <itemizedlist>
-      <listitem>seam-servlet.jar</listitem>
+      <listitem><para>seam-servlet.jar</para></listitem>
    </itemizedlist>
 
    <para>

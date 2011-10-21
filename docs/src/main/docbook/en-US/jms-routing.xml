@@ -74,15 +74,9 @@
                 must meet a few criteria items:
 
                 <itemizedlist>
-                    <listitem>
-                        A default, no arg constructor.
-                    </listitem>
-                    <listitem>
-                        Be a non bean (no dependencies on injection)
-                    </listitem>
-                    <listitem>
-                        Return either <literal>Route</literal> instances or <literal>Collection&lt;Route&gt;</literal> instances.
-                    </listitem>
+                    <listitem><para>A default, no arg constructor.</para></listitem>
+                    <listitem><para>Be a non bean (no dependencies on injection)</para></listitem>
+                    <listitem><para>Return either <literal>Route</literal> instances or <literal>Collection&lt;Route&gt;</literal> instances.</para></listitem>
                 </itemizedlist>
 
                 These requirements exist because of when the generation of <literal>Route</literal>s must happen.

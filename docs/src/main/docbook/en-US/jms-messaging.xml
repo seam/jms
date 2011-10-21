@@ -136,9 +136,11 @@ public class FormBean {
             public void unsubscribe(String id);
             ]]></programlisting>
             <tip>
+              <para>
                 From a design pattern standpoint, it makes sense to create an <code>ApplicationScoped</code> object that
                 all subscribers are created from, injecting a <code>DurableMessageManager</code> for use across the application,
                 producing <code>SessionScoped</code> sessions for use by clients.
+              </para>
             </tip>
         </section>
         <section id="messaging-api-listener">
