@@ -83,11 +83,6 @@
 			For example, the base implementation assumes a Java EE container, however an extension to the JmsConnectionFactoryProducer could bootstrap a JMS container for you
 			or change the default JNDI location of the <literal>ConnectionFactory</literal>
 		</para>
-		<tip>
-      <para>
-			Extending JmsConnectionFactoryProducer to bootstrap a SE compliant JMS container will be provided out of the box in the next release, supporting HornetQ, OpenMQ and ActiveMQ.
-      </para>
-		</tip>
 		<para>
 			Each producer in these classes generates an instance based on The <literal>@JmsDefault</literal> annotation.  This object is used within other places of the API, so you can control the Session generated that is injected into a MessageManager this way.
 		</para>
