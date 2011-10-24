@@ -46,11 +46,12 @@
             forwarded to what destination.  Or conversely, what message types sent to which destinations generate CDI 
             events.
 
-                <programlisting role="Java">public interface Route
-   {
-      public &lt;D extends Destination&gt; Route connectTo(Class&lt;D&gt; d, D destination);
-      public Route addQualifiers(Annotation... qualifiers);
-   }
+                <programlisting role="Java">public interface Route {
+  public &lt;D extends Destination&gt; Route connectTo(Class&lt;D&gt; d, D destination);
+  public Route addQualifiers(Annotation... qualifiers);
+
+  ...
+}
                 </programlisting>
             </para>
 
@@ -74,25 +75,15 @@
                 must meet a few criteria items:
 
                 <itemizedlist>
-                    <listitem>
-                        A default, no arg constructor.
-                    </listitem>
-                    <listitem>
-                        Be a non bean (no dependencies on injection)
-                    </listitem>
-                    <listitem>
-                        Return either <literal>Route</literal> instances or <literal>Collection&lt;Route&gt;</literal> instances.
-                    </listitem>
+                    <listitem><para>A default, no arg constructor.</para></listitem>
+                    <listitem><para>Be a non bean (no dependencies on injection)</para></listitem>
+                    <listitem><para>Return either <literal>Route</literal> instances or <literal>Collection&lt;Route&gt;</literal> instances.</para></listitem>
                 </itemizedlist>
 
                 These requirements exist because of when the generation of <literal>Route</literal>s must happen.
                 There are no CDI beans active within the context.  A class identified for routing will automatically
                 be veto'd from the context.
-            </para>
-        </section>
-      
-        <section id="routing.bridge.eventrouting">
-            <title>@EventRouting</title>
+            </para> 
 
             <para>
             Routes are registered by returning them from a non-bean method annotated with

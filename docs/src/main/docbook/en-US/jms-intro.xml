@@ -48,34 +48,18 @@
 
 		<itemizedlist>
 			<title>JMS Resource Injection</title>
-			<listitem>
-				ConnectionFactory
-			</listitem>
-			<listitem>
-				Connection
-			</listitem>
-			<listitem>
-				Session
-			</listitem>
-			<listitem>
-				Topics &amp; Queues
-			</listitem>
-			<listitem>
-				Message Producer
-			</listitem>
-			<listitem>
-				Message Consumer
-			</listitem>
+      <listitem><para>ConnectionFactory</para></listitem>
+      <listitem><para>Connection</para></listitem>
+			<listitem><para>Session</para></listitem>
+			<listitem><para>Topics &amp; Queues</para></listitem>
+			<listitem><para>Message Producer</para></listitem>
+			<listitem><para>Message Consumer</para></listitem>
 		</itemizedlist>
 
 		<itemizedlist>
 			<title>Event Bridge</title>
-			<listitem>
-				Inbound: Routes CDI events to JMS destinations
-			</listitem>
-			<listitem>
-				Outbound: Fires CDI events based on the reception of JMS messages
-			</listitem>
+			<listitem><para>Inbound: Routes CDI events to JMS destinations</para></listitem>
+			<listitem><para>Outbound: Fires CDI events based on the reception of JMS messages</para></listitem>
 		</itemizedlist>
 	</section>
 	

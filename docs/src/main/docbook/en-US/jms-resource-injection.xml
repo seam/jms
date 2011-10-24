@@ -31,22 +31,14 @@
       <para>The following JMS resources are available for injection:</para>
 
       <itemizedlist>
-         <listitem>
-            javax.jms.Connection
-         </listitem>
-         <listitem>
-            javax.jms.Session
-         </listitem>
+         <listitem><para>javax.jms.Connection</para></listitem>
+         <listitem><para>javax.jms.Session</para></listitem>
       </itemizedlist>
 
       <para>Destination-based resources:</para>
       <itemizedlist>
-         <listitem>
-            javax.jms.Topic
-         </listitem>
-         <listitem>
-            javax.jms.Queue
-         </listitem>
+         <listitem><para>javax.jms.Topic</para></listitem>
+         <listitem><para>javax.jms.Queue</para></listitem>
       </itemizedlist>
 
       <section id="jms-injection.destination-based">
@@ -81,15 +73,9 @@
 			The Seam JMS module has certain points of extension, where the application developer can customize the behavior to match their needs.  This is done by extending any of three base classes:
 		</para>
 		<itemizedlist>
-			<listitem>
-				org.jboss.seam.jms.inject.JmsConnectionFactoryProducer
-			</listitem>
-			<listitem>
-				org.jboss.seam.jms.inject.JmsConnectionProducer
-			</listitem>
-			<listitem>
-				org.jboss.seam.jms.inject.JmsSessionProducer
-			</listitem>
+			<listitem><para>org.jboss.seam.jms.inject.JmsConnectionFactoryProducer</para></listitem>
+			<listitem><para>org.jboss.seam.jms.inject.JmsConnectionProducer</para></listitem>
+			<listitem><para>org.jboss.seam.jms.inject.JmsSessionProducer</para></listitem>
 		</itemizedlist>
 		<para>
 			This can be done using CDI specializations and extending the base class to change the produced object. 
@@ -97,9 +83,6 @@
 			For example, the base implementation assumes a Java EE container, however an extension to the JmsConnectionFactoryProducer could bootstrap a JMS container for you
 			or change the default JNDI location of the <literal>ConnectionFactory</literal>
 		</para>
-		<tip>
-			Extending JmsConnectionFactoryProducer to bootstrap a SE compliant JMS container will be provided out of the box in the next release, supporting HornetQ, OpenMQ and ActiveMQ.
-		</tip>
 		<para>
 			Each producer in these classes generates an instance based on The <literal>@JmsDefault</literal> annotation.  This object is used within other places of the API, so you can control the Session generated that is injected into a MessageManager this way.
 		</para>
