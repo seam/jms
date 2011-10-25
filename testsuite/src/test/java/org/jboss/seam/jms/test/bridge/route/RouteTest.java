@@ -69,7 +69,7 @@ public class RouteTest {
     @Test
     public void forwardSimpleEvent() throws JMSException {
         String expected = "'configured via Collection<Route>'";
-        QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
+        QueueReceiver qr = messageManager.createQueueReceiver("jms/RouteTest");
         clear(qr);
         event_viaCollectionRouteConfig.fire(expected);
         Message m = qr.receive(3000);
@@ -82,7 +82,7 @@ public class RouteTest {
     @Test
     public void noMatchingRoutes() throws JMSException {
         String expected = "'no matching route'";
-        QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
+        QueueReceiver qr = messageManager.createQueueReceiver("jms/RouteTest");
         clear(qr);
         plainEvent.fire(expected);
         Message m = qr.receive(3000);
@@ -93,7 +93,7 @@ public class RouteTest {
     @Test
     public void forwardSimpleEvent_via_single_route_config() throws JMSException {
         String expected = "'configured via Route'";
-        QueueReceiver qr = messageManager.createQueueReceiver("queue/DLQ");
+        QueueReceiver qr = messageManager.createQueueReceiver("jms/RouteTest");
         clear(qr);
         event_viaSingleRouteConfig.fire(expected);
         Message m = qr.receive(3000);
