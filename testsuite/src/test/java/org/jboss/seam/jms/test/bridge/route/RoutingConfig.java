@@ -30,7 +30,7 @@ import org.jboss.seam.jms.bridge.RouteManager;
 import static org.jboss.seam.jms.bridge.RouteType.EGRESS;
 
 public class RoutingConfig {
-    @Resource(mappedName = "queue/DLQ")
+    @Resource(mappedName = "jms/RouteTest")
     Queue q;
 
     private static final AnnotationLiteral<BridgedViaCollection> BRIDGED_VIA_COLLECTION = new AnnotationLiteral<BridgedViaCollection>() {
@@ -43,11 +43,13 @@ public class RoutingConfig {
 
     @EventRouting
     public Collection<Route> getRoutes(RouteManager routeManager) {
-        return Arrays.asList(routeManager.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_COLLECTION).addDestinationJndiName("queue/DLQ"));
+        return Arrays.asList(routeManager.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_COLLECTION)
+          .addDestinationJndiName("jms/RouteTest"));
     }
 
     @EventRouting
     public Route getRoute(RouteManager routeManager) {
-        return routeManager.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_ROUTE).addDestinationJndiName("queue/DLQ");
+        return routeManager.createRoute(EGRESS, String.class).addQualifiers(BRIDGED_VIA_ROUTE).addDestinationJndiName
+          ("jms/RouteTest");
     }
 }

@@ -146,7 +146,7 @@ public class MessageManagerImpl implements MessageManager {
 
     private void sendMessage(Destination destination, Message message) {
         try {
-            logger.info("Routing destionation " + destination + " with message " + message);
+            logger.info("Routing destination " + destination + " with message " + message);
             this.createMessageProducer(destination).send(message);
         } catch (JMSException e) {
             logger.warn("Problem attempting to send message " + message + " to destination " + destination, e);
