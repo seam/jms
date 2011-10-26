@@ -9,4 +9,5 @@ add-jms-queue --name=Q --entries=jms/Q
 add-jms-queue --name=QC --entries=jms/QC
 add-jms-queue --name=QB --entries=jms/QB
 add-jms-queue --name=QA --entries=jms/QA
+add-jms-queue --name=RouteTest --entries=jms/RouteTest
 run-batch

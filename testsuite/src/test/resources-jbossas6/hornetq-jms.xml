@@ -52,4 +52,8 @@
         <queue name="QA">
         <entry name="/jms/QA"/>
     </queue>
+
+    <queue name="RouteTest">
+      <entry name="/jms/RouteTest"/>
+    </queue>
 </configuration>
