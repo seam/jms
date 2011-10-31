@@ -22,8 +22,8 @@ import org.jboss.seam.jms.example.statuswatcher.session.StatusManager;
 
 @MessageDriven(name = "OrderProcessor", activationConfig = {
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-        @ActivationConfigProperty(propertyName = "destination", propertyValue = "/jms/updateStatusQueue")},
-        mappedName="jms/updateStatusQueue")
+        @ActivationConfigProperty(propertyName = "destination", propertyValue = "java:/jms/updateStatusQueue")},
+        mappedName="java:/jms/updateStatusQueue")
 public class DistributorMDB implements MessageListener {
     @Inject
     private Logger log;
@@ -31,10 +31,10 @@ public class DistributorMDB implements MessageListener {
     @EJB
     private StatusManager manager;
 
-    @Resource(mappedName = "/ConnectionFactory")
+    @Resource(mappedName = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
 
-    @Resource(mappedName = "/jms/statusInfoTopic")
+    @Resource(mappedName = "java:/jms/statusInfoTopic")
     private Topic statusTopic;
 
     @Override

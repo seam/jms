@@ -10,6 +10,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Qualifier
 @Retention(RUNTIME)
-@JmsDestination(jndiName = "/jms/statusInfoTopic")
+@JmsDestination(jndiName = "java:/jms/statusInfoTopic")
 public @interface StatusTopic {
 }
