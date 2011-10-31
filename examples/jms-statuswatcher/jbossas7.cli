@@ -1,0 +1,5 @@
+connect
+batch
+add-jms-topic --name=StatusInfoTopic --entries=java:/jms/statusInfoTopic
+add-jms-queue --name=UpdateStatusQueue --entries=java:/jms/updateStatusQueue
+run-batch

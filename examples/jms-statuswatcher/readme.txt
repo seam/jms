@@ -9,7 +9,7 @@ To run the example on JBossAS 6 you need to do the following:
 
 * build and deploy the app:
 
-   mvn clean install jboss:hard-deploy
+   mvn clean install jboss:hard-deploy -Pjbossas6
 
 This will copy the resulting war along with a hornetq configuration file to a JBossAS
 deploy directory.
@@ -31,4 +31,25 @@ You can send your status to the server via (opening it in a different browser wi
    http://localhost:8080/jms-statuswatcher/sendstatus.jsf
 
 Of course, you can open several browser windows, one for each user, and watch incomming statuses.
+
+
+
+To run the example on JBossAS 7 you need to do the following:
+
+* Start an AS7 instance with the EE6-full profile
+
+    $JBOSS_HOME/bin/standalone.sh --server-config=$JBOSS_HOME/standalone/configuration/standalone-preview.xml
+
+* Create queues and topics for testing
+
+    $JBOSS_HOME/bin/jboss-admin.sh --file=jbossas7.cli
+
+* Build the example
+
+    mvn clean package -Pjbossas7
+
+* Deploy the example
+
+    $JBOSS_HOME/bin/jboss-admin.sh --connect
+    deploy target/jms-statuswatcher.war
 
