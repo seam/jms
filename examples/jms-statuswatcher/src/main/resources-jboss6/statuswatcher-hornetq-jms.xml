@@ -3,11 +3,11 @@
                xsi:schemaLocation="urn:hornetq /schema/hornetq-jms.xsd">
 
     <queue name="UpdateStatusQueue">
-        <entry name="/jms/updateStatusQueue"/>
+        <entry name="java:/jms/updateStatusQueue"/>
     </queue>
 
     <topic name="StatusInfoTopic">
-        <entry name="/jms/statusInfoTopic"/>
+        <entry name="java:/jms/statusInfoTopic"/>
     </topic>
 
 </configuration>

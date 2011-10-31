@@ -9,5 +9,5 @@ import org.jboss.seam.jms.example.statuswatcher.model.Status;
 
 public interface CdiJmsMapping {
     @Outbound
-    public void mapStatusToQueue(@Observes Status status, @JmsDestination(jndiName = "/jms/updateStatusQueue") Queue q);
+    public void mapStatusToQueue(@Observes Status status, @JmsDestination(jndiName = "java:/jms/updateStatusQueue") Queue q);
 }
