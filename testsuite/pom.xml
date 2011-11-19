@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -28,6 +27,12 @@
 			<groupId>org.jboss.solder</groupId>
 			<artifactId>solder-impl</artifactId>
 		</dependency>
+
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
 		<dependency>
 			<groupId>org.jboss.spec.javax.jms</groupId>
@@ -60,100 +65,57 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<skip>true</skip>
-					<systemProperties>
-						<arquillian.launch>${arquillian}</arquillian.launch>
-						<arquillian>${arquillian}</arquillian>
-					</systemProperties>
-				</configuration>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+	
+    <profiles>
+        <profile>
+            <activation>
+                <property>
+                    <name>arquillian</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                            <systemProperties>
+                                <arquillian.launch>${arquillian}</arquillian.launch>
+                                <arquillian>${arquillian}</arquillian>
+                            </systemProperties>
+                        </configuration>
 
-				<executions>
-					<execution>
-						<id>surefire-it</id>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<skip>false</skip>
-							<redirectTestOutputToFile>true</redirectTestOutputToFile>
-							<trimStackTrace>false</trimStackTrace>
-							<printSummary>true</printSummary>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-
-	<profiles>
-    <!--
-		<profile>
-			<id>weld-ee-embedded-1.1</id>
-			<activation>
-        <activeByDefault>true</activeByDefault>
-				<property>
-					<name>arquillian</name>
-					<value>weld-ee-embedded-1.1</value>
-				</property>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.spec.javax.el</groupId>
-					<artifactId>jboss-el-api_2.2_spec</artifactId>
-				</dependency>
-
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-weld-se-embedded-1.1</artifactId>
-					<scope>test</scope>
-				</dependency>
-
-				<dependency>
-					<groupId>org.hornetq</groupId>
-					<artifactId>hornetq-jms</artifactId>
-					<version>${hornetq.version}</version>
-				</dependency>
-
-				<dependency>
-					<groupId>org.hornetq</groupId>
-					<artifactId>hornetq-jms-client</artifactId>
-					<version>${hornetq.version}</version>
-				</dependency>
-
-				<dependency>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-simple</artifactId>
-					<scope>test</scope>
-				</dependency>
-
-				<dependency>
-					<groupId>org.jboss.weld</groupId>
-					<artifactId>weld-core</artifactId>
-					<scope>test</scope>
-				</dependency>
-
-				<dependency>
-					<groupId>org.jboss.weld</groupId>
-					<artifactId>weld-api</artifactId>
-					<scope>test</scope>
-				</dependency>
-
-				<dependency>
-					<groupId>commons-collections</groupId>
-					<artifactId>commons-collections</artifactId>
-					<version>3.2.1</version>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-    -->
+                        <executions>
+                            <execution>
+                                <id>surefire-it</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <configuration>
+                                    <skip>false</skip>
+                                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                                    <trimStackTrace>false</trimStackTrace>
+                                    <printSummary>true</printSummary>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
 		<profile>
 			<id>jbossas-remote-6</id>

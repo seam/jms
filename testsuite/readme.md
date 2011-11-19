@@ -15,7 +15,7 @@
     mvn clean verify -Darquillian=jbossas-remote-7
     
 ##Running the testsuite on JBoss AS 6
-    export JBOSS_HOME=/path/to/jboss-as-7.x
+    export JBOSS_HOME=/path/to/jboss-as-6.x
     
     Disable security.  See [SEAMJMS-13](https://issues.jboss.org/browse/SEAMJMS-13) for more information.
     sed '/<\/address-settings>/a<security-enabled>false</security-enabled>' -i ${JBOSS_HOME}/server/default/deploy/hornetq/hornetq-configuration.xml

@@ -39,7 +39,7 @@ public class ReceivingClient implements Serializable {
     	log.debug("Creating new ReceivingClient.");
     	this.pendingStatuses = new ArrayList<Integer>();
         this.receivedStatuses = new LinkedList<Status>();
-        topicBuilder.destination("jms/statusInfoTopic").listen(new ReceivingClientListener(this));
+        topicBuilder.destination("java:/jms/statusInfoTopic").listen(new ReceivingClientListener(this));
     }
     
     public String receive() {
