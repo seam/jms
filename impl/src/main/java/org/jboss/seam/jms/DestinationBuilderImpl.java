@@ -10,7 +10,7 @@ import org.jboss.solder.exception.control.ExceptionToCatch;
 
 import org.jboss.solder.logging.Logger;
 
-public class QueueBuilderImpl implements QueueBuilder {
+public class DestinationBuilderImpl implements DestinationBuilder {
 
     private Event<ExceptionToCatch> exceptionEvent;
     private ConnectionFactory connectionFactory;
@@ -18,17 +18,17 @@ public class QueueBuilderImpl implements QueueBuilder {
     private Session session;
     private javax.jms.MessageProducer messageProducer;
     private javax.jms.MessageConsumer messageConsumer;
-    private Queue lastQueue;
+    private Destination lastDestination;
     private boolean transacted = false;
     private int sessionMode = Session.AUTO_ACKNOWLEDGE;
 
-    QueueBuilderImpl(Event<ExceptionToCatch> exceptionEvent) {
+    DestinationBuilderImpl(Event<ExceptionToCatch> exceptionEvent) {
         this.exceptionEvent = exceptionEvent;
     }
 
     @Override
-    public QueueBuilder destination(Queue queue) {
-        this.lastQueue = queue;
+    public DestinationBuilder destination(Destination destination) {
+        this.lastDestination = destination;
         this.messageProducer = null;
         this.messageConsumer = null;
         return this;
@@ -96,7 +96,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     private void createMessageProducer() {
         if (messageProducer == null) {
             try {
-                this.messageProducer = session.createProducer(lastQueue);
+                this.messageProducer = session.createProducer(lastDestination);
             } catch (JMSException ex) {
                 this.exceptionEvent.fire(new ExceptionToCatch(ex));
             }
@@ -106,7 +106,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     private void createMessageConsumer() {
         if (messageConsumer == null) {
             try {
-                this.messageConsumer = session.createConsumer(lastQueue);
+                this.messageConsumer = session.createConsumer(lastDestination);
             } catch (JMSException ex) {
                 this.exceptionEvent.fire(new ExceptionToCatch(ex));
             }
@@ -114,7 +114,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     }
 
     @Override
-    public QueueBuilder connectionFactory(ConnectionFactory cf) {
+    public DestinationBuilder connectionFactory(ConnectionFactory cf) {
         cleanConnection();
         this.connectionFactory = cf;
         getSession();
@@ -122,7 +122,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     }
 
     @Override
-    public QueueBuilder send(Message m) {
+    public DestinationBuilder send(Message m) {
         this.createMessageProducer();
         try{
             this.messageProducer.send(m);
@@ -133,7 +133,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     }
 
     @Override
-    public QueueBuilder sendMap(Map map) {
+    public DestinationBuilder sendMap(Map map) {
         try {
             Session s = getSession();
             MapMessage msg = s.createMapMessage();
@@ -150,7 +150,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     }
 
     @Override
-    public QueueBuilder sendString(String string) {
+    public DestinationBuilder sendString(String string) {
         try{
             Session s = getSession();
             TextMessage tm = s.createTextMessage();
@@ -163,7 +163,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     }
     
     @Override
-    public QueueBuilder sendObject(Serializable obj) {
+    public DestinationBuilder sendObject(Serializable obj) {
         try{
             Session s = getSession();
             ObjectMessage om = s.createObjectMessage();
@@ -176,7 +176,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     }
 
     @Override
-    public QueueBuilder listen(MessageListener listener) {
+    public DestinationBuilder listen(MessageListener listener) {
         this.createMessageConsumer();
         try{
             this.messageConsumer.setMessageListener(listener);
@@ -187,18 +187,18 @@ public class QueueBuilderImpl implements QueueBuilder {
     }
 
     @Override
-    public QueueBuilder newBuilder() {
-        return new QueueBuilderImpl(this.exceptionEvent);
+    public DestinationBuilder newBuilder() {
+        return new DestinationBuilderImpl(this.exceptionEvent);
     }
 
     @Override
-    public QueueBuilder transacted() {
+    public DestinationBuilder transacted() {
         this.transacted = !this.transacted;
         return this;
     }
 
     @Override
-    public QueueBuilder sessionMode(int sessionMode) {
+    public DestinationBuilder sessionMode(int sessionMode) {
         this.sessionMode = sessionMode;
         return this;
     }

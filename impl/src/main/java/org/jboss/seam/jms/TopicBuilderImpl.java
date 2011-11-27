@@ -1,18 +1,10 @@
 package org.jboss.seam.jms;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import java.util.Set;
 import javax.enterprise.event.Event;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.Session;
-import javax.jms.Topic;
-import javax.jms.TopicPublisher;
 import javax.jms.*;
 
 import org.jboss.solder.exception.control.ExceptionToCatch;
@@ -26,8 +18,9 @@ public class TopicBuilderImpl implements TopicBuilder {
     private javax.jms.MessageProducer messageProducer;
     private javax.jms.MessageConsumer messageConsumer;
     private Topic lastTopic;
-    private boolean transacted;
-    private int sessionMode;
+    private boolean transacted = false;
+    private int sessionMode = Session.AUTO_ACKNOWLEDGE;
+
     private String subtopic;
 
     TopicBuilderImpl(Event<ExceptionToCatch> event) {
@@ -207,5 +200,17 @@ public class TopicBuilderImpl implements TopicBuilder {
 
     public String getSubtopic() {
         return this.subtopic;
+    }
+
+    @Override
+    public TopicBuilder transacted() {
+        this.transacted = !this.transacted;
+        return this;
+    }
+
+    @Override
+    public TopicBuilder sessionMode(int sessionMode) {
+        this.sessionMode = sessionMode;
+        return this;
     }
 }

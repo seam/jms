@@ -17,6 +17,21 @@ import javax.jms.Topic;
 public interface TopicBuilder extends Serializable {
 
     /**
+     * Toggles the transacted state (default is false) for this builder.
+     * 
+     * @return this Builder.
+     */
+    public TopicBuilder transacted();
+
+    /**
+     * Sets the session mode for this Builder.  Default is Session.AUTO_ACKNOWLEDGE
+     * 
+     * @param sessionMode  SessionMode flag, see javax.jms.Session's list of valid values.
+     * @return this Builder.
+     */
+    public TopicBuilder sessionMode(int sessionMode);
+    
+    /**
      * Specifies the ConnectionFactory to use.
      * 
      * @param ConnectionFactory to use.

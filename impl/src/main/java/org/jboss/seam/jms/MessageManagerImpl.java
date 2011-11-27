@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.jms.BytesMessage;
 import javax.jms.Destination;
@@ -337,13 +336,11 @@ public class MessageManagerImpl implements MessageManager {
         return mc;
     }
 
-    @Produces
     @Override
     public TopicBuilder createTopicBuilder() {
         return new TopicBuilderImpl(this.exceptionEvent);
     }
 
-    @Produces
     @Override
     public QueueBuilder createQueueBuilder() {
         return new QueueBuilderImpl(this.exceptionEvent);
