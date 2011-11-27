@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Event;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.jms.BytesMessage;
@@ -30,32 +31,36 @@ import javax.naming.NamingException;
 
 import org.jboss.solder.logging.Logger;
 import org.jboss.seam.jms.annotations.JmsDefault;
+import org.jboss.solder.exception.control.ExceptionToCatch;
 
 @Dependent
 public class MessageManagerImpl implements MessageManager {
 
-    @Inject @JmsDefault("session")
+    @Inject
+    @JmsDefault("session")
     Session session;
-
+    @Inject
+    Event<ExceptionToCatch> exceptionEvent;
     private Logger logger = Logger.getLogger(MessageManagerImpl.class);
-/*
+    /*
     @PostConstruct
     public void init() {
-        try {
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        } catch (JMSException e) {
-        }
+    try {
+    session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+    } catch (JMSException e) {
     }
-
+    }
+    
     @PreDestroy
     public void close() {
-        try {
-            session.commit();
-            connection.close();
-        } catch (JMSException e) {
-        }
+    try {
+    session.commit();
+    connection.close();
+    } catch (JMSException e) {
     }
-*/
+    }
+     */
+
     @Override
     public ObjectMessage createObjectMessage(Object object) {
         if (!(object instanceof Serializable)) {
@@ -155,25 +160,27 @@ public class MessageManagerImpl implements MessageManager {
 
     @Override
     public void sendMessage(Message message, Destination... destinations) {
-        for (Destination destination : destinations)
+        for (Destination destination : destinations) {
             sendMessage(destination, message);
+        }
     }
 
     @Override
     public void sendMessage(Message message, String... destinations) {
-        for (String destination : destinations)
+        for (String destination : destinations) {
             sendMessage(destination, message);
+        }
     }
 
     @Override
     public void sendObjectToDestinations(Object object,
-                                         Destination... destinations) {
+            Destination... destinations) {
         sendMessage(this.createObjectMessage(object), destinations);
     }
 
     @Override
     public void sendTextToDestinations(String string,
-                                       Destination... destinations) {
+            Destination... destinations) {
         sendMessage(this.createTextMessage(string), destinations);
     }
 
@@ -184,7 +191,7 @@ public class MessageManagerImpl implements MessageManager {
 
     @Override
     public void sendBytesToDestinations(byte[] bytes,
-                                        Destination... destinations) {
+            Destination... destinations) {
         sendMessage(this.createBytesMessage(bytes), destinations);
     }
 
@@ -198,12 +205,13 @@ public class MessageManagerImpl implements MessageManager {
         try {
             MessageConsumer mc = this.session.createConsumer(lookupDestination(destination));
             if (mc != null && listeners != null) {
-                for (MessageListener listener : listeners)
+                for (MessageListener listener : listeners) {
                     try {
                         mc.setMessageListener(listener);
                     } catch (JMSException e) {
                         logger.warn("Unable to map listener " + listener + " to consumer " + mc, e);
                     }
+                }
             }
             return mc;
         } catch (JMSException e) {
@@ -212,30 +220,31 @@ public class MessageManagerImpl implements MessageManager {
         }
     }
 
-	@Override
-	public MessageConsumer createMessageConsumer(String destination, String selector, MessageListener... listeners) {
-		return createMessageConsumer(lookupDestination(destination),selector,listeners);
-	}
-	
-	@Override
-	public MessageConsumer createMessageConsumer(Destination destination, String selector, MessageListener... listeners) {
-		try {
-			MessageConsumer mc = this.session.createConsumer(destination,selector);
-			if(mc != null && listeners != null) {
-				for(MessageListener listener : listeners)
-					try {
-						mc.setMessageListener(listener);
-					} catch (JMSException e) {
-						logger.warn("Unable to map listener "+listener+" to consumer "+mc,e);
-					}
-			}
-			return mc;
-		} catch (JMSException e) {
-			logger.warn("Unable to create message consumer",e);
-			return null;
-		}
-	}
-	
+    @Override
+    public MessageConsumer createMessageConsumer(String destination, String selector, MessageListener... listeners) {
+        return createMessageConsumer(lookupDestination(destination), selector, listeners);
+    }
+
+    @Override
+    public MessageConsumer createMessageConsumer(Destination destination, String selector, MessageListener... listeners) {
+        try {
+            MessageConsumer mc = this.session.createConsumer(destination, selector);
+            if (mc != null && listeners != null) {
+                for (MessageListener listener : listeners) {
+                    try {
+                        mc.setMessageListener(listener);
+                    } catch (JMSException e) {
+                        logger.warn("Unable to map listener " + listener + " to consumer " + mc, e);
+                    }
+                }
+            }
+            return mc;
+        } catch (JMSException e) {
+            logger.warn("Unable to create message consumer", e);
+            return null;
+        }
+    }
+
     protected MessageConsumer createMessageConsumer(Destination destination) {
         try {
             return this.session.createConsumer(destination);
@@ -256,8 +265,7 @@ public class MessageManagerImpl implements MessageManager {
 
     private TopicSubscriber createDurableSubscriber(String destination, String id) {
         try {
-            return
-                    this.session.createDurableSubscriber((Topic) this.lookupDestination(destination), id);
+            return this.session.createDurableSubscriber((Topic) this.lookupDestination(destination), id);
         } catch (JMSException e) {
             logger.warn("Unable to create durable subscriber", e);
             return null;
@@ -286,73 +294,73 @@ public class MessageManagerImpl implements MessageManager {
 
     @Override
     public TopicSubscriber createTopicSubscriber(String destination,
-                                                 MessageListener... listeners) {
+            MessageListener... listeners) {
         MessageConsumer mc = this.createMessageConsumer(destination, listeners);
         return (TopicSubscriber) mc;
     }
-	
-    @Override
-	public TopicSubscriber createTopicSubscriber(String destination,
-			String selector,
-			MessageListener... listeners) {
-    	return (TopicSubscriber)this.createMessageConsumer(destination, selector, listeners);
-	}
-    
-    @Override
-	public TopicSubscriber createTopicSubscriber(Destination destination,
-			String selector,
-			MessageListener... listeners) {
-		return (TopicSubscriber)this.createMessageConsumer(destination, selector, listeners);
-		
-	}
 
-	@Override
+    @Override
+    public TopicSubscriber createTopicSubscriber(String destination,
+            String selector,
+            MessageListener... listeners) {
+        return (TopicSubscriber) this.createMessageConsumer(destination, selector, listeners);
+    }
+
+    @Override
+    public TopicSubscriber createTopicSubscriber(Destination destination,
+            String selector,
+            MessageListener... listeners) {
+        return (TopicSubscriber) this.createMessageConsumer(destination, selector, listeners);
+
+    }
+
+    @Override
     public QueueReceiver createQueueReceiver(String destination,
-                                             MessageListener... listeners) {
+            MessageListener... listeners) {
         MessageConsumer mc = this.createMessageConsumer(destination, listeners);
         return (QueueReceiver) mc;
     }
 
     @Override
     public MessageConsumer createMessageConsumer(Destination destination,
-                                                 MessageListener... listeners) {
+            MessageListener... listeners) {
         MessageConsumer mc = this.createMessageConsumer(destination);
         if (mc != null && listeners != null) {
-            for (MessageListener listener : listeners)
+            for (MessageListener listener : listeners) {
                 try {
                     mc.setMessageListener(listener);
                 } catch (JMSException e) {
                     logger.warn("Unable to set listener " + listener + " on to destination " + destination);
                 }
+            }
         }
         return mc;
-	}
+    }
 
     @Produces
-	@Override
-	public TopicBuilder createTopicBuilder() {
-		return new TopicBuilderImpl(this);
+    @Override
+    public TopicBuilder createTopicBuilder() {
+        return new TopicBuilderImpl(this.exceptionEvent);
     }
-	
-	@Produces
-	@Override
-	public QueueBuilder createQueueBuilder() {
-		return new QueueBuilderImpl(this);
-	}
 
-	@Override
-	public JmsMessage createJmsMessage(Class<?> payloadType, Object payload) {
-		return new JmsMessageImpl(payloadType,payload,this);
-	}
+    @Produces
+    @Override
+    public QueueBuilder createQueueBuilder() {
+        return new QueueBuilderImpl(this.exceptionEvent);
+    }
 
-	@Override
-	public TopicPublisher createTopicPublisher(Topic topic) {
-		return (TopicPublisher)this.createMessageProducer(topic);
-	}
+    @Override
+    public JmsMessage createJmsMessage(Class<?> payloadType, Object payload) {
+        return new JmsMessageImpl(payloadType, payload, this);
+    }
 
-	@Override
-	public QueueSender createQueueSender(Queue queue) {
-		return (QueueSender)this.createMessageProducer(queue);
-	}
+    @Override
+    public TopicPublisher createTopicPublisher(Topic topic) {
+        return (TopicPublisher) this.createMessageProducer(topic);
+    }
 
+    @Override
+    public QueueSender createQueueSender(Queue queue) {
+        return (QueueSender) this.createMessageProducer(queue);
+    }
 }

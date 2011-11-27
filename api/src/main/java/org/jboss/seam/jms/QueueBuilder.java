@@ -3,6 +3,7 @@ package org.jboss.seam.jms;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.Queue;
@@ -14,13 +15,15 @@ import javax.jms.Queue;
  *
  */
 public interface QueueBuilder extends Serializable {
+	
 	/**
-	 * Adds a destination based on JNDI location.
+	 * Specifies the ConnectionFactory to use.
 	 * 
-	 * @param destination jndi location.
-	 * @return this QueueBuilder
+	 * @param ConnectionFactory to use.
+	 * @return this QueueBuilder.
 	 */
-	public QueueBuilder destination(String destination);
+	public QueueBuilder connectionFactory(ConnectionFactory connectionFactory);
+
 	/**
 	 * Adds a Queue to the destinations of this QueueBuilder.
 	 * 
@@ -28,13 +31,6 @@ public interface QueueBuilder extends Serializable {
 	 * @return this QueueBuilder
 	 */
 	public QueueBuilder destination(Queue queue);
-	/**
-	 * Sends an Object as a JMS Object Message to the destinations associated.
-	 * 
-	 * @param obj the serializable Object to send.
-	 * @return this QueueBuilder
-	 */
-	public QueueBuilder sendObject(Object obj);
 	/**
 	 * Sends a JMS Message to the destinations associated.
 	 * 
@@ -56,13 +52,21 @@ public interface QueueBuilder extends Serializable {
 	 * @return this QueueBuilder.
 	 */
 	public QueueBuilder sendString(String s);
+        
+        /**
+         * Sends a Serializable Object as an ObjectMessage.
+         * 
+         * @param obj The Serializable object to send.
+         * @return this QueueBuilder
+         */
+        public QueueBuilder sendObject(Serializable obj);
 	/**
 	 * Adds the given MessageListeners as listeners on the associated destinations.
 	 * 
 	 * @param ml MessageListener instances to connect to these destinations.
 	 * @return this QueueBuilder
 	 */
-	public QueueBuilder listen(MessageListener... ml);
+	public QueueBuilder listen(MessageListener ml);
 	/**
 	 * Creates a QueueBuilder.  It will be associated with any active Session.
 	 * 
