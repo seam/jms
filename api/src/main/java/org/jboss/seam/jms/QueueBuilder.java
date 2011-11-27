@@ -7,6 +7,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.Queue;
+import javax.jms.QueueBrowser;
 
 /**
  * QueueBuilder is a builder pattern implementation for working with JMS Queues.
@@ -93,4 +94,11 @@ public interface QueueBuilder extends Serializable {
      * @return a new QueueBuilder instance.
      */
     public QueueBuilder newBuilder();
+    
+    /**
+     * Creates a QueueBrowser from the configured session and queue.
+     * 
+     * @return a QueueBrowser on top of the configured queue and session.
+     */
+    public QueueBrowser getQueueBrowser();
 }

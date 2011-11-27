@@ -202,4 +202,13 @@ public class QueueBuilderImpl implements QueueBuilder {
         this.sessionMode = sessionMode;
         return this;
     }
+    
+    public QueueBrowser getQueueBrowser() {
+        try{
+            return this.session.createBrowser(this.lastQueue);
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+            return null;
+        }
+    }
 }
