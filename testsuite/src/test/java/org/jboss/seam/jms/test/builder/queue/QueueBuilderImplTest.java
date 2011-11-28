@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.jms.MapMessage;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
+import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import junit.framework.Assert;
@@ -36,85 +37,86 @@ import org.jboss.seam.jms.QueueBuilder;
 import org.jboss.seam.jms.QueueBuilderImpl;
 import org.jboss.seam.jms.test.DeploymentFactory;
 import org.jboss.shrinkwrap.api.Archive;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 public class QueueBuilderImplTest {
 
-	@Deployment
+    @Deployment
     public static Archive<?> createDeployment() {
-        return DeploymentFactory.createDeployment(QueueBuilderImplTest.class,QueueBuilderImpl.class);
+        return DeploymentFactory.createDeployment(QueueBuilderImplTest.class, QueueBuilderImpl.class);
     }
-	
-	@Inject QueueBuilder queueBuilder;
-		
-	@Test
-	public void testNewBuilder() {
-		QueueBuilder tb = queueBuilder.newBuilder();
-		Assert.assertFalse(tb.equals(queueBuilder));
-	}
-	
-	@Test
-	public void testDestination() {
-		QueueBuilder tb = queueBuilder.newBuilder();
-		//tb.destination("myDestination");
-		if(!(tb instanceof QueueBuilderImpl)) {
-			Assert.assertFalse(true);
-		}
-		QueueBuilderImpl tbi = (QueueBuilderImpl)tb;
-		//ist<javax.jms.Queue> destinations = tbi.getDestinations();
-		//Assert.assertEquals(1, destinations.size());
-		//Assert.assertNull(destinations.get(0));
-	}
-	
-	private static void testMessageSent(boolean observed,Class<?> type,QueueTestListener ttl) {
-		Assert.assertEquals(observed, ttl.isObserved());
-		if(type == null) {
-			Assert.assertTrue(ttl.getMessageClass() == null);
-		} else {
-			Assert.assertTrue(type.isAssignableFrom(ttl.getMessageClass()));
-		}
-	}
-	
-	@Test
-	public void testListen() {
-		QueueTestListener ttl = new QueueTestListener();
-		queueBuilder.newBuilder().listen(ttl);
-		testMessageSent(false,null,ttl);
-	}
-	@Resource(mappedName="jms/QA")
-        Queue qa;
-        
-        @Resource(mappedName="jms/QB")
-        Queue qb;
-        
-        @Resource(mappedName="jms/QC")
-        Queue qc;
-        
-	@Test
-	public void testSendMap() {
-		QueueTestListener ttl = new QueueTestListener();
-		Map mapData = new HashMap<String,String>();
-		mapData.put("my key","my value");
-		queueBuilder.newBuilder().destination(qa).listen(ttl).sendMap(mapData);
-		DeploymentFactory.pause(5000);
-		testMessageSent(true,MapMessage.class,ttl);
-	}
-	@Test
-	public void testSendString() {
-		QueueTestListener ttl = new QueueTestListener();
-		String data = "new data";
-		queueBuilder.newBuilder().destination(qb).listen(ttl).sendString(data);
-		DeploymentFactory.pause(5000);
-		testMessageSent(true,TextMessage.class,ttl);
-	}
-	@Test
-	public void testSendObject() {
-		QueueTestListener ttl = new QueueTestListener();
-		Serializable data = 33L;
-		queueBuilder.newBuilder().destination(qc).listen(ttl).sendObject(data);
-		DeploymentFactory.pause(5000);
-		testMessageSent(true,ObjectMessage.class,ttl);
-	}
+    @Inject
+    QueueBuilder queueBuilder;
+
+    @Test
+    public void testNewBuilder() {
+        QueueBuilder tb = queueBuilder.newBuilder();
+        Assert.assertFalse(tb.equals(queueBuilder));
+    }
+
+    @Test
+    public void testDestination() {
+        QueueBuilder tb = queueBuilder.newBuilder();
+        //tb.destination("myDestination");
+        if (!(tb instanceof QueueBuilderImpl)) {
+            Assert.assertFalse(true);
+        }
+        QueueBuilderImpl tbi = (QueueBuilderImpl) tb;
+        //ist<javax.jms.Queue> destinations = tbi.getDestinations();
+        //Assert.assertEquals(1, destinations.size());
+        //Assert.assertNull(destinations.get(0));
+    }
+
+    private static void testMessageSent(boolean observed, Class<?> type, QueueTestListener ttl) {
+        Assert.assertEquals(observed, ttl.isObserved());
+        if (type == null) {
+            Assert.assertTrue(ttl.getMessageClass() == null);
+        } else {
+            Assert.assertTrue(type.isAssignableFrom(ttl.getMessageClass()));
+        }
+    }
+
+    @Test @Ignore
+    public void testListen() {
+        QueueTestListener ttl = new QueueTestListener();
+        queueBuilder.newBuilder().listen(ttl);
+        testMessageSent(false, null, ttl);
+    }
+    @Resource(mappedName = "jms/QA")
+    Queue qa;
+    @Resource(mappedName = "jms/QB")
+    Queue qb;
+    @Resource(mappedName = "jms/QC")
+    Queue qc;
+
+    @Test
+    public void testSendMap() {
+        QueueTestListener ttl = new QueueTestListener();
+        Map mapData = new HashMap<String, String>();
+        mapData.put("my key", "my value");
+        queueBuilder.newBuilder().transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qa).listen(ttl).sendMap(mapData);
+        DeploymentFactory.pause(5000);
+        testMessageSent(true, MapMessage.class, ttl);
+    }
+
+    @Test
+    public void testSendString() {
+        QueueTestListener ttl = new QueueTestListener();
+        String data = "new data";
+        queueBuilder.newBuilder().transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qb).listen(ttl).sendString(data);
+        DeploymentFactory.pause(5000);
+        testMessageSent(true, TextMessage.class, ttl);
+    }
+
+    @Test
+    public void testSendObject() {
+        QueueTestListener ttl = new QueueTestListener();
+        Serializable data = 33L;
+        queueBuilder.newBuilder().transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qc).listen(ttl).sendObject(data);
+        DeploymentFactory.pause(5000);
+        testMessageSent(true, ObjectMessage.class, ttl);
+    }
 }

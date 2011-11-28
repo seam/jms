@@ -29,6 +29,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     @Override
     public QueueBuilder destination(Queue queue) {
         this.lastQueue = queue;
+        cleanupMessaging();
         this.messageProducer = null;
         this.messageConsumer = null;
         return this;
