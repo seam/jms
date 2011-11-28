@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.jms.ConnectionFactory;
 import javax.jms.MapMessage;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
@@ -91,13 +92,15 @@ public class QueueBuilderImplTest {
     Queue qb;
     @Resource(mappedName = "jms/QC")
     Queue qc;
+    
+    @Resource(mappedName="/ConnectionFactory") ConnectionFactory cf;
 
     @Test
     public void testSendMap() {
         QueueTestListener ttl = new QueueTestListener();
         Map mapData = new HashMap<String, String>();
         mapData.put("my key", "my value");
-        queueBuilder.newBuilder().transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qa).listen(ttl).sendMap(mapData);
+        queueBuilder.newBuilder().connectionFactory(cf).transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qa).listen(ttl).sendMap(mapData);
         DeploymentFactory.pause(5000);
         testMessageSent(true, MapMessage.class, ttl);
     }
@@ -106,7 +109,7 @@ public class QueueBuilderImplTest {
     public void testSendString() {
         QueueTestListener ttl = new QueueTestListener();
         String data = "new data";
-        queueBuilder.newBuilder().transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qb).listen(ttl).sendString(data);
+        queueBuilder.newBuilder().connectionFactory(cf).transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qb).listen(ttl).sendString(data);
         DeploymentFactory.pause(5000);
         testMessageSent(true, TextMessage.class, ttl);
     }
@@ -115,7 +118,7 @@ public class QueueBuilderImplTest {
     public void testSendObject() {
         QueueTestListener ttl = new QueueTestListener();
         Serializable data = 33L;
-        queueBuilder.newBuilder().transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qc).listen(ttl).sendObject(data);
+        queueBuilder.newBuilder().connectionFactory(cf).transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qc).listen(ttl).sendObject(data);
         DeploymentFactory.pause(5000);
         testMessageSent(true, ObjectMessage.class, ttl);
     }
