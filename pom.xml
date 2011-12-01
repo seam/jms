@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.jboss.seam</groupId>
         <artifactId>seam-parent</artifactId>
-        <version>16</version>
+        <version>18</version>
     </parent>
 
     <groupId>org.jboss.seam.jms</groupId>
@@ -17,7 +17,7 @@
     <url>http://sfwk.org/Seam3/JMS</url>
 
     <properties>
-        <seam.version>3.1.0.Beta4</seam.version>
+        <seam.version>3.1.0.CR1</seam.version>
         <emma.version>2.0.5312</emma.version>
     </properties>
 
