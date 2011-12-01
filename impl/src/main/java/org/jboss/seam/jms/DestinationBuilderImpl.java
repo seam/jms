@@ -4,12 +4,13 @@ import java.io.Serializable;
 import java.util.Map;
 
 import java.util.Set;
-import javax.enterprise.event.Event;
 import javax.jms.*;
-
+import javax.enterprise.event.Event;
 import org.jboss.solder.exception.control.ExceptionToCatch;
 
-public class TopicBuilderImpl implements TopicBuilder {
+import org.jboss.solder.logging.Logger;
+
+public class DestinationBuilderImpl implements DestinationBuilder {
 
     private Event<ExceptionToCatch> exceptionEvent;
     private ConnectionFactory connectionFactory;
@@ -17,19 +18,17 @@ public class TopicBuilderImpl implements TopicBuilder {
     private Session session;
     private javax.jms.MessageProducer messageProducer;
     private javax.jms.MessageConsumer messageConsumer;
-    private Topic lastTopic;
+    private Destination lastDestination;
     private boolean transacted = false;
     private int sessionMode = Session.AUTO_ACKNOWLEDGE;
 
-    private String subtopic;
-
-    TopicBuilderImpl(Event<ExceptionToCatch> event) {
-        this.exceptionEvent = event;
+    DestinationBuilderImpl(Event<ExceptionToCatch> exceptionEvent) {
+        this.exceptionEvent = exceptionEvent;
     }
 
     @Override
-    public TopicBuilder destination(Topic topic) {
-        this.lastTopic = topic;
+    public DestinationBuilder destination(Destination destination) {
+        this.lastDestination = destination;
         this.messageProducer = null;
         this.messageConsumer = null;
         return this;
@@ -87,7 +86,7 @@ public class TopicBuilderImpl implements TopicBuilder {
 
             this.session = null;
             this.connection = null;
-
+            
             cleanupMessaging();
         } catch (JMSException ex) {
             this.exceptionEvent.fire(new ExceptionToCatch(ex));
@@ -97,7 +96,7 @@ public class TopicBuilderImpl implements TopicBuilder {
     private void createMessageProducer() {
         if (messageProducer == null) {
             try {
-                this.messageProducer = session.createProducer(lastTopic);
+                this.messageProducer = session.createProducer(lastDestination);
             } catch (JMSException ex) {
                 this.exceptionEvent.fire(new ExceptionToCatch(ex));
             }
@@ -107,7 +106,7 @@ public class TopicBuilderImpl implements TopicBuilder {
     private void createMessageConsumer() {
         if (messageConsumer == null) {
             try {
-                this.messageConsumer = session.createConsumer(lastTopic);
+                this.messageConsumer = session.createConsumer(lastDestination);
             } catch (JMSException ex) {
                 this.exceptionEvent.fire(new ExceptionToCatch(ex));
             }
@@ -115,7 +114,7 @@ public class TopicBuilderImpl implements TopicBuilder {
     }
 
     @Override
-    public TopicBuilder connectionFactory(ConnectionFactory cf) {
+    public DestinationBuilder connectionFactory(ConnectionFactory cf) {
         cleanConnection();
         this.connectionFactory = cf;
         getSession();
@@ -123,9 +122,9 @@ public class TopicBuilderImpl implements TopicBuilder {
     }
 
     @Override
-    public TopicBuilder send(Message m) {
+    public DestinationBuilder send(Message m) {
         this.createMessageProducer();
-        try {
+        try{
             this.messageProducer.send(m);
         } catch (JMSException ex) {
             this.exceptionEvent.fire(new ExceptionToCatch(ex));
@@ -134,13 +133,7 @@ public class TopicBuilderImpl implements TopicBuilder {
     }
 
     @Override
-    public TopicBuilder subtopic(String subtopic) {
-        this.subtopic = subtopic;
-        return this;
-    }
-
-    @Override
-    public TopicBuilder sendMap(Map map) {
+    public DestinationBuilder sendMap(Map map) {
         try {
             Session s = getSession();
             MapMessage msg = s.createMapMessage();
@@ -157,35 +150,35 @@ public class TopicBuilderImpl implements TopicBuilder {
     }
 
     @Override
-    public TopicBuilder sendString(String string) {
-        try {
+    public DestinationBuilder sendString(String string) {
+        try{
             Session s = getSession();
             TextMessage tm = s.createTextMessage();
             tm.setText(string);
             send(tm);
         } catch (JMSException ex) {
             this.exceptionEvent.fire(new ExceptionToCatch(ex));
-        }
+        } 
         return this;
     }
-
+    
     @Override
-    public TopicBuilder sendObject(Serializable obj) {
-        try {
+    public DestinationBuilder sendObject(Serializable obj) {
+        try{
             Session s = getSession();
             ObjectMessage om = s.createObjectMessage();
             om.setObject(obj);
             send(om);
         } catch (JMSException ex) {
             this.exceptionEvent.fire(new ExceptionToCatch(ex));
-        }
+        } 
         return this;
     }
 
     @Override
-    public TopicBuilder listen(MessageListener listener) {
+    public DestinationBuilder listen(MessageListener listener) {
         this.createMessageConsumer();
-        try {
+        try{
             this.messageConsumer.setMessageListener(listener);
         } catch (JMSException ex) {
             this.exceptionEvent.fire(new ExceptionToCatch(ex));
@@ -194,22 +187,18 @@ public class TopicBuilderImpl implements TopicBuilder {
     }
 
     @Override
-    public TopicBuilder newBuilder() {
-        return new TopicBuilderImpl(this.exceptionEvent);
-    }
-
-    public String getSubtopic() {
-        return this.subtopic;
+    public DestinationBuilder newBuilder() {
+        return new DestinationBuilderImpl(this.exceptionEvent);
     }
 
     @Override
-    public TopicBuilder transacted() {
+    public DestinationBuilder transacted() {
         this.transacted = !this.transacted;
         return this;
     }
 
     @Override
-    public TopicBuilder sessionMode(int sessionMode) {
+    public DestinationBuilder sessionMode(int sessionMode) {
         this.sessionMode = sessionMode;
         return this;
     }

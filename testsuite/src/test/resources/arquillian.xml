@@ -25,6 +25,11 @@
 
     <container qualifier=""/>
     <container qualifier="weld-ee-embedded-1.1"/>
+    <container qualifier="jbossas-managed-6">
+       <configuration>
+            <property name="javaVmArguments">-Xmx1024m -XX:MaxPermSize=512m</property>
+       </configuration>
+    </container>
     <container qualifier="jbossas-remote-6"/>
     <container qualifier="jbossas-remote-7"/>
     

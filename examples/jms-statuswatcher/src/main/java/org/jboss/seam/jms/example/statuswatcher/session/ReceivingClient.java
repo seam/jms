@@ -6,11 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import javax.jms.Topic;
 import org.jboss.seam.jms.TopicBuilder;
 import org.jboss.seam.jms.example.statuswatcher.model.Status;
 import org.jboss.solder.logging.Logger;
@@ -34,12 +36,16 @@ public class ReceivingClient implements Serializable {
     @Inject TopicBuilder topicBuilder;
     @EJB StatusManager statusManager;
 
+    @Resource(mappedName="java:/jms/statusInfoTopic")
+    Topic statusInfoTopic;
+    
+    
     @PostConstruct
     public void initialize() {
     	log.debug("Creating new ReceivingClient.");
     	this.pendingStatuses = new ArrayList<Integer>();
         this.receivedStatuses = new LinkedList<Status>();
-        topicBuilder.destination("java:/jms/statusInfoTopic").listen(new ReceivingClientListener(this));
+        topicBuilder.destination(statusInfoTopic).listen(new ReceivingClientListener(this));
     }
     
     public String receive() {

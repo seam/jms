@@ -29,7 +29,6 @@ import javax.jms.TopicSubscriber;
 public interface MessageManager extends Serializable {
 
     /* factory methods for creating messages */
-
     /**
      * Creates an object message based on the object payload provided.
      *
@@ -103,15 +102,13 @@ public interface MessageManager extends Serializable {
      */
     public void sendBytesToDestinations(byte[] bytes, String... destinations);
 
-
-	/**
-	 * Sends the given message to the list of destinations.
-	 * 
-	 * @param message The message to be sent.
-	 * @param destinations an array of destinations to be sent to.
-	 */
+    /**
+     * Sends the given message to the list of destinations.
+     * 
+     * @param message The message to be sent.
+     * @param destinations an array of destinations to be sent to.
+     */
     public void sendMessage(Message message, Destination... destinations);
-
 
     /**
      * Wrapper method for creating object message, then sending it to listed destinations.
@@ -167,7 +164,7 @@ public interface MessageManager extends Serializable {
      * @return a new TopicPublisher that is ready to work.
      */
     public TopicPublisher createTopicPublisher(String destination);
-    
+
     /**
      * Creates a TopicPublisher for the given topic.
      *
@@ -180,14 +177,14 @@ public interface MessageManager extends Serializable {
      * Creates a TopicBuilder, simple interface for working with Topics.
      * @return a new TopicBuilder
      */
-	public TopicBuilder createTopicBuilder();
-	
-	/**
-	 * Creates a QueueBuilder, simple interface for working with Queues
-	 * @return a new QueueBuilder
-	 */
-	public QueueBuilder createQueueBuilder();
-	
+    public TopicBuilder createTopicBuilder();
+
+    /**
+     * Creates a QueueBuilder, simple interface for working with Queues
+     * @return a new QueueBuilder
+     */
+    public QueueBuilder createQueueBuilder();
+
     /**
      * Creates a QueueSender for the given queue.
      *
@@ -195,7 +192,7 @@ public interface MessageManager extends Serializable {
      * @return a new QueueSender that is ready to work.
      */
     public QueueSender createQueueSender(String destination);
-    
+
     /**
      * Creates a QueueSender for the given queue.
      *
@@ -241,17 +238,17 @@ public interface MessageManager extends Serializable {
     public QueueReceiver createQueueReceiver(String destination, MessageListener... listeners);
 
     public MessageConsumer createMessageConsumer(Destination destination, String selector, MessageListener... listeners);
-    
-	public MessageConsumer createMessageConsumer(String destination, String selector,
-			MessageListener... listeners);
 
-	public TopicSubscriber createTopicSubscriber(String destination, String selector,
-			MessageListener... listeners);
-	
-	public TopicSubscriber createTopicSubscriber(Destination destination, String selector,
-			MessageListener... listeners);
-	
-	public Destination lookupDestination(String jndiName);
-	
-	public JmsMessage createJmsMessage(Class<?> payloadType, Object payload);
+    public MessageConsumer createMessageConsumer(String destination, String selector,
+            MessageListener... listeners);
+
+    public TopicSubscriber createTopicSubscriber(String destination, String selector,
+            MessageListener... listeners);
+
+    public TopicSubscriber createTopicSubscriber(Destination destination, String selector,
+            MessageListener... listeners);
+
+    public Destination lookupDestination(String jndiName);
+
+    public JmsMessage createJmsMessage(Class<?> payloadType, Object payload);
 }

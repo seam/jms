@@ -1,88 +1,215 @@
 package org.jboss.seam.jms;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Map;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.Queue;
-import javax.jms.QueueSender;
-import javax.jms.Session;
-import javax.jms.TopicPublisher;
-import javax.jms.TopicSubscriber;
+import java.util.Set;
+import javax.jms.*;
+import javax.enterprise.event.Event;
+import org.jboss.solder.exception.control.ExceptionToCatch;
 
 import org.jboss.solder.logging.Logger;
 
 public class QueueBuilderImpl implements QueueBuilder {
 
-	private MessageManager messageManager;
-	private List<Queue> destinations;
-	private Logger logger;
-	
-	QueueBuilderImpl(MessageManager messageManager) {
-		this.logger = Logger.getLogger(QueueBuilder.class);
-		this.messageManager = messageManager;
-		this.destinations = new ArrayList<Queue>();
-	}
-	
-	@Override
-	public QueueBuilder destination(String destination) {
-		Queue queue = (Queue)this.messageManager.lookupDestination(destination);
-		return destination(queue);
-	}
-	
-	@Override
-	public QueueBuilder destination(Queue queue) {
-		destinations.add(queue);
-		return this;
-	}
+    private Event<ExceptionToCatch> exceptionEvent;
+    private ConnectionFactory connectionFactory;
+    private Connection connection;
+    private Session session;
+    private javax.jms.MessageProducer messageProducer;
+    private javax.jms.MessageConsumer messageConsumer;
+    private Queue lastQueue;
+    private boolean transacted = false;
+    private int sessionMode = Session.AUTO_ACKNOWLEDGE;
 
-	@Override
-	public QueueBuilder sendObject(Object obj) {
-		send(this.messageManager.createObjectMessage(obj));
-		return this;
-	}
+    QueueBuilderImpl(Event<ExceptionToCatch> exceptionEvent) {
+        this.exceptionEvent = exceptionEvent;
+    }
 
-	@Override
-	public QueueBuilder send(Message m) {
-		for(Queue queue : this.destinations) {
-			QueueSender qs = messageManager.createQueueSender(queue);
-			try {
-				qs.send(m);
-			} catch (JMSException e) {
-				logger.warn("Error when sending JMS Message",e);
-			}
-		}
-		return this;
-	}
+    @Override
+    public QueueBuilder destination(Queue queue) {
+        this.lastQueue = queue;
+        cleanupMessaging();
+        this.messageProducer = null;
+        this.messageConsumer = null;
+        return this;
+    }
 
-	@Override
-	public QueueBuilder sendMap(Map m) {
-		send(this.messageManager.createMapMessage(m));
-		return this;
-	}
+    private Session getSession() {
+        if (this.connectionFactory != null) {
+            if (this.connection == null) {
+                this.session = null;
+                try {
+                    this.connection = this.connectionFactory.createConnection();
+                } catch (JMSException ex) {
+                    this.exceptionEvent.fire(new ExceptionToCatch(ex));
+                    throw new RuntimeException(ex);
+                }
+            }
+            if (this.session == null) {
+                try {
+                    this.session = connection.createSession(transacted, sessionMode);
+                } catch (JMSException ex) {
+                    this.exceptionEvent.fire(new ExceptionToCatch(ex));
+                    throw new RuntimeException(ex);
+                }
+            }
+        } else {
+            throw new RuntimeException("Attempting to pull the session before setting the connectionFactory");
+        }
+        return this.session;
+    }
 
-	@Override
-	public QueueBuilder sendString(String s) {
-		send(this.messageManager.createTextMessage(s));
-		return this;
-	}
+    private void cleanupMessaging() {
+        try {
+            if (this.messageConsumer != null) {
+                this.messageConsumer.close();
+            }
+            if (this.messageProducer != null) {
+                this.messageProducer.close();
+            }
 
-	@Override
-	public QueueBuilder listen(MessageListener... listeners) {
-		for(Queue queue : this.destinations) {
-			this.messageManager.createMessageConsumer(queue, listeners);
-		}
-		return this;
-	}
-	
-	@Override
-	public QueueBuilder newBuilder() {
-		return new QueueBuilderImpl(this.messageManager);
-	}
-	public List<Queue> getDestinations() {
-		return this.destinations;
-	}
+            this.messageConsumer = null;
+            this.messageProducer = null;
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+        }
+    }
+
+    private void cleanConnection() {
+        try {
+            if (this.session != null) {
+                this.session.close();
+            }
+            if (this.connection != null) {
+                this.connection.close();
+            }
+
+            this.session = null;
+            this.connection = null;
+            
+            cleanupMessaging();
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+        }
+    }
+
+    private void createMessageProducer() {
+        if (messageProducer == null) {
+            try {
+                this.messageProducer = session.createProducer(lastQueue);
+            } catch (JMSException ex) {
+                this.exceptionEvent.fire(new ExceptionToCatch(ex));
+            }
+        }
+    }
+
+    private void createMessageConsumer() {
+        if (messageConsumer == null) {
+            try {
+                this.messageConsumer = session.createConsumer(lastQueue);
+            } catch (JMSException ex) {
+                this.exceptionEvent.fire(new ExceptionToCatch(ex));
+            }
+        }
+    }
+
+    @Override
+    public QueueBuilder connectionFactory(ConnectionFactory cf) {
+        cleanConnection();
+        this.connectionFactory = cf;
+        getSession();
+        return this;
+    }
+
+    @Override
+    public QueueBuilder send(Message m) {
+        this.createMessageProducer();
+        try{
+            this.messageProducer.send(m);
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+        }
+        return this;
+    }
+
+    @Override
+    public QueueBuilder sendMap(Map map) {
+        try {
+            Session s = getSession();
+            MapMessage msg = s.createMapMessage();
+            Set<Object> keys = map.keySet();
+            for (Object key : keys) {
+                Object value = map.get(key);
+                msg.setObject(key.toString(), value);
+            }
+            send(msg);
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+        }
+        return this;
+    }
+
+    @Override
+    public QueueBuilder sendString(String string) {
+        try{
+            Session s = getSession();
+            TextMessage tm = s.createTextMessage();
+            tm.setText(string);
+            send(tm);
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+        } 
+        return this;
+    }
+    
+    @Override
+    public QueueBuilder sendObject(Serializable obj) {
+        try{
+            Session s = getSession();
+            ObjectMessage om = s.createObjectMessage();
+            om.setObject(obj);
+            send(om);
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+        } 
+        return this;
+    }
+
+    @Override
+    public QueueBuilder listen(MessageListener listener) {
+        this.createMessageConsumer();
+        try{
+            this.messageConsumer.setMessageListener(listener);
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+        }
+        return this;
+    }
+
+    @Override
+    public QueueBuilder newBuilder() {
+        return new QueueBuilderImpl(this.exceptionEvent);
+    }
+
+    @Override
+    public QueueBuilder transacted() {
+        this.transacted = !this.transacted;
+        return this;
+    }
+
+    @Override
+    public QueueBuilder sessionMode(int sessionMode) {
+        this.sessionMode = sessionMode;
+        return this;
+    }
+    
+    public QueueBrowser getQueueBrowser() {
+        try{
+            return this.session.createBrowser(this.lastQueue);
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+            return null;
+        }
+    }
 }

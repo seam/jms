@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.Map;
 
 import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.Queue;
-import javax.jms.QueueBrowser;
 
 /**
  * QueueBuilder is a builder pattern implementation for working with JMS Queues.
@@ -15,14 +15,14 @@ import javax.jms.QueueBrowser;
  * @author johnament
  *
  */
-public interface QueueBuilder extends Serializable {
+public interface DestinationBuilder extends Serializable {
 
     /**
      * Toggles the transacted state (default is false) for this builder.
      * 
      * @return this Builder.
      */
-    public QueueBuilder transacted();
+    public DestinationBuilder transacted();
 
     /**
      * Sets the session mode for this Builder.  Default is Session.AUTO_ACKNOWLEDGE
@@ -30,7 +30,7 @@ public interface QueueBuilder extends Serializable {
      * @param sessionMode  SessionMode flag, see javax.jms.Session's list of valid values.
      * @return this Builder.
      */
-    public QueueBuilder sessionMode(int sessionMode);
+    public DestinationBuilder sessionMode(int sessionMode);
 
     /**
      * Specifies the ConnectionFactory to use.
@@ -38,7 +38,7 @@ public interface QueueBuilder extends Serializable {
      * @param ConnectionFactory to use.
      * @return this QueueBuilder.
      */
-    public QueueBuilder connectionFactory(ConnectionFactory connectionFactory);
+    public DestinationBuilder connectionFactory(ConnectionFactory connectionFactory);
 
     /**
      * Adds a Queue to the destinations of this QueueBuilder.
@@ -46,7 +46,7 @@ public interface QueueBuilder extends Serializable {
      * @param queue The queue to add.
      * @return this QueueBuilder
      */
-    public QueueBuilder destination(Queue queue);
+    public DestinationBuilder destination(Destination destination);
 
     /**
      * Sends a JMS Message to the destinations associated.
@@ -54,7 +54,7 @@ public interface QueueBuilder extends Serializable {
      * @param m The message to send.
      * @return this QueueBuilder.
      */
-    public QueueBuilder send(Message m);
+    public DestinationBuilder send(Message m);
 
     /**
      * Sends a Map as a JMS Map Message to the destinations associated.
@@ -62,7 +62,7 @@ public interface QueueBuilder extends Serializable {
      * @param m the Map to send.
      * @return this QueueBuilder
      */
-    public QueueBuilder sendMap(Map m);
+    public DestinationBuilder sendMap(Map m);
 
     /**
      * Sends a String as a JMS TextMessage to the destinations associated.
@@ -70,7 +70,7 @@ public interface QueueBuilder extends Serializable {
      * @param s The String to send.
      * @return this QueueBuilder.
      */
-    public QueueBuilder sendString(String s);
+    public DestinationBuilder sendString(String s);
 
     /**
      * Sends a Serializable Object as an ObjectMessage.
@@ -78,7 +78,7 @@ public interface QueueBuilder extends Serializable {
      * @param obj The Serializable object to send.
      * @return this QueueBuilder
      */
-    public QueueBuilder sendObject(Serializable obj);
+    public DestinationBuilder sendObject(Serializable obj);
 
     /**
      * Adds the given MessageListeners as listeners on the associated destinations.
@@ -86,19 +86,12 @@ public interface QueueBuilder extends Serializable {
      * @param ml MessageListener instances to connect to these destinations.
      * @return this QueueBuilder
      */
-    public QueueBuilder listen(MessageListener ml);
+    public DestinationBuilder listen(MessageListener ml);
 
     /**
      * Creates a QueueBuilder.  It will be associated with any active Session.
      * 
      * @return a new QueueBuilder instance.
      */
-    public QueueBuilder newBuilder();
-    
-    /**
-     * Creates a QueueBrowser from the configured session and queue.
-     * 
-     * @return a QueueBrowser on top of the configured queue and session.
-     */
-    public QueueBrowser getQueueBrowser();
+    public DestinationBuilder newBuilder();
 }
