@@ -8,8 +8,6 @@ import javax.jms.*;
 import javax.enterprise.event.Event;
 import org.jboss.solder.exception.control.ExceptionToCatch;
 
-import org.jboss.solder.logging.Logger;
-
 public class QueueBuilderImpl implements QueueBuilder {
 
     private Event<ExceptionToCatch> exceptionEvent;
