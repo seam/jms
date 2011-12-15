@@ -47,6 +47,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
+@Ignore
 public class TopicBuilderImplTest {
 	@Deployment
     public static Archive<?> createDeployment() {
