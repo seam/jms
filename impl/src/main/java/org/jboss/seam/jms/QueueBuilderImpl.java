@@ -7,9 +7,10 @@ import java.util.Set;
 import javax.jms.*;
 import javax.enterprise.event.Event;
 import org.jboss.solder.exception.control.ExceptionToCatch;
+import org.jboss.solder.logging.Logger;
 
 public class QueueBuilderImpl implements QueueBuilder {
-
+    private Logger logger = Logger.getLogger(QueueBuilderImpl.class);
     private Event<ExceptionToCatch> exceptionEvent;
     private ConnectionFactory connectionFactory;
     private Connection connection;
@@ -70,6 +71,7 @@ public class QueueBuilderImpl implements QueueBuilder {
             this.messageConsumer = null;
             this.messageProducer = null;
         } catch (JMSException ex) {
+            logger.error("unable to create queuebuilder, ",ex);
             this.exceptionEvent.fire(new ExceptionToCatch(ex));
         }
     }
@@ -114,10 +116,18 @@ public class QueueBuilderImpl implements QueueBuilder {
 
     @Override
     public QueueBuilder connectionFactory(ConnectionFactory cf) {
-        cleanConnection();
-        this.connectionFactory = cf;
-        getSession();
-        return this;
+        try {
+            cleanConnection();
+            this.connectionFactory = cf;
+            this.connection = cf.createConnection();
+            this.session = connection.createSession(transacted, sessionMode);
+            logger.info("Created session  "+session);
+            //getSession();
+            return this;
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+            return null;
+        }
     }
 
     @Override
@@ -134,8 +144,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     @Override
     public QueueBuilder sendMap(Map map) {
         try {
-            Session s = getSession();
-            MapMessage msg = s.createMapMessage();
+            MapMessage msg = this.session.createMapMessage();
             Set<Object> keys = map.keySet();
             for (Object key : keys) {
                 Object value = map.get(key);
@@ -151,8 +160,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     @Override
     public QueueBuilder sendString(String string) {
         try{
-            Session s = getSession();
-            TextMessage tm = s.createTextMessage();
+            TextMessage tm = this.session.createTextMessage();
             tm.setText(string);
             send(tm);
         } catch (JMSException ex) {
@@ -164,8 +172,7 @@ public class QueueBuilderImpl implements QueueBuilder {
     @Override
     public QueueBuilder sendObject(Serializable obj) {
         try{
-            Session s = getSession();
-            ObjectMessage om = s.createObjectMessage();
+            ObjectMessage om = this.session.createObjectMessage();
             om.setObject(obj);
             send(om);
         } catch (JMSException ex) {

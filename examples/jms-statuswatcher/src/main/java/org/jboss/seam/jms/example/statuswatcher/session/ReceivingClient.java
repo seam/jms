@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import javax.jms.ConnectionFactory;
+import javax.jms.Session;
 import javax.jms.Topic;
 import org.jboss.seam.jms.TopicBuilder;
 import org.jboss.seam.jms.example.statuswatcher.model.Status;
@@ -39,7 +40,7 @@ public class ReceivingClient implements Serializable {
 
     @Resource(mappedName="java:/jms/statusInfoTopic")
     Topic statusInfoTopic;
-    @Resource(mappedName="java:/jms/ConnectionFactory")
+    @Resource(mappedName="java:/ConnectionFactory")
     ConnectionFactory connectionFactory;
     
     @PostConstruct
@@ -47,7 +48,10 @@ public class ReceivingClient implements Serializable {
     	log.debug("Creating new ReceivingClient.");
     	this.pendingStatuses = new ArrayList<Integer>();
         this.receivedStatuses = new LinkedList<Status>();
-        topicBuilder.connectionFactory(connectionFactory).destination(statusInfoTopic).listen(new ReceivingClientListener(this));
+        topicBuilder.sessionMode(Session.AUTO_ACKNOWLEDGE)
+                .connectionFactory(connectionFactory)
+                .destination(statusInfoTopic)
+                .listen(new ReceivingClientListener(this));
     }
     
     public String receive() {

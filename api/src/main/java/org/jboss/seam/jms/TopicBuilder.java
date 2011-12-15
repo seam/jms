@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.jms.ConnectionFactory;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.Session;
 import javax.jms.Topic;
 
 /**
