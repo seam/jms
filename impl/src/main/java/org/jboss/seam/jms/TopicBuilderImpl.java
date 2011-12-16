@@ -122,6 +122,7 @@ public class TopicBuilderImpl implements TopicBuilder {
             this.connectionFactory = cf;
             this.connection = cf.createConnection();
             this.session = connection.createSession(transacted, sessionMode);
+            this.connection.start();
             return this;
         } catch (JMSException ex) {
             logger.error("Unable to set connection factory",ex);
