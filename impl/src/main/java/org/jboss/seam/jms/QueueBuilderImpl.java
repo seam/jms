@@ -34,31 +34,6 @@ public class QueueBuilderImpl implements QueueBuilder {
         return this;
     }
 
-    private Session getSession() {
-        if (this.connectionFactory != null) {
-            if (this.connection == null) {
-                this.session = null;
-                try {
-                    this.connection = this.connectionFactory.createConnection();
-                } catch (JMSException ex) {
-                    this.exceptionEvent.fire(new ExceptionToCatch(ex));
-                    throw new RuntimeException(ex);
-                }
-            }
-            if (this.session == null) {
-                try {
-                    this.session = connection.createSession(transacted, sessionMode);
-                } catch (JMSException ex) {
-                    this.exceptionEvent.fire(new ExceptionToCatch(ex));
-                    throw new RuntimeException(ex);
-                }
-            }
-        } else {
-            throw new RuntimeException("Attempting to pull the session before setting the connectionFactory");
-        }
-        return this.session;
-    }
-
     private void cleanupMessaging() {
         try {
             if (this.messageConsumer != null) {
@@ -121,7 +96,8 @@ public class QueueBuilderImpl implements QueueBuilder {
             this.connectionFactory = cf;
             this.connection = cf.createConnection();
             this.session = connection.createSession(transacted, sessionMode);
-            logger.info("Created session  "+session);
+            logger.debug("Created session  "+session);
+            this.connection.start();
             //getSession();
             return this;
         } catch (JMSException ex) {

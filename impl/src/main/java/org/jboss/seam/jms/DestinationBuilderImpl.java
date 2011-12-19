@@ -11,7 +11,7 @@ import org.jboss.solder.exception.control.ExceptionToCatch;
 import org.jboss.solder.logging.Logger;
 
 public class DestinationBuilderImpl implements DestinationBuilder {
-
+    private Logger logger = Logger.getLogger(QueueBuilderImpl.class);
     private Event<ExceptionToCatch> exceptionEvent;
     private ConnectionFactory connectionFactory;
     private Connection connection;
@@ -32,31 +32,6 @@ public class DestinationBuilderImpl implements DestinationBuilder {
         this.messageProducer = null;
         this.messageConsumer = null;
         return this;
-    }
-
-    private Session getSession() {
-        if (this.connectionFactory != null) {
-            if (this.connection == null) {
-                this.session = null;
-                try {
-                    this.connection = this.connectionFactory.createConnection();
-                } catch (JMSException ex) {
-                    this.exceptionEvent.fire(new ExceptionToCatch(ex));
-                    throw new RuntimeException(ex);
-                }
-            }
-            if (this.session == null) {
-                try {
-                    this.session = connection.createSession(transacted, sessionMode);
-                } catch (JMSException ex) {
-                    this.exceptionEvent.fire(new ExceptionToCatch(ex));
-                    throw new RuntimeException(ex);
-                }
-            }
-        } else {
-            throw new RuntimeException("Attempting to pull the session before setting the connectionFactory");
-        }
-        return this.session;
     }
 
     private void cleanupMessaging() {
@@ -115,10 +90,19 @@ public class DestinationBuilderImpl implements DestinationBuilder {
 
     @Override
     public DestinationBuilder connectionFactory(ConnectionFactory cf) {
-        cleanConnection();
-        this.connectionFactory = cf;
-        getSession();
-        return this;
+        try {
+            cleanConnection();
+            this.connectionFactory = cf;
+            this.connection = cf.createConnection();
+            this.session = connection.createSession(transacted, sessionMode);
+            logger.debug("Created session  "+session);
+            this.connection.start();
+            //getSession();
+            return this;
+        } catch (JMSException ex) {
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+            return null;
+        }
     }
 
     @Override
@@ -135,8 +119,7 @@ public class DestinationBuilderImpl implements DestinationBuilder {
     @Override
     public DestinationBuilder sendMap(Map map) {
         try {
-            Session s = getSession();
-            MapMessage msg = s.createMapMessage();
+            MapMessage msg = this.session.createMapMessage();
             Set<Object> keys = map.keySet();
             for (Object key : keys) {
                 Object value = map.get(key);
@@ -152,8 +135,7 @@ public class DestinationBuilderImpl implements DestinationBuilder {
     @Override
     public DestinationBuilder sendString(String string) {
         try{
-            Session s = getSession();
-            TextMessage tm = s.createTextMessage();
+            TextMessage tm = this.session.createTextMessage();
             tm.setText(string);
             send(tm);
         } catch (JMSException ex) {
@@ -165,8 +147,7 @@ public class DestinationBuilderImpl implements DestinationBuilder {
     @Override
     public DestinationBuilder sendObject(Serializable obj) {
         try{
-            Session s = getSession();
-            ObjectMessage om = s.createObjectMessage();
+            ObjectMessage om = this.session.createObjectMessage();
             om.setObject(obj);
             send(om);
         } catch (JMSException ex) {
