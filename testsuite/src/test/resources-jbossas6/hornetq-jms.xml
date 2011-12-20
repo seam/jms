@@ -17,40 +17,54 @@
        See the License for the specific language governing permissions and
        limitations under the License.
       -->
-    <topic name="T3">
-        <entry name="/jms/T3"/>
-    </topic>
-
     <topic name="Topic5">
         <entry name="/jms/T5"/>
+    </topic>
+    <topic name="T3">
+        <entry name="/jms/T3"/>
     </topic>
 
     <topic name="Topic2">
         <entry name="/jms/T2"/>
     </topic>
-    
+
     <topic name="Topic1">
         <entry name="/jms/T1"/>
     </topic>
-    
+
     <topic name="T">
         <entry name="/jms/T"/>
     </topic>
+    <topic name="STRT">
+	            <entry name="/jms/STRT"/>
+		        </topic>
 
     <queue name="Q">
         <entry name="/jms/Q"/>
     </queue>
-    
+
         <queue name="QC">
         <entry name="/jms/QC"/>
     </queue>
-    
+
         <queue name="QB">
         <entry name="/jms/QB"/>
     </queue>
-    
+
         <queue name="QA">
         <entry name="/jms/QA"/>
+    </queue>
+    
+	<queue name="QC1">
+        <entry name="/jms/QC1"/>
+    </queue>
+
+        <queue name="QB1">
+        <entry name="/jms/QB1"/>
+    </queue>
+
+        <queue name="QA1">
+        <entry name="/jms/QA1"/>
     </queue>
 
     <queue name="RouteTest">
