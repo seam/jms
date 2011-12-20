@@ -87,11 +87,11 @@ public class QueueBuilderImplTest {
         queueBuilder.newBuilder().listen(ttl);
         testMessageSent(false, null, ttl);
     }
-    @Resource(mappedName = "jms/QA")
+    @Resource(mappedName = "jms/QA1")
     Queue qa;
-    @Resource(mappedName = "jms/QB")
+    @Resource(mappedName = "jms/QB1")
     Queue qb;
-    @Resource(mappedName = "jms/QC")
+    @Resource(mappedName = "jms/QC1")
     Queue qc;
     
     @Resource(mappedName="/ConnectionFactory") ConnectionFactory cf;
@@ -101,7 +101,7 @@ public class QueueBuilderImplTest {
         QueueTestListener ttl = new QueueTestListener();
         Map mapData = new HashMap<String, String>();
         mapData.put("my key", "my value");
-        queueBuilder.newBuilder().connectionFactory(cf).transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qa).listen(ttl).sendMap(mapData);
+        queueBuilder.newBuilder().sessionMode(Session.AUTO_ACKNOWLEDGE).connectionFactory(cf).destination(qa).listen(ttl).sendMap(mapData);
         DeploymentFactory.pause(5000);
         testMessageSent(true, MapMessage.class, ttl);
     }
@@ -110,7 +110,7 @@ public class QueueBuilderImplTest {
     public void testSendString() {
         QueueTestListener ttl = new QueueTestListener();
         String data = "new data";
-        queueBuilder.newBuilder().connectionFactory(cf).transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qb).listen(ttl).sendString(data);
+        queueBuilder.newBuilder().sessionMode(Session.AUTO_ACKNOWLEDGE).connectionFactory(cf).destination(qb).listen(ttl).sendString(data);
         DeploymentFactory.pause(5000);
         testMessageSent(true, TextMessage.class, ttl);
     }
@@ -119,7 +119,7 @@ public class QueueBuilderImplTest {
     public void testSendObject() {
         QueueTestListener ttl = new QueueTestListener();
         Serializable data = 33L;
-        queueBuilder.newBuilder().connectionFactory(cf).transacted().sessionMode(Session.SESSION_TRANSACTED).destination(qc).listen(ttl).sendObject(data);
+        queueBuilder.newBuilder().sessionMode(Session.AUTO_ACKNOWLEDGE).connectionFactory(cf).destination(qc).listen(ttl).sendObject(data);
         DeploymentFactory.pause(5000);
         testMessageSent(true, ObjectMessage.class, ttl);
     }

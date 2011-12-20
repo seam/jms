@@ -4,13 +4,15 @@ import java.io.Serializable;
 import java.util.Map;
 
 import java.util.Set;
+import java.util.logging.Level;
 import javax.enterprise.event.Event;
 import javax.jms.*;
 
 import org.jboss.solder.exception.control.ExceptionToCatch;
+import org.jboss.solder.logging.Logger;
 
 public class TopicBuilderImpl implements TopicBuilder {
-
+    private Logger logger = Logger.getLogger(TopicBuilder.class);
     private Event<ExceptionToCatch> exceptionEvent;
     private ConnectionFactory connectionFactory;
     private Connection connection;
@@ -35,31 +37,6 @@ public class TopicBuilderImpl implements TopicBuilder {
         return this;
     }
 
-    private Session getSession() {
-        if (this.connectionFactory != null) {
-            if (this.connection == null) {
-                this.session = null;
-                try {
-                    this.connection = this.connectionFactory.createConnection();
-                } catch (JMSException ex) {
-                    this.exceptionEvent.fire(new ExceptionToCatch(ex));
-                    throw new RuntimeException(ex);
-                }
-            }
-            if (this.session == null) {
-                try {
-                    this.session = connection.createSession(transacted, sessionMode);
-                } catch (JMSException ex) {
-                    this.exceptionEvent.fire(new ExceptionToCatch(ex));
-                    throw new RuntimeException(ex);
-                }
-            }
-        } else {
-            throw new RuntimeException("Attempting to pull the session before setting the connectionFactory");
-        }
-        return this.session;
-    }
-
     private void cleanupMessaging() {
         try {
             if (this.messageConsumer != null) {
@@ -72,6 +49,7 @@ public class TopicBuilderImpl implements TopicBuilder {
             this.messageConsumer = null;
             this.messageProducer = null;
         } catch (JMSException ex) {
+            logger.error("There was a problem cleaning up the JMS session",ex);
             this.exceptionEvent.fire(new ExceptionToCatch(ex));
         }
     }
@@ -90,36 +68,67 @@ public class TopicBuilderImpl implements TopicBuilder {
 
             cleanupMessaging();
         } catch (JMSException ex) {
+            logger.error("There was a problem cleaning up the JMS connection",ex);
             this.exceptionEvent.fire(new ExceptionToCatch(ex));
         }
     }
 
     private void createMessageProducer() {
+        logger.debug("Creating the MessageProducer.");
         if (messageProducer == null) {
             try {
                 this.messageProducer = session.createProducer(lastTopic);
             } catch (JMSException ex) {
+                logger.error("There was a problem creating the MessageProducer",ex);
+                this.exceptionEvent.fire(new ExceptionToCatch(ex));
+            }
+        }
+    }
+    
+    public void close() {
+        cleanMessageProducer();
+    }
+    
+    private void cleanMessageProducer() {
+        if(this.messageProducer != null) {
+            try {
+                messageProducer.close();
+            } catch (JMSException ex) {
+                logger.error("Unable to close producer",ex);
                 this.exceptionEvent.fire(new ExceptionToCatch(ex));
             }
         }
     }
 
     private void createMessageConsumer() {
+        logger.debug("Creating the MessageConsumer.");
         if (messageConsumer == null) {
             try {
+                logger.debug("ABout to create.");
                 this.messageConsumer = session.createConsumer(lastTopic);
             } catch (JMSException ex) {
+                logger.error("There was a problem creating the MessageConsumer",ex);
                 this.exceptionEvent.fire(new ExceptionToCatch(ex));
             }
+        } else {
+            logger.debug("messageConsumer is not null, not creating a new one");
         }
     }
 
     @Override
     public TopicBuilder connectionFactory(ConnectionFactory cf) {
-        cleanConnection();
-        this.connectionFactory = cf;
-        getSession();
-        return this;
+        try {
+            cleanConnection();
+            this.connectionFactory = cf;
+            this.connection = cf.createConnection();
+            this.session = connection.createSession(transacted, sessionMode);
+            this.connection.start();
+            return this;
+        } catch (JMSException ex) {
+            logger.error("Unable to set connection factory",ex);
+            this.exceptionEvent.fire(new ExceptionToCatch(ex));
+            return null;
+        }
     }
 
     @Override
@@ -142,7 +151,7 @@ public class TopicBuilderImpl implements TopicBuilder {
     @Override
     public TopicBuilder sendMap(Map map) {
         try {
-            Session s = getSession();
+            Session s = this.session;
             MapMessage msg = s.createMapMessage();
             Set<Object> keys = map.keySet();
             for (Object key : keys) {
@@ -158,12 +167,14 @@ public class TopicBuilderImpl implements TopicBuilder {
 
     @Override
     public TopicBuilder sendString(String string) {
+        logger.debug("Sending a string. "+string);
         try {
-            Session s = getSession();
+            Session s = this.session;
             TextMessage tm = s.createTextMessage();
             tm.setText(string);
             send(tm);
         } catch (JMSException ex) {
+            logger.error("There was a problem sending the String",ex);
             this.exceptionEvent.fire(new ExceptionToCatch(ex));
         }
         return this;
@@ -171,12 +182,14 @@ public class TopicBuilderImpl implements TopicBuilder {
 
     @Override
     public TopicBuilder sendObject(Serializable obj) {
+        logger.debug("Sending an object. "+obj);
         try {
-            Session s = getSession();
+            Session s = this.session;
             ObjectMessage om = s.createObjectMessage();
             om.setObject(obj);
             send(om);
         } catch (JMSException ex) {
+            logger.error("There was a problem sending the Object",ex);
             this.exceptionEvent.fire(new ExceptionToCatch(ex));
         }
         return this;
@@ -184,6 +197,7 @@ public class TopicBuilderImpl implements TopicBuilder {
 
     @Override
     public TopicBuilder listen(MessageListener listener) {
+        logger.debug("Setting up a message listener.");
         this.createMessageConsumer();
         try {
             this.messageConsumer.setMessageListener(listener);
