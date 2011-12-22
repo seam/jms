@@ -43,7 +43,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-@Ignore
 public class QueueBuilderImplTest {
 
     @Deployment
@@ -87,14 +86,14 @@ public class QueueBuilderImplTest {
         queueBuilder.newBuilder().listen(ttl);
         testMessageSent(false, null, ttl);
     }
-    @Resource(mappedName = "jms/QA1")
+    @Resource(mappedName = "jms/QA")
     Queue qa;
-    @Resource(mappedName = "jms/QB1")
+    @Resource(mappedName = "jms/QB")
     Queue qb;
-    @Resource(mappedName = "jms/QC1")
+    @Resource(mappedName = "jms/QC")
     Queue qc;
     
-    @Resource(mappedName="/ConnectionFactory") ConnectionFactory cf;
+    @Resource(mappedName="java:/ConnectionFactory") ConnectionFactory cf;
 
     @Test
     public void testSendMap() {
