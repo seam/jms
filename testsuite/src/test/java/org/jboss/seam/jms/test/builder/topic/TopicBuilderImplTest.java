@@ -47,7 +47,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-@Ignore
 public class TopicBuilderImplTest {
 	@Deployment
     public static Archive<?> createDeployment() {
@@ -97,7 +96,7 @@ public class TopicBuilderImplTest {
         @Resource(mappedName="java:/ConnectionFactory") ConnectionFactory cf;
         
 	
-	@Test @Ignore
+	@Test 
 	public void testSendMap() {
 		Map mapData = new HashMap<String,String>();
 		mapData.put("xx","yy");
@@ -110,22 +109,11 @@ public class TopicBuilderImplTest {
 	public void testSendString() throws Exception {
 		String data = "new data";
 		TopicTestListener ttl = new TopicTestListener();
-		//TopicBuilder tb = topicBuilder.newBuilder().transacted().sessionMode(Session.SESSION_TRANSACTED).connectionFactory(cf).destination(t1).sendString(data);
-		//DeploymentFactory.pause(20000);
-                Connection conn = cf.createConnection();
-                Session session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-                TextMessage tm = session.createTextMessage();
-                tm.setText(data);
-                MessageProducer mp = session.createProducer(t1);
-                MessageConsumer mc = session.createConsumer(t1);
-                mp.send(tm);
-                Message m = mc.receive(10000);
-                Assert.assertNotNull(m);
-                //tb.close();
+		topicBuilder.newBuilder().sessionMode(Session.AUTO_ACKNOWLEDGE).connectionFactory(cf).destination(t3).listen(ttl).sendString(data);
+		DeploymentFactory.pause(10000);
 		testMessageSent(true,TextMessage.class,ttl);
-                DeploymentFactory.pause(1000000);
 	}
-	@Test @Ignore
+	@Test 
 	public void testSendObject() {
 		Serializable data = 33L;
 		TopicTestListener ttl = new TopicTestListener();
