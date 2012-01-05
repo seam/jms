@@ -1,0 +1,49 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+                template="/layout/template.xhtml">
+
+
+    <ui:define name="body">
+
+        <h:form>
+            <h:panelGrid columns="3">
+                <h:commandButton value="Send Non-XA" action="#{testView.sendNonXA}"/>
+                <h:commandButton value="Send Non-XA transactional" action="#{testView.sendNonXATransactional}"/>
+                <h:outputText value="message should get into queue cause non XA session is used (default MessageManager)"/>
+
+                <h:commandButton value="Send XA" action="#{testView.sendXA}"/>
+                <h:commandButton value="Send XA transactional" action="#{testView.sendXATransactional}"/>
+                <h:outputText value="message should not get into queue cause non XA session is used"/>
+
+                <h:commandButton value="Send bridged events" action="#{testView.sendBridgedEvents}"/>
+                <h:commandButton value="Send bridged events transactional" action="#{testView.sendBridgedEventsTransactional}"/>
+
+            </h:panelGrid>
+        </h:form>
+
+        <p>
+            Methods invoked with buttons in left column are not annotated @Transactional while those in right column are. </p>
+
+        <p>
+            When you are not logged in then "Send bridged events" will try to fire event with empty value </p>
+
+        <p>
+            Note that bridged events are sent via default MessageManager which by default works with @JmsDefault("session") Session.
+            So events will still get to jms queue even if we get exception. To avoid that we have to modify default MessageManager: </p>
+        <pre>
+            &lt;jms:MessageManagerImpl>
+                &lt;s:replaces/>
+                &lt;jms:session>
+                    &lt;jmsa:JmsDefault value="XASession"/>
+                    &lt;s:Inject/>
+                &lt;/jms:session>
+                &lt;jms:exceptionEvent>
+                    &lt;s:Inject/>
+                &lt;/jms:exceptionEvent>
+            &lt;/jms:MessageManagerImpl>
+        </pre>
+
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:s="urn:java:ee" xmlns:jms="urn:java:org.jboss.seam.jms"
+       xmlns:jmsa="urn:java:org.jboss.seam.jms.annotations" xmlns:jmsi="urn:java:org.jboss.seam.jms.example.xaplayground.inject"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://jboss.org/schema/cdi/beans_1_0.xsd">
+
+    <!--If we want routed events to use XASession then we have to uncomment this-->
+    <!--<jms:MessageManagerImpl>-->
+    <!--<s:replaces/>-->
+    <!--<jms:session>-->
+    <!--<jmsa:JmsDefault value="XASession"/>-->
+    <!--<s:Inject/>-->
+    <!--</jms:session>-->
+    <!--<jms:exceptionEvent>-->
+    <!--<s:Inject/>-->
+    <!--</jms:exceptionEvent>-->
+    <!--</jms:MessageManagerImpl>-->
+
+    <jms:MessageManagerImpl>
+        <jmsi:XA/>
+        <jms:session>
+            <jmsa:JmsDefault value="XASession"/>
+            <s:Inject/>
+        </jms:session>
+        <jms:exceptionEvent>
+            <s:Inject/>
+        </jms:exceptionEvent>
+    </jms:MessageManagerImpl>
+</beans>
