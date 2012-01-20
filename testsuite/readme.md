@@ -1,13 +1,9 @@
-#Seam Solder Test Suite
-
-##Running the testsuite on the default container (Embedded Weld)
-
-    mvn clean verify 
+#Seam JMS Test Suite
 
 ##Running the testsuite on JBoss AS 7
 
     export JBOSS_HOME=/path/to/jboss-as-7.x
-    $JBOSS_HOME/bin/standalone.sh --server-config=$JBOSS_HOME/standalone/configuration/standalone-preview.xml
+    $JBOSS_HOME/bin/standalone.sh --server-config=standalone-full.xml
     
     Create queues and topics for testing
     $JBOSS_HOME/bin/jboss-admin.sh --file=jbossas7.cli
