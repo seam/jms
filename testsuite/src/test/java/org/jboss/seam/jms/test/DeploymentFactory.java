@@ -57,7 +57,9 @@ public class DeploymentFactory {
         }
         WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
         war.addAsLibraries(ejbModule);
-        war.addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml")
+        war.addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
+                .configureFrom("../settings.xml")
+                .loadMetadataFromPom("pom.xml")
                 .artifact("org.jboss.solder:solder-impl").resolveAs(JavaArchive.class));
         return war;
     }
