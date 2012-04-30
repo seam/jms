@@ -90,7 +90,6 @@ public class TopicBuilderImplTest {
 	}
         
         @Resource(mappedName="/jms/T3") Topic t3;
-        @Resource(mappedName="/jms/STRT") Topic t1;
         @Resource(mappedName="/jms/T2") Topic t2;
         
         @Resource(mappedName="java:/ConnectionFactory") ConnectionFactory cf;

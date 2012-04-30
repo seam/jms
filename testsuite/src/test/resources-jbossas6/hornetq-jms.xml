@@ -35,9 +35,9 @@
     <topic name="T">
         <entry name="/jms/T"/>
     </topic>
-    <topic name="STRT">
+    <!-- topic name="STRT">
 	    <entry name="/jms/STRT"/>
-	</topic>
+	</topic-->
 
     <queue name="Q">
         <entry name="/jms/Q"/>
