@@ -1,13 +1,13 @@
 connect
 batch
-add-jms-topic --name=T3 --entries=jms/T3
-add-jms-topic --name=Topic5 --entries=jms/T5
-add-jms-topic --name=Topic2 --entries=jms/T2
-add-jms-topic --name=Topic1 --entries=jms/T1
-add-jms-topic --name=T --entries=jms/T
-add-jms-queue --name=Q --entries=jms/Q
-add-jms-queue --name=QC --entries=jms/QC
-add-jms-queue --name=QB --entries=jms/QB
-add-jms-queue --name=QA --entries=jms/QA
-add-jms-queue --name=RouteTest --entries=jms/RouteTest
+jms-topic add --topic-address=T3 --entries=jms/T3
+jms-topic add --topic-address=Topic5 --entries=jms/T5
+jms-topic add --topic-address=Topic2 --entries=jms/T2
+jms-topic add --topic-address=Topic1 --entries=jms/T1
+jms-topic add --topic-address=T --entries=jms/T
+jms-queue add --queue-address=Q --entries=jms/Q
+jms-queue add --queue-address=QC --entries=jms/QC
+jms-queue add --queue-address=QB --entries=jms/QB
+jms-queue add --queue-address=QA --entries=jms/QA
+jms-queue add --queue-address=RouteTest --entries=jms/RouteTest
 run-batch
